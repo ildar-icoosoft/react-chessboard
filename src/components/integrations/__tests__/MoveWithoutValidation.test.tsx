@@ -116,6 +116,7 @@ describe("MoveWithoutValidation", () => {
                   sourceCoordinates: "e2",
                   targetCoordinates: "e4",
                   pieceCode: PieceCode.WHITE_PAWN,
+                  cancelMove() {},
                 });
               }
 
@@ -148,6 +149,7 @@ describe("MoveWithoutValidation", () => {
                   sourceCoordinates: "e2",
                   targetCoordinates: "e2",
                   pieceCode: PieceCode.WHITE_PAWN,
+                  cancelMove() {},
                 });
               }
 
