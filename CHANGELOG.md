@@ -11,3 +11,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reset Piece move CSS transition styles when transition is finished
 - Fix tsdx lint warnings
+- Install @storybook/storybook-deployer and configure deploy-storybook script in package.json
