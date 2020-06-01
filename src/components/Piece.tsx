@@ -17,7 +17,7 @@ export interface PieceProps {
   transitionDuration?: number;
 }
 
-const getTransitionStyles = (
+const getDndTransitionStyles = (
   transitionFrom: SquareTransitionFrom | undefined,
   state: TransitionStatus,
   transitionDuration: number
@@ -56,15 +56,13 @@ export const Piece: FC<PieceProps> = ({
   });
 
   return (
-    <Transition in={inProp} timeout={5000}>
+    <Transition in={inProp} timeout={transitionDuration}>
       {(state) => {
-        console.log("state", state);
-
         return (
           <div
             className={"piece"}
             data-testid={`piece-${pieceCode}`}
-            style={getTransitionStyles(
+            style={getDndTransitionStyles(
               transitionFrom,
               state,
               transitionDuration
