@@ -44,7 +44,7 @@ export const useTransitionPieces = (
     }
 
     return getPositionDiff(position, prevPosition);
-  }, [position, prevPosition, disableTransitionFrom.current]);
+  }, [position, prevPosition]);
 
   const transitionPieces: Record<string, SquareTransitionFrom> = _mapValues(
     positionDiff,
