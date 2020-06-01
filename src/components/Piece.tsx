@@ -17,7 +17,7 @@ export interface PieceProps {
   transitionDuration?: number;
 }
 
-const getDndTransitionStyles = (
+const getTransitionStyles = (
   transitionFrom: SquareTransitionFrom | undefined,
   state: TransitionStatus,
   transitionDuration: number
@@ -35,7 +35,6 @@ const getDndTransitionStyles = (
       transition: `transform ${transitionDuration}ms`,
       zIndex: 1,
     },
-    entered: {},
   };
 
   return styles[state] || {};
@@ -62,7 +61,7 @@ export const Piece: FC<PieceProps> = ({
           <div
             className={"piece"}
             data-testid={`piece-${pieceCode}`}
-            style={getDndTransitionStyles(
+            style={getTransitionStyles(
               transitionFrom,
               state,
               transitionDuration
