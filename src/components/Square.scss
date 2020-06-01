@@ -1,0 +1,25 @@
+.square {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.dark {
+  background-color: rgb(181, 136, 99);
+
+  &.isDragging {
+    background-color: #646f40;
+  }
+}
+
+.light {
+  background-color: rgb(240, 217, 181);
+
+  &.isDragging {
+    background-color: #829769;
+  }
+}
+
+.isDragging :global(.piece) {
+  opacity: 0.3;
+}

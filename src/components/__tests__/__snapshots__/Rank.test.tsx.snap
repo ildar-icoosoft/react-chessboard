@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Rank Snapshot 1`] = `
+<div
+  className="rank"
+  data-testid="rank-2"
+  style={
+    Object {
+      "width": "480px",
+    }
+  }
+>
+  <div
+    className="square light"
+    data-testid="square-a2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  >
+    <div
+      className="rankNotation lightSquare"
+      data-testid="notation-rank-2"
+      style={
+        Object {
+          "fontSize": "10px",
+          "paddingRight": "50px",
+        }
+      }
+    >
+      2
+    </div>
+  </div>
+  <div
+    className="square dark"
+    data-testid="square-b2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+  <div
+    className="square light"
+    data-testid="square-c2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+  <div
+    className="square dark"
+    data-testid="square-d2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+  <div
+    className="square light"
+    data-testid="square-e2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+  <div
+    className="square dark"
+    data-testid="square-f2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+  <div
+    className="square light"
+    data-testid="square-g2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+  <div
+    className="square dark"
+    data-testid="square-h2"
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "height": "60px",
+        "width": "60px",
+      }
+    }
+  />
+</div>
+`;
