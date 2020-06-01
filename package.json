@@ -21,7 +21,8 @@
     "prepare": "tsdx build",
     "storybook": "start-storybook -p 6006",
     "prebuild-storybook": "npm run test:generate-output",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "deploy-storybook": "storybook-to-ghpages"
   },
   "peerDependencies": {
     "react": ">=16"
