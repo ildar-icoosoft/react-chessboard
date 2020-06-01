@@ -23,7 +23,7 @@ export const PhantomPiece: FC<PhantomPieceProps> = ({
     }, transitionDuration);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [transitionDuration]);
 
   if (!showPhantom) {
     return null;

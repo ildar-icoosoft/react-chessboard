@@ -52,7 +52,7 @@ export const Piece: FC<PieceProps> = ({
     if (transitionFrom) {
       setInProp(true);
     }
-  }, []);
+  }, [transitionFrom]);
 
   return (
     <Transition in={inProp} timeout={transitionDuration}>

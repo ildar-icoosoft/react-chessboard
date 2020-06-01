@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Reset Piece move CSS transition styles when transition is finished
+- Fix tsdx lint warnings
