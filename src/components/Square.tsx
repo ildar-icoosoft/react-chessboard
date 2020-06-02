@@ -213,6 +213,7 @@ export const Square = forwardRef<SquareRef, SquareProps>(
             [css.light]: isLight,
             [css.dark]: !isLight,
             [css.isDragging]: isDragging,
+            [css.isOver]: isOver,
           }
         )}
         onClick={handleSquareClick}

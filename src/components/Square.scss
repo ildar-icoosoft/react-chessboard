@@ -10,6 +10,9 @@
   &.isDragging {
     background-color: #646f40;
   }
+  &.isOver {
+    background-color: #a5b56b;
+  }
 }
 
 .light {
@@ -17,6 +20,9 @@
 
   &.isDragging {
     background-color: #829769;
+  }
+  &.isOver {
+    background-color: #cbdf85;
   }
 }
 
