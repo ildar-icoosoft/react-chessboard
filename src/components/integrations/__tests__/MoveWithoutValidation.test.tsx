@@ -258,10 +258,27 @@ describe("MoveWithoutValidation", () => {
 
         expect(childrenCallback).toHaveBeenCalledTimes(3);
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(childrenCallback).nthCalledWith(
+          1,
           expect.objectContaining({
             position: initialPosition,
             squareCssClasses: {},
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {},
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          3,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {
+              e2: "selectedSquare",
+            },
           })
         );
       });
