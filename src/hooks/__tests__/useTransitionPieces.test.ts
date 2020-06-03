@@ -55,6 +55,39 @@ describe("useTransitionPieces()", () => {
     });
   });
 
+  it("should return transition pieces with phantom piece", () => {
+    const position: Position = {
+      e2: PieceCode.WHITE_PAWN,
+      e4: PieceCode.BLACK_BISHOP,
+    };
+
+    const getSquareXYCoordinates = (): XYCoordinates => ({
+      x: 0,
+      y: 0,
+    });
+
+    const { result, rerender } = renderHook<
+      Position,
+      useTransitionPiecesResult
+    >((position) => useTransitionPieces(position, getSquareXYCoordinates), {
+      initialProps: position,
+    });
+
+    // change position to position2
+    rerender({
+      e4: PieceCode.WHITE_PAWN,
+    });
+    const [transitionPieces2] = result.current;
+    expect(transitionPieces2).toEqual({
+      e4: {
+        algebraic: "e2",
+        x: 0,
+        y: 0,
+        phantomPiece: PieceCode.BLACK_BISHOP,
+      },
+    });
+  });
+
   it("should return empty transition pieces if disableTransitionInNextPosition() is called", () => {
     const position: Position = {
       e2: PieceCode.WHITE_PAWN,

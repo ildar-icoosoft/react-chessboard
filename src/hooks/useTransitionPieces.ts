@@ -61,9 +61,7 @@ export const useTransitionPieces = (
         algebraic: sourceCoordinates,
         x: sourceX - targetX,
         y: sourceY - targetY,
-        phantomPiece: prevPosition
-          ? prevPosition[targetCoordinates]
-          : undefined,
+        phantomPiece: (prevPosition as Position)[targetCoordinates],
       };
     }
   );
