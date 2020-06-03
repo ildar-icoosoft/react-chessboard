@@ -1,3 +1,9 @@
+# Chessboard
+
+![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
+
+![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
+
 # TSDX React User Guide
 
 Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
