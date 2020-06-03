@@ -184,21 +184,71 @@ describe("MoveWithoutValidation", () => {
 
     describe("Move by click", () => {
       it("props.children onSquareClick() e2-e4", () => {
-        const childrenCallback = jest.fn((res) => {
-          return res.position;
-        });
-        let isFirstCallbackCall: boolean = true;
+        const childrenCallback = jest.fn();
+        let callbackCounter: number = 0;
 
         TestRenderer.create(
           <MoveWithoutValidation initialPosition={initialPosition}>
             {(props) => {
               childrenCallback(props);
 
-              if (isFirstCallbackCall) {
-                isFirstCallbackCall = false;
+              callbackCounter++;
 
+              if (callbackCounter === 1) {
                 props.onSquareClick("e2");
+              }
+              if (callbackCounter === 2) {
                 props.onSquareClick("e4");
+              }
+
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toHaveBeenCalledTimes(4);
+
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            position: initialPosition,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {
+              e2: "selectedSquare",
+            },
+          })
+        );
+
+        expect(childrenCallback).nthCalledWith(
+          4,
+          expect.objectContaining({
+            position: positionAfterFirstMove,
+            squareCssClasses: {},
+          })
+        );
+      });
+
+      it("props.children onSquareClick() on empty square", () => {
+        const childrenCallback = jest.fn();
+        let callbackCounter: number = 0;
+
+        TestRenderer.create(
+          <MoveWithoutValidation initialPosition={initialPosition}>
+            {(props) => {
+              childrenCallback(props);
+
+              callbackCounter++;
+
+              if (callbackCounter === 1) {
+                props.onSquareClick("e4");
+              }
+              if (callbackCounter === 2) {
+                props.onSquareClick("e2");
               }
 
               return null;
@@ -208,37 +258,29 @@ describe("MoveWithoutValidation", () => {
 
         expect(childrenCallback).toHaveBeenCalledTimes(3);
 
-        expect(childrenCallback).nthReturnedWith(1, initialPosition);
-        expect(childrenCallback).nthReturnedWith(3, positionAfterFirstMove);
-      });
-
-      it("props.children onSquareClick() on empty square", () => {
-        const childrenCallback = jest.fn((res) => {
-          return res.position;
-        });
-        let isFirstCallbackCall: boolean = true;
-
-        TestRenderer.create(
-          <MoveWithoutValidation initialPosition={initialPosition}>
-            {(props) => {
-              childrenCallback(props);
-
-              if (isFirstCallbackCall) {
-                isFirstCallbackCall = false;
-
-                props.onSquareClick("e4");
-                props.onSquareClick("e2");
-              }
-
-              return null;
-            }}
-          </MoveWithoutValidation>
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {},
+          })
         );
-
-        expect(childrenCallback).toHaveBeenCalledTimes(2);
-
-        expect(childrenCallback).nthReturnedWith(1, initialPosition);
-        expect(childrenCallback).nthReturnedWith(2, initialPosition);
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {},
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          3,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {
+              e2: "selectedSquare",
+            },
+          })
+        );
       });
     });
   });
