@@ -6,6 +6,10 @@ Renders a chess board using React
 
 ![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
 ![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
+[![codecov][codecov-image]][codecov-url]
+
+[codecov-image]: https://img.shields.io/codecov/c/github/ildar-icoosoft/react-chessboard/feature/update-readme.svg?style=flat-square
+[codecov-url]: https://codecov.io/gh/ildar-icoosoft/react-chessboard/branch/feature/update-readme
 
 </div>
 
