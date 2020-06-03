@@ -1,8 +1,16 @@
-# Chessboard
+# react-chessboard ![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg) ![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
 
-![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
+Renders a chess board using React
 
-![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
+## Installation
+
+```
+npm install --save @ildar-icoosoft/react-chessboard
+```
+
+## Demo
+
+- [Storybook](https://ildar-icoosoft.github.io/react-chessboard/)
 
 # TSDX React User Guide
 
