@@ -640,7 +640,7 @@ describe("Board", () => {
   });
 
   describe("methods", () => {
-    it("getSquareXYCoordinates", () => {
+    it("getSquareXYCoordinates()", () => {
       const ref = createRef<BoardRef>();
 
       render(<Board ref={ref} />);
@@ -651,6 +651,16 @@ describe("Board", () => {
         x: 0,
         y: 0,
       });
+    });
+
+    it("getSquareXYCoordinates() throws Error", () => {
+      const ref = createRef<BoardRef>();
+
+      render(<Board ref={ref} />);
+
+      const boardRef: BoardRef = ref.current as BoardRef;
+
+      expect(() => boardRef.getSquareXYCoordinates("a9")).toThrow();
     });
   });
 
