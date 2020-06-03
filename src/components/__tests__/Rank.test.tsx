@@ -477,6 +477,18 @@ describe("Rank", () => {
         y: 0,
       });
     });
+
+    it("getSquareXYCoordinates() throws Error", () => {
+      const dragAndDropRef = createRef<ReactDndRefType>();
+
+      render(<RankWithDnd rankName={"2"} ref={dragAndDropRef} />);
+
+      const rankRef: RankRef = (dragAndDropRef.current as ReactDndRefType).getDecoratedComponent<
+        RankRef
+      >();
+
+      expect(() => rankRef.getSquareXYCoordinates("c3")).toThrow();
+    });
   });
 
   describe("DOM structure", () => {
