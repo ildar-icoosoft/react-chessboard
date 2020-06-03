@@ -25,8 +25,7 @@ npm install --save @ildar-icoosoft/react-chessboard
 
 ## Documentation
 
-- [Get Started](https://github.com/ildar-icoosoft/react-chessboard/wiki)
-- [API Reference](https://github.com/ildar-icoosoft/react-chessboard/wiki)
+Check out our [WIKI](https://github.com/ildar-icoosoft/react-chessboard/wiki/API)
 
 ### Example
 
