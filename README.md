@@ -1,6 +1,13 @@
-# react-chessboard ![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg) ![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
+<h1 align="center">react-chessboard</h1>
+
+<div align="center">
 
 Renders a chess board using React
+
+![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
+![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
+
+</div>
 
 ## Installation
 
