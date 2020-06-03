@@ -184,9 +184,7 @@ describe("MoveWithoutValidation", () => {
 
     describe("Move by click", () => {
       it("props.children onSquareClick() e2-e4", () => {
-        const childrenCallback = jest.fn((res) => {
-          return res.position;
-        });
+        const childrenCallback = jest.fn();
         let isFirstCallbackCall: boolean = true;
 
         TestRenderer.create(
@@ -208,8 +206,29 @@ describe("MoveWithoutValidation", () => {
 
         expect(childrenCallback).toHaveBeenCalledTimes(3);
 
-        expect(childrenCallback).nthReturnedWith(1, initialPosition);
-        expect(childrenCallback).nthReturnedWith(3, positionAfterFirstMove);
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            position: initialPosition,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {
+              e2: "selectedSquare",
+            },
+          })
+        );
+
+        expect(childrenCallback).nthCalledWith(
+          3,
+          expect.objectContaining({
+            position: positionAfterFirstMove,
+            squareCssClasses: {},
+          })
+        );
       });
 
       it("props.children onSquareClick() on empty square", () => {

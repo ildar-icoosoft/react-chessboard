@@ -7,7 +7,8 @@
 .dark {
   background-color: rgb(181, 136, 99);
 
-  &.isDragging {
+  &.isDragging,
+  &:global(.selectedSquare) {
     background-color: #646f40;
   }
   &.isOver {
@@ -18,7 +19,8 @@
 .light {
   background-color: rgb(240, 217, 181);
 
-  &.isDragging {
+  &.isDragging,
+  &:global(.selectedSquare) {
     background-color: #829769;
   }
   &.isOver {

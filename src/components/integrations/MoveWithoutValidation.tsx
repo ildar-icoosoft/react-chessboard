@@ -1,10 +1,12 @@
 import { FC, ReactElement, useState } from "react";
 import { Position } from "../../interfaces/Position";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
+import { SquareCssClasses } from "../../interfaces/SquareCssClasses";
 
 export interface MoveWithoutValidationCallbackProps {
   position: Position;
   draggable: boolean;
+  squareCssClasses: SquareCssClasses;
   onDrop(event: BoardDropEvent): void;
   onSquareClick(coordinates: string): void;
 }
@@ -21,7 +23,14 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   initialPosition = {},
 }) => {
   const [position, setPosition] = useState(initialPosition);
-  const [, setCurrentMoveSelection] = useState<string[]>([]);
+  const [currentMoveSelection, setCurrentMoveSelection] = useState<
+    string | null
+  >(null);
+
+  const squareCssClasses: SquareCssClasses = {};
+  if (currentMoveSelection) {
+    squareCssClasses[currentMoveSelection] = "selectedSquare";
+  }
 
   return children({
     position,
@@ -40,28 +49,29 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
       });
     },
     onSquareClick(coordinates: string) {
-      setCurrentMoveSelection((prevState) => {
-        if (!prevState.length && !position[coordinates]) {
-          return prevState;
+      setCurrentMoveSelection((currentSelection) => {
+        if (currentSelection === null && !position[coordinates]) {
+          return currentSelection;
         }
 
-        if (prevState.length) {
+        if (currentSelection) {
           setPosition((prevPosition) => {
             const newPosition: Position = {
               ...prevPosition,
             };
-            delete newPosition[prevState[0]];
+            delete newPosition[currentSelection];
 
-            newPosition[coordinates] = prevPosition[prevState[0]];
+            newPosition[coordinates] = prevPosition[currentSelection];
 
             return newPosition;
           });
 
-          return [];
+          return null;
         }
 
-        return [coordinates];
+        return coordinates;
       });
     },
+    squareCssClasses,
   });
 };
