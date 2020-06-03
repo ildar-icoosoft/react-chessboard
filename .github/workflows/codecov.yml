@@ -1,8 +1,6 @@
 name: Codecov
 
-on:
-  push:
-    branches: [ develop ]
+on: push
 
 jobs:
   run:
