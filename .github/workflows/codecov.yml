@@ -1,8 +1,10 @@
 name: Codecov
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
 
 jobs:
   run:
@@ -26,6 +28,6 @@ jobs:
 
       - name: Generate coverage report
         run: npm run test:coverage
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
