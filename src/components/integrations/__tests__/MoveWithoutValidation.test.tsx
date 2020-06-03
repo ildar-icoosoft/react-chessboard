@@ -185,17 +185,19 @@ describe("MoveWithoutValidation", () => {
     describe("Move by click", () => {
       it("props.children onSquareClick() e2-e4", () => {
         const childrenCallback = jest.fn();
-        let isFirstCallbackCall: boolean = true;
+        let callbackCounter: number = 0;
 
         TestRenderer.create(
           <MoveWithoutValidation initialPosition={initialPosition}>
             {(props) => {
               childrenCallback(props);
 
-              if (isFirstCallbackCall) {
-                isFirstCallbackCall = false;
+              callbackCounter++;
 
+              if (callbackCounter === 1) {
                 props.onSquareClick("e2");
+              }
+              if (callbackCounter === 2) {
                 props.onSquareClick("e4");
               }
 
@@ -204,7 +206,7 @@ describe("MoveWithoutValidation", () => {
           </MoveWithoutValidation>
         );
 
-        expect(childrenCallback).toHaveBeenCalledTimes(3);
+        expect(childrenCallback).toHaveBeenCalledTimes(4);
 
         expect(childrenCallback).nthCalledWith(
           1,
@@ -223,7 +225,7 @@ describe("MoveWithoutValidation", () => {
         );
 
         expect(childrenCallback).nthCalledWith(
-          3,
+          4,
           expect.objectContaining({
             position: positionAfterFirstMove,
             squareCssClasses: {},
@@ -232,20 +234,20 @@ describe("MoveWithoutValidation", () => {
       });
 
       it("props.children onSquareClick() on empty square", () => {
-        const childrenCallback = jest.fn((res) => {
-          return res.position;
-        });
-        let isFirstCallbackCall: boolean = true;
+        const childrenCallback = jest.fn();
+        let callbackCounter: number = 0;
 
         TestRenderer.create(
           <MoveWithoutValidation initialPosition={initialPosition}>
             {(props) => {
               childrenCallback(props);
 
-              if (isFirstCallbackCall) {
-                isFirstCallbackCall = false;
+              callbackCounter++;
 
+              if (callbackCounter === 1) {
                 props.onSquareClick("e4");
+              }
+              if (callbackCounter === 2) {
                 props.onSquareClick("e2");
               }
 
@@ -254,10 +256,14 @@ describe("MoveWithoutValidation", () => {
           </MoveWithoutValidation>
         );
 
-        expect(childrenCallback).toHaveBeenCalledTimes(2);
+        expect(childrenCallback).toHaveBeenCalledTimes(3);
 
-        expect(childrenCallback).nthReturnedWith(1, initialPosition);
-        expect(childrenCallback).nthReturnedWith(2, initialPosition);
+        expect(childrenCallback).toBeCalledWith(
+          expect.objectContaining({
+            position: initialPosition,
+            squareCssClasses: {},
+          })
+        );
       });
     });
   });
