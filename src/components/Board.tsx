@@ -20,6 +20,7 @@ import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { getRankNameFromCoordinates } from "../utils/chess";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
 import { Coords } from "./Coords";
+import { CoordinateGrid } from "./CoordinateGrid";
 
 export interface BoardRef {
   getSquareXYCoordinates(coordinates: string): XYCoordinates;
@@ -158,6 +159,9 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           </div>
           <PieceDragLayer width={width / 8} />
         </DndProvider>
+
+        <CoordinateGrid orientation={orientation} position={position} />
+
         {showCoordinates && <Coords orientation={orientation} />}
       </>
     );

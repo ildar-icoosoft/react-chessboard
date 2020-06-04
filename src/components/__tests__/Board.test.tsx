@@ -7,12 +7,13 @@ import { PieceCode } from "../../enums/PieceCode";
 import { Position } from "../../interfaces/Position";
 import { SquareCssClasses } from "../../interfaces/SquareCssClasses";
 import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
-import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { PieceDragLayer } from "../PieceDragLayer";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 import { Coords } from "../Coords";
+import { CoordinateGrid } from "../CoordinateGrid";
+import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 
 jest.useFakeTimers();
 
@@ -44,6 +45,13 @@ describe("Board", () => {
       testRenderer.update(<Board showCoordinates={false}></Board>);
 
       expect(testInstance.findAllByType(Coords).length).toBe(0);
+    });
+
+    it("contains 1 CoordinateGrid", () => {
+      const testRenderer = TestRenderer.create(<Board />);
+      const testInstance = testRenderer.root;
+
+      expect(testInstance.findAllByType(CoordinateGrid).length).toBe(1);
     });
   });
 
@@ -513,6 +521,38 @@ describe("Board", () => {
         testRenderer.update(<Board orientation={PieceColor.BLACK} />);
 
         expect(coords.props.orientation).toBe(PieceColor.BLACK);
+      });
+    });
+
+    describe("CoordinateGrid", () => {
+      it("orientation", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coords: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coords.props.orientation).toBe(PieceColor.WHITE);
+
+        testRenderer.update(<Board orientation={PieceColor.BLACK} />);
+
+        expect(coords.props.orientation).toBe(PieceColor.BLACK);
+      });
+
+      it("position", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coords: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coords.props.position).toEqual({});
+
+        testRenderer.update(<Board position={{ e2: PieceCode.WHITE_PAWN }} />);
+
+        expect(coords.props.position).toEqual({ e2: PieceCode.WHITE_PAWN });
       });
     });
   });
