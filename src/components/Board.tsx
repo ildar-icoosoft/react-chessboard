@@ -165,6 +165,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
         </DndProvider>
 
         <div
+          data-testid={"board"}
           className={css.board2}
           style={{
             width: `${width}px`,

@@ -1198,15 +1198,115 @@ Array [
     </div>
   </div>,
   <div
-    className="coordinateGrid"
-    data-testid="coordinate-grid"
+    className="board2"
+    data-testid="board"
     style={
       Object {
         "height": "480px",
         "width": "480px",
       }
     }
-  />,
-  <div />,
+  >
+    <div
+      className="coordinateGrid"
+      data-testid="coordinate-grid"
+      style={
+        Object {
+          "height": "480px",
+          "width": "480px",
+        }
+      }
+    />
+    <div
+      className="coords ranks white"
+      data-testid="coords-ranks"
+    >
+      <div
+        className="coord"
+      >
+        1
+      </div>
+      <div
+        className="coord"
+      >
+        2
+      </div>
+      <div
+        className="coord"
+      >
+        3
+      </div>
+      <div
+        className="coord"
+      >
+        4
+      </div>
+      <div
+        className="coord"
+      >
+        5
+      </div>
+      <div
+        className="coord"
+      >
+        6
+      </div>
+      <div
+        className="coord"
+      >
+        7
+      </div>
+      <div
+        className="coord"
+      >
+        8
+      </div>
+    </div>
+    <div
+      className="coords files white"
+      data-testid="coords-files"
+    >
+      <div
+        className="coord"
+      >
+        a
+      </div>
+      <div
+        className="coord"
+      >
+        b
+      </div>
+      <div
+        className="coord"
+      >
+        c
+      </div>
+      <div
+        className="coord"
+      >
+        d
+      </div>
+      <div
+        className="coord"
+      >
+        e
+      </div>
+      <div
+        className="coord"
+      >
+        f
+      </div>
+      <div
+        className="coord"
+      >
+        g
+      </div>
+      <div
+        className="coord"
+      >
+        h
+      </div>
+    </div>
+  </div>,
 ]
 `;

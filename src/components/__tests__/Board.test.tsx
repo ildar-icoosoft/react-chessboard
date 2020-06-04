@@ -755,5 +755,28 @@ describe("Board", () => {
       const { queryByTestId } = render(<Board />);
       expect(queryByTestId("board-wrapper")).toBeInTheDocument();
     });
+
+    it("should contain data-testid board", () => {
+      const { queryByTestId } = render(<Board />);
+      expect(queryByTestId("board")).toBeInTheDocument();
+    });
+
+    it("board contains width and height styles", () => {
+      const { getByTestId, rerender } = render(<Board />);
+
+      const boardEl = getByTestId("board");
+
+      expect(boardEl).toHaveStyle({
+        width: "480px",
+        height: "480px",
+      });
+
+      rerender(<Board width={240} />);
+
+      expect(boardEl).toHaveStyle({
+        width: "240px",
+        height: "240px",
+      });
+    });
   });
 });
