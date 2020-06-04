@@ -9,6 +9,8 @@ import {
   DEFAULT_SQUARE_WIDTH,
   DEFAULT_TRANSITION_DURATION,
 } from "../constants/constants";
+import classNames from "classnames";
+import css from "./Piece.scss";
 
 export interface PieceProps {
   pieceCode: PieceCode;
@@ -59,13 +61,13 @@ export const Piece: FC<PieceProps> = ({
       {(state) => {
         return (
           <div
-            className={"piece"}
+            className={classNames(css.piece, css[pieceCode])}
             data-testid={`piece-${pieceCode}`}
-            style={{
-              height: width,
-              width,
-              ...getTransitionStyles(transitionFrom, state, transitionDuration),
-            }}
+            style={getTransitionStyles(
+              transitionFrom,
+              state,
+              transitionDuration
+            )}
           >
             <svg viewBox={`1 1 43 43`} width={width} height={width}>
               <g>{getPieceElement(pieceCode, { width: 45, height: 45 })}</g>
