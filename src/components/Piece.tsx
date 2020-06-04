@@ -1,14 +1,10 @@
 import React, { CSSProperties, FC, useEffect, useState } from "react";
 import { PieceCode } from "../enums/PieceCode";
-import { getPieceElement } from "../utils/chess";
 import { Transition } from "react-transition-group";
 import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
 import { TransitionStatus } from "react-transition-group/Transition";
 import { PartialRecord } from "../types/PartialRecord";
-import {
-  DEFAULT_SQUARE_WIDTH,
-  DEFAULT_TRANSITION_DURATION,
-} from "../constants/constants";
+import { DEFAULT_TRANSITION_DURATION } from "../constants/constants";
 import classNames from "classnames";
 import css from "./Piece.scss";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
@@ -57,7 +53,6 @@ const getTransitionStyles = (
 
 export const Piece: FC<PieceProps> = ({
   pieceCode,
-  width = DEFAULT_SQUARE_WIDTH,
   transitionFrom,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   xYCoordinates,
@@ -81,11 +76,7 @@ export const Piece: FC<PieceProps> = ({
               ...getDefaultStyle(xYCoordinates),
               ...getTransitionStyles(transitionFrom, state, transitionDuration),
             }}
-          >
-            <svg viewBox={`1 1 43 43`} width={width} height={width}>
-              <g>{getPieceElement(pieceCode, { width: 45, height: 45 })}</g>
-            </svg>
-          </div>
+          ></div>
         );
       }}
     </Transition>
