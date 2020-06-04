@@ -19,6 +19,7 @@ import { useTransitionPieces } from "../hooks/useTransitionPieces";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { getRankNameFromCoordinates } from "../utils/chess";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
+import { Coords } from "./Coords";
 
 export interface BoardRef {
   getSquareXYCoordinates(coordinates: string): XYCoordinates;
@@ -118,42 +119,45 @@ export const Board = forwardRef<BoardRef, BoardProps>(
     };
 
     return (
-      <DndProvider backend={Backend}>
-        <div
-          data-testid={"board-wrapper"}
-          className={css.board}
-          style={{ width: `${width}px`, height: `${width}px` }}
-        >
-          {rankNames.map((rankName) => {
-            return (
-              <Rank
-                ref={(el) => (rankRefs.current[rankName] = el)}
-                key={rankName}
-                allowDrag={allowDrag}
-                draggable={draggable}
-                transitionDuration={transitionDuration}
-                transitionPieces={transitionPieces}
-                width={width}
-                showNotation={showNotation}
-                rankName={rankName}
-                position={position}
-                squareCssClasses={squareCssClasses}
-                dragStartCssClass={dragStartCssClass}
-                dragEnterSquareCssClass={dragEnterSquareCssClass}
-                orientation={orientation}
-                onSquareClick={onSquareClick}
-                onSquareRightClick={onSquareRightClick}
-                onDragStart={onDragStart}
-                onDragEnterSquare={onDragEnterSquare}
-                onDrop={handleDrop}
-                onMouseEnterSquare={onMouseEnterSquare}
-                onMouseLeaveSquare={onMouseLeaveSquare}
-              />
-            );
-          })}
-        </div>
-        <PieceDragLayer width={width / 8} />
-      </DndProvider>
+      <>
+        <DndProvider backend={Backend}>
+          <div
+            data-testid={"board-wrapper"}
+            className={css.board}
+            style={{ width: `${width}px`, height: `${width}px` }}
+          >
+            {rankNames.map((rankName) => {
+              return (
+                <Rank
+                  ref={(el) => (rankRefs.current[rankName] = el)}
+                  key={rankName}
+                  allowDrag={allowDrag}
+                  draggable={draggable}
+                  transitionDuration={transitionDuration}
+                  transitionPieces={transitionPieces}
+                  width={width}
+                  showNotation={showNotation}
+                  rankName={rankName}
+                  position={position}
+                  squareCssClasses={squareCssClasses}
+                  dragStartCssClass={dragStartCssClass}
+                  dragEnterSquareCssClass={dragEnterSquareCssClass}
+                  orientation={orientation}
+                  onSquareClick={onSquareClick}
+                  onSquareRightClick={onSquareRightClick}
+                  onDragStart={onDragStart}
+                  onDragEnterSquare={onDragEnterSquare}
+                  onDrop={handleDrop}
+                  onMouseEnterSquare={onMouseEnterSquare}
+                  onMouseLeaveSquare={onMouseLeaveSquare}
+                />
+              );
+            })}
+          </div>
+          <PieceDragLayer width={width / 8} />
+        </DndProvider>
+        <Coords orientation={orientation} />
+      </>
     );
   }
 );

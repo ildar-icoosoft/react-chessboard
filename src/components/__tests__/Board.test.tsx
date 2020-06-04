@@ -12,6 +12,7 @@ import { PieceDragLayer } from "../PieceDragLayer";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
+import { Coords } from "../Coords";
 
 jest.useFakeTimers();
 
@@ -32,6 +33,12 @@ describe("Board", () => {
       const testInstance = TestRenderer.create(<Board />).root;
 
       expect(testInstance.findAllByType(PieceDragLayer).length).toBe(1);
+    });
+
+    it("contains 1 Coords", () => {
+      const testInstance = TestRenderer.create(<Board />).root;
+
+      expect(testInstance.findAllByType(Coords).length).toBe(1);
     });
   });
 
@@ -484,6 +491,23 @@ describe("Board", () => {
         testRenderer.update(<Board width={240} />);
 
         expect(pieceDragLayer.props.width).toBe(240 / 8);
+      });
+    });
+
+    describe("Coords", () => {
+      it("orientation", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coords: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Coords
+        );
+
+        expect(coords.props.orientation).toBe(PieceColor.WHITE);
+
+        testRenderer.update(<Board orientation={PieceColor.BLACK} />);
+
+        expect(coords.props.orientation).toBe(PieceColor.BLACK);
       });
     });
   });

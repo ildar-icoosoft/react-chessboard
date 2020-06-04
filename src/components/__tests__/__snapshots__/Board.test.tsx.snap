@@ -1,1198 +1,1201 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Board Snapshot 1`] = `
-<div
-  className="board"
-  data-testid="board-wrapper"
-  style={
-    Object {
-      "height": "480px",
-      "width": "480px",
-    }
-  }
->
+Array [
   <div
-    className="rank"
-    data-testid="rank-8"
+    className="board"
+    data-testid="board-wrapper"
     style={
       Object {
+        "height": "480px",
         "width": "480px",
       }
     }
   >
     <div
-      className="square light"
-      data-testid="square-a8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-8"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation lightSquare"
-        data-testid="notation-rank-8"
+        className="square light"
+        data-testid="square-a8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        8
+        <div
+          className="rankNotation lightSquare"
+          data-testid="notation-rank-8"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          8
+        </div>
       </div>
+      <div
+        className="square dark"
+        data-testid="square-b8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-c8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-d8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-e8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-f8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-g8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-h8"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square dark"
-      data-testid="square-b8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-7"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-c8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-d8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-e8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-f8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-g8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-h8"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-7"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square dark"
-      data-testid="square-a7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation"
-        data-testid="notation-rank-7"
+        className="square dark"
+        data-testid="square-a7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        7
+        <div
+          className="rankNotation"
+          data-testid="notation-rank-7"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          7
+        </div>
       </div>
+      <div
+        className="square light"
+        data-testid="square-b7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-c7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-d7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-e7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-f7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-g7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-h7"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square light"
-      data-testid="square-b7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-6"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-c7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-d7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-e7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-f7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-g7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-h7"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-6"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square light"
-      data-testid="square-a6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation lightSquare"
-        data-testid="notation-rank-6"
+        className="square light"
+        data-testid="square-a6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        6
+        <div
+          className="rankNotation lightSquare"
+          data-testid="notation-rank-6"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          6
+        </div>
       </div>
+      <div
+        className="square dark"
+        data-testid="square-b6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-c6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-d6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-e6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-f6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-g6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-h6"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square dark"
-      data-testid="square-b6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-5"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-c6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-d6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-e6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-f6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-g6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-h6"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-5"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square dark"
-      data-testid="square-a5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation"
-        data-testid="notation-rank-5"
+        className="square dark"
+        data-testid="square-a5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        5
+        <div
+          className="rankNotation"
+          data-testid="notation-rank-5"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          5
+        </div>
       </div>
+      <div
+        className="square light"
+        data-testid="square-b5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-c5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-d5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-e5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-f5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-g5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-h5"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square light"
-      data-testid="square-b5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-4"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-c5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-d5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-e5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-f5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-g5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-h5"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-4"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square light"
-      data-testid="square-a4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation lightSquare"
-        data-testid="notation-rank-4"
+        className="square light"
+        data-testid="square-a4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        4
+        <div
+          className="rankNotation lightSquare"
+          data-testid="notation-rank-4"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          4
+        </div>
       </div>
+      <div
+        className="square dark"
+        data-testid="square-b4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-c4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-d4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-e4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-f4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-g4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-h4"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square dark"
-      data-testid="square-b4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-3"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-c4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-d4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-e4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-f4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-g4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-h4"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-3"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square dark"
-      data-testid="square-a3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation"
-        data-testid="notation-rank-3"
+        className="square dark"
+        data-testid="square-a3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        3
+        <div
+          className="rankNotation"
+          data-testid="notation-rank-3"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          3
+        </div>
       </div>
+      <div
+        className="square light"
+        data-testid="square-b3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-c3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-d3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-e3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-f3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-g3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-h3"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square light"
-      data-testid="square-b3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-2"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-c3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-d3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-e3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-f3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-g3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-h3"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-2"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square light"
-      data-testid="square-a2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation lightSquare"
-        data-testid="notation-rank-2"
+        className="square light"
+        data-testid="square-a2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        2
+        <div
+          className="rankNotation lightSquare"
+          data-testid="notation-rank-2"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          2
+        </div>
       </div>
+      <div
+        className="square dark"
+        data-testid="square-b2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-c2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-d2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-e2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-f2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square light"
+        data-testid="square-g2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
+      <div
+        className="square dark"
+        data-testid="square-h2"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        style={
+          Object {
+            "height": "60px",
+            "width": "60px",
+          }
+        }
+      />
     </div>
     <div
-      className="square dark"
-      data-testid="square-b2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
+      className="rank"
+      data-testid="rank-1"
       style={
         Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-c2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-d2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-e2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-f2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square light"
-      data-testid="square-g2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-    <div
-      className="square dark"
-      data-testid="square-h2"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    />
-  </div>
-  <div
-    className="rank"
-    data-testid="rank-1"
-    style={
-      Object {
-        "width": "480px",
-      }
-    }
-  >
-    <div
-      className="square dark"
-      data-testid="square-a1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
+          "width": "480px",
         }
       }
     >
       <div
-        className="rankNotation"
-        data-testid="notation-rank-1"
+        className="square dark"
+        data-testid="square-a1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingRight": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        1
+        <div
+          className="rankNotation"
+          data-testid="notation-rank-1"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingRight": "50px",
+            }
+          }
+        >
+          1
+        </div>
+        <div
+          className="fileNotation"
+          data-testid="notation-file-a"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          a
+        </div>
       </div>
       <div
-        className="fileNotation"
-        data-testid="notation-file-a"
+        className="square light"
+        data-testid="square-b1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        a
+        <div
+          className="fileNotation lightSquare"
+          data-testid="notation-file-b"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          b
+        </div>
       </div>
-    </div>
-    <div
-      className="square light"
-      data-testid="square-b1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
       <div
-        className="fileNotation lightSquare"
-        data-testid="notation-file-b"
+        className="square dark"
+        data-testid="square-c1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        b
+        <div
+          className="fileNotation"
+          data-testid="notation-file-c"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          c
+        </div>
       </div>
-    </div>
-    <div
-      className="square dark"
-      data-testid="square-c1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
       <div
-        className="fileNotation"
-        data-testid="notation-file-c"
+        className="square light"
+        data-testid="square-d1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        c
+        <div
+          className="fileNotation lightSquare"
+          data-testid="notation-file-d"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          d
+        </div>
       </div>
-    </div>
-    <div
-      className="square light"
-      data-testid="square-d1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
       <div
-        className="fileNotation lightSquare"
-        data-testid="notation-file-d"
+        className="square dark"
+        data-testid="square-e1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        d
+        <div
+          className="fileNotation"
+          data-testid="notation-file-e"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          e
+        </div>
       </div>
-    </div>
-    <div
-      className="square dark"
-      data-testid="square-e1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
       <div
-        className="fileNotation"
-        data-testid="notation-file-e"
+        className="square light"
+        data-testid="square-f1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        e
+        <div
+          className="fileNotation lightSquare"
+          data-testid="notation-file-f"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          f
+        </div>
       </div>
-    </div>
-    <div
-      className="square light"
-      data-testid="square-f1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
       <div
-        className="fileNotation lightSquare"
-        data-testid="notation-file-f"
+        className="square dark"
+        data-testid="square-g1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        f
+        <div
+          className="fileNotation"
+          data-testid="notation-file-g"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
+          }
+        >
+          g
+        </div>
       </div>
-    </div>
-    <div
-      className="square dark"
-      data-testid="square-g1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
       <div
-        className="fileNotation"
-        data-testid="notation-file-g"
+        className="square light"
+        data-testid="square-h1"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
         style={
           Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+            "height": "60px",
+            "width": "60px",
           }
         }
       >
-        g
-      </div>
-    </div>
-    <div
-      className="square light"
-      data-testid="square-h1"
-      onClick={[Function]}
-      onContextMenu={[Function]}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      style={
-        Object {
-          "height": "60px",
-          "width": "60px",
-        }
-      }
-    >
-      <div
-        className="fileNotation lightSquare"
-        data-testid="notation-file-h"
-        style={
-          Object {
-            "fontSize": "10px",
-            "paddingLeft": "50px",
+        <div
+          className="fileNotation lightSquare"
+          data-testid="notation-file-h"
+          style={
+            Object {
+              "fontSize": "10px",
+              "paddingLeft": "50px",
+            }
           }
-        }
-      >
-        h
+        >
+          h
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </div>,
+  <div />,
+]
 `;
