@@ -46,6 +46,38 @@ describe("Square", () => {
     });
   });
 
+  describe("children components props", () => {
+    describe("Piece", () => {
+      it("pieceCode", () => {
+        const testInstance = TestRenderer.create(
+          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} />
+        ).root;
+
+        const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Piece
+        );
+        expect(piece.props.pieceCode).toBe(PieceCode.WHITE_PAWN);
+      });
+
+      it("width", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} />
+        );
+        const testInstance = testRenderer.root;
+
+        const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Piece
+        );
+        expect(piece.props.width).toBe(60);
+
+        testRenderer.update(
+          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} width={240} />
+        );
+        expect(piece.props.width).toBe(30);
+      });
+    });
+  });
+
   describe("DOM structure", () => {
     it("should contain data-testid coordinateGrid", () => {
       const { queryByTestId } = render(<CoordinateGrid />);

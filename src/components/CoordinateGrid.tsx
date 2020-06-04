@@ -23,7 +23,7 @@ export const CoordinateGrid: FC<CoordinateGridProps> = ({
       style={{ width: `${width}px`, height: `${width}px` }}
     >
       {_toPairs(position).map((pair) => (
-        <Piece pieceCode={pair[1]} key={pair[0]} />
+        <Piece pieceCode={pair[1]} width={width / 8} key={pair[0]} />
       ))}
     </div>
   );
