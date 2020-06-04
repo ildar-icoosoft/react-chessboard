@@ -61,11 +61,11 @@ export const Piece: FC<PieceProps> = ({
           <div
             className={"piece"}
             data-testid={`piece-${pieceCode}`}
-            style={getTransitionStyles(
-              transitionFrom,
-              state,
-              transitionDuration
-            )}
+            style={{
+              height: width,
+              width,
+              ...getTransitionStyles(transitionFrom, state, transitionDuration),
+            }}
           >
             <svg viewBox={`1 1 43 43`} width={width} height={width}>
               <g>{getPieceElement(pieceCode, { width: 45, height: 45 })}</g>

@@ -66,6 +66,24 @@ describe("Piece", () => {
     });
   });
 
+  it("contains width and height styles", () => {
+    const { getByTestId, rerender } = render(
+      <Piece pieceCode={PieceCode.WHITE_KING} />
+    );
+
+    const el: HTMLElement = getByTestId(`piece-${PieceCode.WHITE_KING}`);
+    expect(el).toHaveStyle({
+      width: "60px",
+      height: "60px",
+    });
+
+    rerender(<Piece pieceCode={PieceCode.WHITE_KING} width={30} />);
+    expect(el).toHaveStyle({
+      width: "30px",
+      height: "30px",
+    });
+  });
+
   it("does not contain Piece move CSS transition styles if there is no transitionFrom prop", () => {
     const { getByTestId } = render(<Piece pieceCode={PieceCode.WHITE_KING} />);
 

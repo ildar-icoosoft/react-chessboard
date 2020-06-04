@@ -4,7 +4,12 @@ exports[`Piece Snapshot 1`] = `
 <div
   className="piece"
   data-testid="piece-wK"
-  style={Object {}}
+  style={
+    Object {
+      "height": 60,
+      "width": 60,
+    }
+  }
 >
   <svg
     height={60}
