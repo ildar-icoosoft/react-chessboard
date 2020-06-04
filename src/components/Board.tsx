@@ -164,13 +164,21 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           <PieceDragLayer width={width / 8} />
         </DndProvider>
 
-        <CoordinateGrid
-          orientation={orientation}
-          position={position}
-          width={width}
-        />
+        <div
+          className={css.board2}
+          style={{
+            width: `${width}px`,
+            height: `${width}px`,
+          }}
+        >
+          <CoordinateGrid
+            orientation={orientation}
+            position={position}
+            width={width}
+          />
 
-        {showCoordinates && <Coords orientation={orientation} />}
+          {showCoordinates && <Coords orientation={orientation} />}
+        </div>
       </>
     );
   }

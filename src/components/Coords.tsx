@@ -18,28 +18,30 @@ const getOrienationCssClass = (orientation: PieceColor) => {
 export const Coords: FC<CoordsProps> = ({ orientation = PieceColor.WHITE }) => {
   return (
     <>
-      <div data-testid={"coords-ranks"}>
+      <div
+        data-testid={"coords-ranks"}
+        className={classNames(
+          css.coords,
+          css.ranks,
+          css[getOrienationCssClass(orientation)]
+        )}
+      >
         {RANK_NAMES.map((item) => (
-          <div
-            className={classNames(
-              css.coords,
-              css.ranks,
-              css[getOrienationCssClass(orientation)]
-            )}
-          >
+          <div key={item} className={css.coord}>
             {item}
           </div>
         ))}
       </div>
-      <div data-testid={"coords-files"}>
+      <div
+        data-testid={"coords-files"}
+        className={classNames(
+          css.coords,
+          css.files,
+          css[getOrienationCssClass(orientation)]
+        )}
+      >
         {FILE_NAMES.map((item) => (
-          <div
-            className={classNames(
-              css.coords,
-              css.files,
-              css[getOrienationCssClass(orientation)]
-            )}
-          >
+          <div key={item} className={css.coord}>
             {item}
           </div>
         ))}
