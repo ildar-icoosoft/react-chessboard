@@ -36,9 +36,14 @@ describe("Board", () => {
     });
 
     it("contains 1 Coords", () => {
-      const testInstance = TestRenderer.create(<Board />).root;
+      const testRenderer = TestRenderer.create(<Board />);
+      const testInstance = testRenderer.root;
 
       expect(testInstance.findAllByType(Coords).length).toBe(1);
+
+      testRenderer.update(<Board showCoordinates={false}></Board>);
+
+      expect(testInstance.findAllByType(Coords).length).toBe(0);
     });
   });
 

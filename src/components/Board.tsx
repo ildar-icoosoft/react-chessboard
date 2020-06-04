@@ -35,6 +35,7 @@ export interface BoardProps {
   transitionDuration?: number;
   width?: number;
   showNotation?: boolean;
+  showCoordinates?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
 
   onSquareClick?(coordinates: string): void;
@@ -61,6 +62,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
       width = DEFAULT_BOARD_WIDTH,
       allowDrag,
       showNotation = true,
+      showCoordinates = true,
       squareCssClasses,
       transitionDuration = DEFAULT_TRANSITION_DURATION,
       dragStartCssClass,
@@ -156,7 +158,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           </div>
           <PieceDragLayer width={width / 8} />
         </DndProvider>
-        <Coords orientation={orientation} />
+        {showCoordinates && <Coords orientation={orientation} />}
       </>
     );
   }
