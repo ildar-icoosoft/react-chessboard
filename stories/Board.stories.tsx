@@ -4,15 +4,12 @@ import { startPosition } from "../src/constants/constants";
 import { PieceDropEvent } from "../src/interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../src/interfaces/PieceDragStartEvent";
 import { PieceColor } from "../src/enums/PieceColor";
-import { PieceCode } from "../src/enums/PieceCode";
 
 export default {
   title: "Board",
 };
 
-export const SimpleBoard = () => (
-  <Board position={{ e2: PieceCode.WHITE_PAWN }} />
-);
+export const SimpleBoard = () => <Board position={startPosition} />;
 
 SimpleBoard.story = {
   parameters: {
