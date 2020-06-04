@@ -127,7 +127,11 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           <div
             data-testid={"board-wrapper"}
             className={css.board}
-            style={{ width: `${width}px`, height: `${width}px` }}
+            style={{
+              width: `${width}px`,
+              height: `${width}px`,
+              display: "none",
+            }}
           >
             {rankNames.map((rankName) => {
               return (
@@ -160,7 +164,11 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           <PieceDragLayer width={width / 8} />
         </DndProvider>
 
-        <CoordinateGrid orientation={orientation} position={position} />
+        <CoordinateGrid
+          orientation={orientation}
+          position={position}
+          width={width}
+        />
 
         {showCoordinates && <Coords orientation={orientation} />}
       </>

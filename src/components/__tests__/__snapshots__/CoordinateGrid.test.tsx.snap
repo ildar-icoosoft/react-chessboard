@@ -1,3 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Square Snapshot 1`] = `null`;
+exports[`Square Snapshot 1`] = `
+<div
+  className="coordinateGrid"
+  data-testid="coordinate-grid"
+  style={
+    Object {
+      "height": "480px",
+      "width": "480px",
+    }
+  }
+/>
+`;

@@ -529,30 +529,47 @@ describe("Board", () => {
         const testRenderer = TestRenderer.create(<Board />);
         const testInstance = testRenderer.root;
 
-        const coords: TestRenderer.ReactTestInstance = testInstance.findByType(
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
           CoordinateGrid
         );
 
-        expect(coords.props.orientation).toBe(PieceColor.WHITE);
+        expect(coordinateGrid.props.orientation).toBe(PieceColor.WHITE);
 
         testRenderer.update(<Board orientation={PieceColor.BLACK} />);
 
-        expect(coords.props.orientation).toBe(PieceColor.BLACK);
+        expect(coordinateGrid.props.orientation).toBe(PieceColor.BLACK);
       });
 
       it("position", () => {
         const testRenderer = TestRenderer.create(<Board />);
         const testInstance = testRenderer.root;
 
-        const coords: TestRenderer.ReactTestInstance = testInstance.findByType(
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
           CoordinateGrid
         );
 
-        expect(coords.props.position).toEqual({});
+        expect(coordinateGrid.props.position).toEqual({});
 
         testRenderer.update(<Board position={{ e2: PieceCode.WHITE_PAWN }} />);
 
-        expect(coords.props.position).toEqual({ e2: PieceCode.WHITE_PAWN });
+        expect(coordinateGrid.props.position).toEqual({
+          e2: PieceCode.WHITE_PAWN,
+        });
+      });
+
+      it("width", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.width).toBe(480);
+
+        testRenderer.update(<Board width={800} />);
+
+        expect(coordinateGrid.props.width).toBe(800);
       });
     });
   });

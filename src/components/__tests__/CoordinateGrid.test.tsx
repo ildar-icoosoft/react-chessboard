@@ -4,6 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { Piece } from "../Piece";
 import { PieceCode } from "../../enums/PieceCode";
+import { render } from "@testing-library/react";
 
 jest.useFakeTimers();
 
@@ -42,6 +43,31 @@ describe("Square", () => {
           );
         }).length
       ).toBe(1);
+    });
+  });
+
+  describe("DOM structure", () => {
+    it("should contain data-testid coordinateGrid", () => {
+      const { queryByTestId } = render(<CoordinateGrid />);
+      expect(queryByTestId("coordinate-grid")).toBeInTheDocument();
+    });
+
+    it("coordinateGrid should have width and height styles", () => {
+      const { getByTestId, rerender } = render(<CoordinateGrid />);
+
+      const coordinateGridEl = getByTestId("coordinate-grid");
+
+      expect(coordinateGridEl).toHaveStyle({
+        width: "480px",
+        height: "480px",
+      });
+
+      rerender(<CoordinateGrid width={700} />);
+
+      expect(coordinateGridEl).toHaveStyle({
+        width: "700px",
+        height: "700px",
+      });
     });
   });
 });

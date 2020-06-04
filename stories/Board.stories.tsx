@@ -9,7 +9,7 @@ export default {
   title: "Board",
 };
 
-export const SimpleBoard = () => <Board position={startPosition} />;
+export const SimpleBoard = () => <Board position={{}} />;
 
 SimpleBoard.story = {
   parameters: {
