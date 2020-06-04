@@ -75,6 +75,29 @@ describe("Square", () => {
         );
         expect(piece.props.width).toBe(30);
       });
+
+      it("xYCoordinates", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} />
+        );
+        const testInstance = testRenderer.root;
+
+        const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Piece
+        );
+        expect(piece.props.xYCoordinates).toEqual({
+          x: 240,
+          y: 360,
+        });
+
+        testRenderer.update(
+          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} width={240} />
+        );
+        expect(piece.props.xYCoordinates).toEqual({
+          x: 120,
+          y: 180,
+        });
+      });
     });
   });
 

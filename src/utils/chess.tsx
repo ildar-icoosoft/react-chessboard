@@ -19,6 +19,7 @@ import {
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
 import { without as _without } from "lodash";
+import { XYCoordinates } from "../interfaces/XYCoordinates";
 
 /**
  * @param a1-h8
@@ -188,4 +189,26 @@ export const getPositionDiff = (
   }
 
   return result;
+};
+
+export const getPieceXYCoordinates = (
+  coordinates: string,
+  boardWidth: number,
+  orientation: PieceColor
+): XYCoordinates => {
+  const rankIndex: number = getRankIndex(coordinates);
+  const fileIndex: number = getFileIndex(coordinates);
+
+  const pieceWidth: number = boardWidth / 8;
+
+  return {
+    x:
+      orientation === PieceColor.WHITE
+        ? fileIndex * pieceWidth
+        : (7 - fileIndex) * pieceWidth,
+    y:
+      orientation === PieceColor.WHITE
+        ? (7 - rankIndex) * pieceWidth
+        : rankIndex * pieceWidth,
+  };
 };

@@ -6,9 +6,10 @@ import {
   getNearestSquare,
   getPieceCoordinatesFromPosition,
   getPieceElement,
+  getPieceXYCoordinates,
+  getPositionDiff,
   getRankIndex,
   getRankNameFromCoordinates,
-  getPositionDiff,
   isLightSquare,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
@@ -106,6 +107,28 @@ describe("Chess utils", () => {
       a4: "a3",
       b4: "b2",
       f4: "c1",
+    });
+  });
+
+  it("getPieceXYCoordinates()", () => {
+    expect(getPieceXYCoordinates("a8", 480, PieceColor.WHITE)).toEqual({
+      x: 0,
+      y: 0,
+    });
+
+    expect(getPieceXYCoordinates("h1", 480, PieceColor.BLACK)).toEqual({
+      x: 0,
+      y: 0,
+    });
+
+    expect(getPieceXYCoordinates("a4", 480, PieceColor.WHITE)).toEqual({
+      x: 0,
+      y: 240,
+    });
+
+    expect(getPieceXYCoordinates("a4", 480, PieceColor.BLACK)).toEqual({
+      x: 420,
+      y: 180,
     });
   });
 });

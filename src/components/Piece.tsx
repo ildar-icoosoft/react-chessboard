@@ -11,12 +11,14 @@ import {
 } from "../constants/constants";
 import classNames from "classnames";
 import css from "./Piece.scss";
+import { XYCoordinates } from "../interfaces/XYCoordinates";
 
 export interface PieceProps {
   pieceCode: PieceCode;
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
+  xYCoordinates: XYCoordinates;
 }
 
 const getTransitionStyles = (

@@ -5,6 +5,7 @@ import { toPairs as _toPairs } from "lodash";
 import { Piece } from "./Piece";
 import css from "./CoordinateGrid.scss";
 import { DEFAULT_BOARD_WIDTH } from "../constants/constants";
+import { getPieceXYCoordinates } from "../utils/chess";
 
 export interface CoordinateGridProps {
   orientation?: PieceColor;
@@ -15,6 +16,7 @@ export interface CoordinateGridProps {
 export const CoordinateGrid: FC<CoordinateGridProps> = ({
   position = {},
   width = DEFAULT_BOARD_WIDTH,
+  orientation = PieceColor.WHITE,
 }) => {
   return (
     <div
@@ -23,7 +25,12 @@ export const CoordinateGrid: FC<CoordinateGridProps> = ({
       style={{ width: `${width}px`, height: `${width}px` }}
     >
       {_toPairs(position).map((pair) => (
-        <Piece pieceCode={pair[1]} width={width / 8} key={pair[0]} />
+        <Piece
+          pieceCode={pair[1]}
+          width={width / 8}
+          xYCoordinates={getPieceXYCoordinates(pair[0], width, orientation)}
+          key={pair[0]}
+        />
       ))}
     </div>
   );
