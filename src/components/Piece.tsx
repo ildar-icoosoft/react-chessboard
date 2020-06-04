@@ -18,8 +18,19 @@ export interface PieceProps {
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
-  xYCoordinates: XYCoordinates;
+  xYCoordinates?: XYCoordinates;
 }
+
+const getDefaultStyle = (
+  xYCoordinates: XYCoordinates | undefined
+): CSSProperties => {
+  if (!xYCoordinates) {
+    return {};
+  }
+  return {
+    transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
+  };
+};
 
 const getTransitionStyles = (
   transitionFrom: SquareTransitionFrom | undefined,
@@ -49,6 +60,7 @@ export const Piece: FC<PieceProps> = ({
   width = DEFAULT_SQUARE_WIDTH,
   transitionFrom,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
+  xYCoordinates,
 }) => {
   const [inProp, setInProp] = useState<boolean>(false);
 
@@ -65,11 +77,10 @@ export const Piece: FC<PieceProps> = ({
           <div
             className={classNames(css.piece, css[pieceCode])}
             data-testid={`piece-${pieceCode}`}
-            style={getTransitionStyles(
-              transitionFrom,
-              state,
-              transitionDuration
-            )}
+            style={{
+              ...getDefaultStyle(xYCoordinates),
+              ...getTransitionStyles(transitionFrom, state, transitionDuration),
+            }}
           >
             <svg viewBox={`1 1 43 43`} width={width} height={width}>
               <g>{getPieceElement(pieceCode, { width: 45, height: 45 })}</g>

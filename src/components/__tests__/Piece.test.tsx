@@ -65,6 +65,25 @@ describe("Piece", () => {
       expect(el.style.zIndex).toBe("");
     });
 
+    it("contains transform:translate style if xYCoordinates prop is not empty", () => {
+      const { getByTestId, rerender } = render(
+        <Piece pieceCode={PieceCode.WHITE_KING} />
+      );
+
+      const el: HTMLElement = getByTestId(`piece-${PieceCode.WHITE_KING}`);
+      expect(el.style.transform).toBe("");
+
+      rerender(
+        <Piece
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 100, y: 300 }}
+        />
+      );
+      expect(el).toHaveStyle({
+        transform: `translate(100px, 300px)`,
+      });
+    });
+
     it("does not contain Piece move CSS transition styles if there is no transitionFrom prop", () => {
       const { getByTestId } = render(
         <Piece pieceCode={PieceCode.WHITE_KING} />
