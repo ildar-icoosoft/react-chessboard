@@ -4,7 +4,8 @@ import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { Piece } from "../Piece";
 import { PieceCode } from "../../enums/PieceCode";
-import { render, fireEvent } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
+import { PieceColor } from "../../enums/PieceColor";
 
 jest.useFakeTimers();
 
@@ -106,27 +107,44 @@ describe("Square", () => {
       const onClick = jest.fn();
       const onRightClick = jest.fn();
 
-      const { getByTestId } = render(
+      const { getByTestId, rerender } = render(
         <CoordinateGrid onClick={onClick} onRightClick={onRightClick} />
       );
 
-      fireEvent.click(getByTestId("coordinate-grid"), {
+      const coordinateGridEl = getByTestId("coordinate-grid");
+
+      fireEvent.click(coordinateGridEl, {
         clientX: 60,
         clientY: 60,
       });
 
-      expect(onClick).toHaveBeenCalledTimes(1);
-      expect(onClick).toBeCalledWith("b7");
+      rerender(
+        <CoordinateGrid
+          onClick={onClick}
+          onRightClick={onRightClick}
+          orientation={PieceColor.BLACK}
+        />
+      );
+
+      fireEvent.click(coordinateGridEl, {
+        clientX: 479,
+        clientY: 0,
+      });
+
+      expect(onClick).toHaveBeenCalledTimes(2);
+
+      expect(onClick).toHaveBeenNthCalledWith(1, "b7");
+      expect(onClick).toHaveBeenNthCalledWith(2, "a1");
 
       expect(onRightClick).toHaveBeenCalledTimes(0);
     });
 
-    /*  it("Click if no callback", () => {
-      const {getByTestId} = render(<CoordinateGrid />);
+    it("Click if no callback", () => {
+      const { getByTestId } = render(<CoordinateGrid />);
       expect(() => {
-        fireEvent.click(getByTestId("square-a1"));
+        fireEvent.click(getByTestId("coordinate-grid"));
       }).not.toThrow();
-    });*/
+    });
   });
 
   describe("DOM structure", () => {
