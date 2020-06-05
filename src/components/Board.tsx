@@ -176,6 +176,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
             orientation={orientation}
             position={position}
             width={width}
+            onClick={onSquareClick}
           />
 
           {showCoordinates && <Coords orientation={orientation} />}

@@ -582,6 +582,26 @@ describe("Board", () => {
         <Board onSquareClick={onSquareClick} />
       ).root;
 
+      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+        CoordinateGrid
+      );
+
+      TestRenderer.act(() => {
+        coordinateGrid.props.onClick("e2");
+      });
+
+      expect(onSquareClick).toHaveBeenCalledTimes(1);
+
+      expect(onSquareClick).toBeCalledWith("e2");
+    });
+
+    it("onSquareClick", () => {
+      const onSquareClick = jest.fn();
+
+      const testInstance = TestRenderer.create(
+        <Board onSquareClick={onSquareClick} />
+      ).root;
+
       const rank: TestRenderer.ReactTestInstance = testInstance.findByProps({
         rankName: "2",
       });
