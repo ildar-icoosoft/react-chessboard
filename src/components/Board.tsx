@@ -164,23 +164,25 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           <PieceDragLayer width={width / 8} />
         </DndProvider>
 
-        <div
-          data-testid={"board"}
-          className={css.board2}
-          style={{
-            width: `${width}px`,
-            height: `${width}px`,
-          }}
-        >
-          <CoordinateGrid
-            orientation={orientation}
-            position={position}
-            width={width}
-            onClick={onSquareClick}
-          />
+        <DndProvider backend={Backend}>
+          <div
+            data-testid={"board"}
+            className={css.board2}
+            style={{
+              width: `${width}px`,
+              height: `${width}px`,
+            }}
+          >
+            <CoordinateGrid
+              orientation={orientation}
+              position={position}
+              width={width}
+              onClick={onSquareClick}
+            />
 
-          {showCoordinates && <Coords orientation={orientation} />}
-        </div>
+            {showCoordinates && <Coords orientation={orientation} />}
+          </div>
+        </DndProvider>
       </>
     );
   }

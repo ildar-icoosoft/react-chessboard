@@ -1,29 +1,33 @@
-import React from "react";
+import React, { createRef } from "react";
 import TestRenderer from "react-test-renderer";
 import "@testing-library/jest-dom/extend-expect";
-import { CoordinateGrid } from "../CoordinateGrid";
+import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
 import { Piece } from "../Piece";
 import { PieceCode } from "../../enums/PieceCode";
 import { fireEvent, render, createEvent } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
+import { wrapInTestContext } from "react-dnd-test-utils";
+import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
 
 jest.useFakeTimers();
 
-describe("Square", () => {
+describe("CoordinateGrid", () => {
+  const CoordinateGridWithDnd = wrapInTestContext(CoordinateGrid);
+
   it("Snapshot", () => {
-    const tree = TestRenderer.create(<CoordinateGrid />).toJSON();
+    const tree = TestRenderer.create(<CoordinateGridWithDnd />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   describe("children components", () => {
     it("contains 1 Piece", () => {
-      const testRenderer = TestRenderer.create(<CoordinateGrid />);
+      const testRenderer = TestRenderer.create(<CoordinateGridWithDnd />);
       const testInstance = testRenderer.root;
 
       expect(testInstance.findAllByType(Piece).length).toBe(0);
 
       testRenderer.update(
-        <CoordinateGrid
+        <CoordinateGridWithDnd
           position={{ e2: PieceCode.WHITE_PAWN, d5: PieceCode.BLACK_BISHOP }}
         />
       );
@@ -51,7 +55,7 @@ describe("Square", () => {
     describe("Piece", () => {
       it("pieceCode", () => {
         const testInstance = TestRenderer.create(
-          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} />
+          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
         ).root;
 
         const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
@@ -62,7 +66,7 @@ describe("Square", () => {
 
       it("width", () => {
         const testRenderer = TestRenderer.create(
-          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} />
+          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
         );
         const testInstance = testRenderer.root;
 
@@ -72,14 +76,17 @@ describe("Square", () => {
         expect(piece.props.width).toBe(60);
 
         testRenderer.update(
-          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} width={240} />
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_PAWN }}
+            width={240}
+          />
         );
         expect(piece.props.width).toBe(30);
       });
 
       it("xYCoordinates", () => {
         const testRenderer = TestRenderer.create(
-          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} />
+          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
         );
         const testInstance = testRenderer.root;
 
@@ -92,7 +99,10 @@ describe("Square", () => {
         });
 
         testRenderer.update(
-          <CoordinateGrid position={{ e2: PieceCode.WHITE_PAWN }} width={240} />
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_PAWN }}
+            width={240}
+          />
         );
         expect(piece.props.xYCoordinates).toEqual({
           x: 120,
@@ -108,7 +118,7 @@ describe("Square", () => {
       const onRightClick = jest.fn();
 
       const { getByTestId, rerender } = render(
-        <CoordinateGrid onClick={onClick} onRightClick={onRightClick} />
+        <CoordinateGridWithDnd onClick={onClick} onRightClick={onRightClick} />
       );
 
       const coordinateGridEl = getByTestId("coordinate-grid");
@@ -119,7 +129,7 @@ describe("Square", () => {
       });
 
       rerender(
-        <CoordinateGrid
+        <CoordinateGridWithDnd
           onClick={onClick}
           onRightClick={onRightClick}
           orientation={PieceColor.BLACK}
@@ -140,7 +150,7 @@ describe("Square", () => {
     });
 
     it("Click if no callback", () => {
-      const { getByTestId } = render(<CoordinateGrid />);
+      const { getByTestId } = render(<CoordinateGridWithDnd />);
       expect(() => {
         fireEvent.click(getByTestId("coordinate-grid"));
       }).not.toThrow();
@@ -151,7 +161,7 @@ describe("Square", () => {
       const onRightClick = jest.fn();
 
       const { getByTestId, rerender } = render(
-        <CoordinateGrid onClick={onClick} onRightClick={onRightClick} />
+        <CoordinateGridWithDnd onClick={onClick} onRightClick={onRightClick} />
       );
 
       const coordinateGridEl = getByTestId("coordinate-grid");
@@ -162,7 +172,7 @@ describe("Square", () => {
       });
 
       rerender(
-        <CoordinateGrid
+        <CoordinateGridWithDnd
           onClick={onClick}
           onRightClick={onRightClick}
           orientation={PieceColor.BLACK}
@@ -183,7 +193,7 @@ describe("Square", () => {
     });
 
     it("Right Click event must be prevented", () => {
-      const { getByTestId } = render(<CoordinateGrid />);
+      const { getByTestId } = render(<CoordinateGridWithDnd />);
 
       const coordinateGridEl = getByTestId("coordinate-grid");
 
@@ -198,21 +208,35 @@ describe("Square", () => {
     });
 
     it("Right Click if no callback", () => {
-      const { getByTestId } = render(<CoordinateGrid />);
+      const { getByTestId } = render(<CoordinateGridWithDnd />);
       expect(() => {
         fireEvent.contextMenu(getByTestId("coordinate-grid"));
       }).not.toThrow();
     });
   });
 
+  describe("methods", () => {
+    it("getDropHandlerId()", () => {
+      const dragAndDropRef = createRef<ReactDndRefType>();
+
+      TestRenderer.create(<CoordinateGridWithDnd ref={dragAndDropRef} />);
+
+      const coordinateGridRef: CoordinateGridRef = (dragAndDropRef.current as ReactDndRefType).getDecoratedComponent<
+        CoordinateGridRef
+      >();
+
+      expect(() => coordinateGridRef.getDropHandlerId()).toBeTruthy();
+    });
+  });
+
   describe("DOM structure", () => {
     it("should contain data-testid coordinateGrid", () => {
-      const { queryByTestId } = render(<CoordinateGrid />);
+      const { queryByTestId } = render(<CoordinateGridWithDnd />);
       expect(queryByTestId("coordinate-grid")).toBeInTheDocument();
     });
 
     it("coordinateGrid should have width and height styles", () => {
-      const { getByTestId, rerender } = render(<CoordinateGrid />);
+      const { getByTestId, rerender } = render(<CoordinateGridWithDnd />);
 
       const coordinateGridEl = getByTestId("coordinate-grid");
 
@@ -221,7 +245,7 @@ describe("Square", () => {
         height: "480px",
       });
 
-      rerender(<CoordinateGrid width={700} />);
+      rerender(<CoordinateGridWithDnd width={700} />);
 
       expect(coordinateGridEl).toHaveStyle({
         width: "700px",
