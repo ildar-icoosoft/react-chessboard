@@ -59,7 +59,7 @@ describe("DraggablePiece", () => {
   });
 
   describe("methods", () => {
-    it("getDropHandlerId()", () => {
+    it("getDragHandlerId()", () => {
       const dragAndDropRef = createRef<ReactDndRefType>();
 
       TestRenderer.create(
