@@ -1211,6 +1211,7 @@ Array [
       className="coordinateGrid"
       data-testid="coordinate-grid"
       onClick={[Function]}
+      onContextMenu={[Function]}
       style={
         Object {
           "height": "480px",

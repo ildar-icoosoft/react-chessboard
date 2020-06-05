@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { Piece } from "../Piece";
 import { PieceCode } from "../../enums/PieceCode";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, createEvent } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 
 jest.useFakeTimers();
@@ -143,6 +143,64 @@ describe("Square", () => {
       const { getByTestId } = render(<CoordinateGrid />);
       expect(() => {
         fireEvent.click(getByTestId("coordinate-grid"));
+      }).not.toThrow();
+    });
+
+    it("Right Click", () => {
+      const onClick = jest.fn();
+      const onRightClick = jest.fn();
+
+      const { getByTestId, rerender } = render(
+        <CoordinateGrid onClick={onClick} onRightClick={onRightClick} />
+      );
+
+      const coordinateGridEl = getByTestId("coordinate-grid");
+
+      fireEvent.contextMenu(coordinateGridEl, {
+        clientX: 60,
+        clientY: 60,
+      });
+
+      rerender(
+        <CoordinateGrid
+          onClick={onClick}
+          onRightClick={onRightClick}
+          orientation={PieceColor.BLACK}
+        />
+      );
+
+      fireEvent.contextMenu(coordinateGridEl, {
+        clientX: 479,
+        clientY: 0,
+      });
+
+      expect(onRightClick).toHaveBeenCalledTimes(2);
+
+      expect(onRightClick).toHaveBeenNthCalledWith(1, "b7");
+      expect(onRightClick).toHaveBeenNthCalledWith(2, "a1");
+
+      expect(onClick).toHaveBeenCalledTimes(0);
+    });
+
+    it("Right Click event must be prevented", () => {
+      const { getByTestId } = render(<CoordinateGrid />);
+
+      const coordinateGridEl = getByTestId("coordinate-grid");
+
+      const contextMenuEvent = createEvent.contextMenu(coordinateGridEl, {
+        clientX: 479,
+        clientY: 0,
+      });
+
+      fireEvent(coordinateGridEl, contextMenuEvent);
+
+      expect(contextMenuEvent.defaultPrevented).toBeTruthy();
+    });
+
+    it("Right Click if no callback", () => {
+      const { getByTestId } = render(<CoordinateGrid />);
+      expect(() => {
+        fireEvent.contextMenu(getByTestId("coordinate-grid"));
       }).not.toThrow();
     });
   });

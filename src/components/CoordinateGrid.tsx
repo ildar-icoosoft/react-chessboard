@@ -24,6 +24,7 @@ export const CoordinateGrid: FC<CoordinateGridProps> = ({
   width = DEFAULT_BOARD_WIDTH,
   orientation = PieceColor.WHITE,
   onClick,
+  onRightClick,
 }) => {
   const elementRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
@@ -44,12 +45,32 @@ export const CoordinateGrid: FC<CoordinateGridProps> = ({
     }
   };
 
+  const handleContextMenu = (event: MouseEvent): void => {
+    event.preventDefault();
+
+    if (onRightClick) {
+      const rect: DOMRect = (elementRef.current as HTMLDivElement).getBoundingClientRect();
+
+      const coordinates: string = getSquareAlgebraicCoordinates(
+        {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+        },
+        width,
+        orientation
+      );
+
+      onRightClick(coordinates);
+    }
+  };
+
   return (
     <div
       data-testid={"coordinate-grid"}
       className={css.coordinateGrid}
       style={{ width: `${width}px`, height: `${width}px` }}
       onClick={handleClick}
+      onContextMenu={handleContextMenu}
       ref={elementRef}
     >
       {_toPairs(position).map((pair) => (
