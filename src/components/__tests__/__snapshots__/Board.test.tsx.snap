@@ -1210,9 +1210,12 @@ Array [
     <div
       className="coordinateGrid"
       data-testid="coordinate-grid"
+      onClick={[Function]}
       style={
         Object {
           "height": "480px",
+          "marginLeft": "300px",
+          "marginTop": "100px",
           "width": "480px",
         }
       }

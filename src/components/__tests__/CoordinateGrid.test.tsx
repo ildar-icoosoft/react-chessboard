@@ -4,7 +4,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { Piece } from "../Piece";
 import { PieceCode } from "../../enums/PieceCode";
-import { render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 
 jest.useFakeTimers();
 
@@ -99,6 +99,34 @@ describe("Square", () => {
         });
       });
     });
+  });
+
+  describe("Events", () => {
+    it("Click", () => {
+      const onClick = jest.fn();
+      const onRightClick = jest.fn();
+
+      const { getByTestId } = render(
+        <CoordinateGrid onClick={onClick} onRightClick={onRightClick} />
+      );
+
+      fireEvent.click(getByTestId("coordinate-grid"), {
+        clientX: 60,
+        clientY: 60,
+      });
+
+      expect(onClick).toHaveBeenCalledTimes(1);
+      expect(onClick).toBeCalledWith("b7");
+
+      expect(onRightClick).toHaveBeenCalledTimes(0);
+    });
+
+    /*  it("Click if no callback", () => {
+      const {getByTestId} = render(<CoordinateGrid />);
+      expect(() => {
+        fireEvent.click(getByTestId("square-a1"));
+      }).not.toThrow();
+    });*/
   });
 
   describe("DOM structure", () => {
