@@ -6,11 +6,12 @@ import {
   getNearestSquare,
   getPieceCoordinatesFromPosition,
   getPieceElement,
-  getPieceXYCoordinates,
+  getSquareXYCoordinates,
   getPositionDiff,
   getRankIndex,
   getRankNameFromCoordinates,
   isLightSquare,
+  getSquareAlgebraicCoordinates,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -110,25 +111,47 @@ describe("Chess utils", () => {
     });
   });
 
-  it("getPieceXYCoordinates()", () => {
-    expect(getPieceXYCoordinates("a8", 480, PieceColor.WHITE)).toEqual({
+  it("getSquareXYCoordinates()", () => {
+    expect(getSquareXYCoordinates("a8", 480, PieceColor.WHITE)).toEqual({
       x: 0,
       y: 0,
     });
 
-    expect(getPieceXYCoordinates("h1", 480, PieceColor.BLACK)).toEqual({
+    expect(getSquareXYCoordinates("h1", 480, PieceColor.BLACK)).toEqual({
       x: 0,
       y: 0,
     });
 
-    expect(getPieceXYCoordinates("a4", 480, PieceColor.WHITE)).toEqual({
+    expect(getSquareXYCoordinates("a4", 480, PieceColor.WHITE)).toEqual({
       x: 0,
       y: 240,
     });
 
-    expect(getPieceXYCoordinates("a4", 480, PieceColor.BLACK)).toEqual({
+    expect(getSquareXYCoordinates("a4", 480, PieceColor.BLACK)).toEqual({
       x: 420,
       y: 180,
     });
+  });
+
+  it("getSquareAlgebraicCoordinates()", () => {
+    expect(
+      getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, PieceColor.WHITE)
+    ).toBe("a8");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, PieceColor.BLACK)
+    ).toBe("h1");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, PieceColor.WHITE)
+    ).toBe("h8");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, PieceColor.BLACK)
+    ).toBe("a1");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 150, y: 200 }, 480, PieceColor.WHITE)
+    ).toBe("c5");
   });
 });

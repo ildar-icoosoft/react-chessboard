@@ -191,24 +191,44 @@ export const getPositionDiff = (
   return result;
 };
 
-export const getPieceXYCoordinates = (
-  coordinates: string,
+export const getSquareXYCoordinates = (
+  algebraicCoordinates: string,
   boardWidth: number,
   orientation: PieceColor
 ): XYCoordinates => {
-  const rankIndex: number = getRankIndex(coordinates);
-  const fileIndex: number = getFileIndex(coordinates);
+  const fileIndex: number = getFileIndex(algebraicCoordinates);
+  const rankIndex: number = getRankIndex(algebraicCoordinates);
 
-  const pieceWidth: number = boardWidth / 8;
+  const squareWidth: number = boardWidth / 8;
 
   return {
     x:
       orientation === PieceColor.WHITE
-        ? fileIndex * pieceWidth
-        : (7 - fileIndex) * pieceWidth,
+        ? fileIndex * squareWidth
+        : (7 - fileIndex) * squareWidth,
     y:
       orientation === PieceColor.WHITE
-        ? (7 - rankIndex) * pieceWidth
-        : rankIndex * pieceWidth,
+        ? (7 - rankIndex) * squareWidth
+        : rankIndex * squareWidth,
   };
+};
+
+export const getSquareAlgebraicCoordinates = (
+  xYCoordinates: XYCoordinates,
+  boardWidth: number,
+  orientation: PieceColor
+): string => {
+  const squareWidth: number = boardWidth / 8;
+
+  let fileIndex: number = Math.floor(xYCoordinates.x / squareWidth);
+  if (orientation === PieceColor.BLACK) {
+    fileIndex = 7 - fileIndex;
+  }
+
+  let rankIndex: number = Math.floor(xYCoordinates.y / squareWidth);
+  if (orientation === PieceColor.WHITE) {
+    rankIndex = 7 - rankIndex;
+  }
+
+  return FILE_NAMES[fileIndex] + RANK_NAMES[rankIndex];
 };
