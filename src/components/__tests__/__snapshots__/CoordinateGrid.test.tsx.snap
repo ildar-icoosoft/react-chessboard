@@ -8,8 +8,6 @@ exports[`Square Snapshot 1`] = `
   style={
     Object {
       "height": "480px",
-      "marginLeft": "300px",
-      "marginTop": "100px",
       "width": "480px",
     }
   }

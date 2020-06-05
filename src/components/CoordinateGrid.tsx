@@ -28,20 +28,18 @@ export const CoordinateGrid: FC<CoordinateGridProps> = ({
   const elementRef: RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
   const handleClick = (event: MouseEvent): void => {
-    const rect: DOMRect = (elementRef.current as HTMLDivElement).getBoundingClientRect();
-
-    const coordinates: string = getSquareAlgebraicCoordinates(
-      {
-        x: event.clientX - rect.x,
-        y: event.clientY - rect.y,
-      },
-      width,
-      orientation
-    );
-
-    debugger;
-
     if (onClick) {
+      const rect: DOMRect = (elementRef.current as HTMLDivElement).getBoundingClientRect();
+
+      const coordinates: string = getSquareAlgebraicCoordinates(
+        {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+        },
+        width,
+        orientation
+      );
+
       onClick(coordinates);
     }
   };
