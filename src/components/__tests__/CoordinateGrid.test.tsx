@@ -226,7 +226,7 @@ describe("CoordinateGrid", () => {
         CoordinateGridRef
       >();
 
-      expect(() => coordinateGridRef.getDropHandlerId()).toBeTruthy();
+      expect(coordinateGridRef.getDropHandlerId()).toBeTruthy();
     });
   });
 

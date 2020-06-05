@@ -435,7 +435,7 @@ describe("Square", () => {
         SquareRef
       >();
 
-      expect(() => squareRef.getDragHandlerId()).toBeTruthy();
+      expect(squareRef.getDragHandlerId()).toBeTruthy();
     });
 
     it("getDropHandlerId()", () => {
@@ -449,7 +449,7 @@ describe("Square", () => {
         SquareRef
       >();
 
-      expect(() => squareRef.getDropHandlerId()).toBeTruthy();
+      expect(squareRef.getDropHandlerId()).toBeTruthy();
     });
 
     it("getXYCoordinates()", () => {
