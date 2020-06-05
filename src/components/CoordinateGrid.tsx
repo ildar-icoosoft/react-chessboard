@@ -8,7 +8,6 @@ import React, {
 import { PieceColor } from "../enums/PieceColor";
 import { Position } from "../interfaces/Position";
 import { toPairs as _toPairs } from "lodash";
-import { Piece } from "./Piece";
 import css from "./CoordinateGrid.scss";
 import { DEFAULT_BOARD_WIDTH } from "../constants/constants";
 import {
@@ -19,6 +18,7 @@ import { useDrop } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
+import { DraggablePiece } from "./DraggablePiece";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -108,7 +108,7 @@ export const CoordinateGrid = forwardRef<
         ref={useCombinedRefs(dropRef, domRef)}
       >
         {_toPairs(position).map((pair) => (
-          <Piece
+          <DraggablePiece
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}

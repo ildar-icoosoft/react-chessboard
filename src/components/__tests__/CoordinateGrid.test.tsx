@@ -2,12 +2,12 @@ import React, { createRef } from "react";
 import TestRenderer from "react-test-renderer";
 import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
-import { Piece } from "../Piece";
 import { PieceCode } from "../../enums/PieceCode";
 import { fireEvent, render, createEvent } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
+import { DraggablePiece } from "../DraggablePiece";
 
 jest.useFakeTimers();
 
@@ -20,11 +20,11 @@ describe("CoordinateGrid", () => {
   });
 
   describe("children components", () => {
-    it("contains 1 Piece", () => {
+    it("contains DraggablePiece", () => {
       const testRenderer = TestRenderer.create(<CoordinateGridWithDnd />);
       const testInstance = testRenderer.root;
 
-      expect(testInstance.findAllByType(Piece).length).toBe(0);
+      expect(testInstance.findAllByType(DraggablePiece).length).toBe(0);
 
       testRenderer.update(
         <CoordinateGridWithDnd
@@ -35,7 +35,8 @@ describe("CoordinateGrid", () => {
       expect(
         testInstance.findAll((item) => {
           return (
-            item.type === Piece && item.props.pieceCode === PieceCode.WHITE_PAWN
+            item.type === DraggablePiece &&
+            item.props.pieceCode === PieceCode.WHITE_PAWN
           );
         }).length
       ).toBe(1);
@@ -43,7 +44,7 @@ describe("CoordinateGrid", () => {
       expect(
         testInstance.findAll((item) => {
           return (
-            item.type === Piece &&
+            item.type === DraggablePiece &&
             item.props.pieceCode === PieceCode.BLACK_BISHOP
           );
         }).length
@@ -59,7 +60,7 @@ describe("CoordinateGrid", () => {
         ).root;
 
         const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
-          Piece
+          DraggablePiece
         );
         expect(piece.props.pieceCode).toBe(PieceCode.WHITE_PAWN);
       });
@@ -71,7 +72,7 @@ describe("CoordinateGrid", () => {
         const testInstance = testRenderer.root;
 
         const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
-          Piece
+          DraggablePiece
         );
         expect(piece.props.width).toBe(60);
 
@@ -91,7 +92,7 @@ describe("CoordinateGrid", () => {
         const testInstance = testRenderer.root;
 
         const piece: TestRenderer.ReactTestInstance = testInstance.findByType(
-          Piece
+          DraggablePiece
         );
         expect(piece.props.xYCoordinates).toEqual({
           x: 240,
