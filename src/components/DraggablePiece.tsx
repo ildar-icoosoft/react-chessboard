@@ -16,10 +16,9 @@ export interface DraggablePieceProps {
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
-  draggable?: (
-    pieceCode: string,
-    xYCoordinates: XYCoordinates
-  ) => boolean | boolean;
+  draggable?:
+    | ((pieceCode: PieceCode, xYCoordinates: XYCoordinates) => boolean)
+    | boolean;
 }
 
 export interface DraggablePieceRef {

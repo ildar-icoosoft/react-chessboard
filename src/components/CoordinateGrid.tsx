@@ -19,6 +19,9 @@ import { DragItemType } from "../enums/DragItemType";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
 import { DraggablePiece } from "./DraggablePiece";
+import { XYCoordinates } from "../interfaces/XYCoordinates";
+import { isFunction as _isFunction } from "lodash";
+import { PieceCode } from "../enums/PieceCode";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -28,6 +31,7 @@ export interface CoordinateGridProps {
   orientation?: PieceColor;
   position?: Position;
   width?: number;
+  draggable?: (pieceCode: PieceCode, coordinates: string) => boolean | boolean;
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;
@@ -42,6 +46,7 @@ export const CoordinateGrid = forwardRef<
       position = {},
       width = DEFAULT_BOARD_WIDTH,
       orientation = PieceColor.WHITE,
+      draggable = false,
       onClick,
       onRightClick,
     },
@@ -98,6 +103,27 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
+    let draggableWrapper:
+      | ((pieceCode: PieceCode, xYCoordinates: XYCoordinates) => boolean)
+      | boolean;
+
+    if (_isFunction(draggable)) {
+      draggableWrapper = (
+        pieceCode: PieceCode,
+        xYCoordinates: XYCoordinates
+      ) => {
+        const algebraicCoordinates: string = getSquareAlgebraicCoordinates(
+          xYCoordinates,
+          width,
+          orientation
+        );
+
+        return draggable(pieceCode, algebraicCoordinates);
+      };
+    } else {
+      draggableWrapper = draggable;
+    }
+
     return (
       <div
         data-testid={"coordinate-grid"}
@@ -109,6 +135,7 @@ export const CoordinateGrid = forwardRef<
       >
         {_toPairs(position).map((pair) => (
           <DraggablePiece
+            draggable={draggableWrapper}
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}

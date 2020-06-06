@@ -3,7 +3,7 @@ import TestRenderer from "react-test-renderer";
 import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
 import { PieceCode } from "../../enums/PieceCode";
-import { fireEvent, render, createEvent } from "@testing-library/react";
+import { createEvent, fireEvent, render } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
@@ -53,7 +53,7 @@ describe("CoordinateGrid", () => {
   });
 
   describe("children components props", () => {
-    describe("Piece", () => {
+    describe("DraggablePiece", () => {
       it("pieceCode", () => {
         const testInstance = TestRenderer.create(
           <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
@@ -109,6 +109,51 @@ describe("CoordinateGrid", () => {
           x: 120,
           y: 180,
         });
+      });
+
+      it("draggable", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
+        );
+        const testInstance = testRenderer.root;
+
+        const draggablePiece = testInstance.findByType(DraggablePiece);
+
+        expect(draggablePiece.props.draggable).toBe(false);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_PAWN }}
+            draggable={true}
+          />
+        );
+
+        expect(draggablePiece.props.draggable).toBe(true);
+
+        const draggableFn = jest.fn();
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_PAWN }}
+            draggable={draggableFn}
+          />
+        );
+
+        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+
+        /* draggablePiece.props.draggable({
+          pieceCode: PieceCode.WHITE_PAWN,
+          xYCoordinates: {
+            x: 240,
+            y:360
+          }
+        });
+
+        expect(draggable).toBeCalledTimes(1);
+        expect(draggable).toBeCalledWith({
+          pieceCode: PieceCode.WHITE_PAWN,
+          coordinates: getSquareAlgebraicCoordinates({x: 240, y: 260}, 480, PieceColor.WHITE)
+        })*/
       });
     });
   });
