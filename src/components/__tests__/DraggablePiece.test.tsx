@@ -5,10 +5,12 @@ import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
 import TestRenderer from "react-test-renderer";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { Piece } from "../Piece";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DragDropManager, Identifier } from "dnd-core";
 import { SquareRef } from "../Square";
+import { ITestBackend } from "react-dnd-test-backend";
+import { DragItemType } from "../../enums/DragItemType";
 
 jest.useFakeTimers();
 
@@ -147,12 +149,12 @@ describe("DraggablePiece", () => {
       rerender(
         <DraggablePieceWithDnd
           pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 200, y: 200 }}
+          xYCoordinates={{ x: 10, y: 20 }}
         />
       );
 
       expect(el).toHaveStyle({
-        transform: `translate(200px, 200px)`,
+        transform: `translate(10px, 20px)`,
       });
     });
   });
@@ -209,6 +211,37 @@ describe("DraggablePiece", () => {
       );
 
       expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is function which returns true
+    });
+
+    it("checks drag source object", () => {
+      const ref = createRef<ReactDndRefType>();
+
+      render(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 10, y: 20 }}
+          draggable={true}
+        />
+      );
+
+      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+        .getDecoratedComponent<SquareRef>()
+        .getDragHandlerId() as Identifier;
+
+      const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+      act(() => {
+        backend.simulateBeginDrag([dragSourceId]);
+      });
+
+      expect(manager.getMonitor().getItem()).toEqual({
+        type: DragItemType.PIECE,
+        pieceCode: PieceCode.WHITE_KING,
+        xYCoordinates: { x: 10, y: 20 },
+      });
     });
   });
 });
