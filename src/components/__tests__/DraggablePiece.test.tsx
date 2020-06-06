@@ -59,8 +59,8 @@ describe("DraggablePiece", () => {
   });
 
   describe("callback props", () => {
-    it("draggable callback", () => {
-      const draggable = jest.fn(() => true);
+    it("allowDrag callback is not called if draggable is false", () => {
+      const allowDrag = jest.fn().mockReturnValue(true);
 
       const ref = createRef<ReactDndRefType>();
 
@@ -69,7 +69,7 @@ describe("DraggablePiece", () => {
           ref={ref}
           pieceCode={PieceCode.WHITE_KING}
           xYCoordinates={{ x: 20, y: 30 }}
-          draggable={draggable}
+          allowDrag={allowDrag}
         />
       );
 
@@ -81,8 +81,34 @@ describe("DraggablePiece", () => {
 
       manager.getMonitor().canDragSource(dragSourceId);
 
-      expect(draggable).toBeCalledWith(PieceCode.WHITE_KING, { x: 20, y: 30 });
-      expect(draggable).toBeCalledTimes(1);
+      expect(allowDrag).toBeCalledTimes(0);
+    });
+
+    it("allowDrag callback is called if draggable is true", () => {
+      const allowDrag = jest.fn().mockReturnValue(true);
+
+      const ref = createRef<ReactDndRefType>();
+
+      render(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 20, y: 30 }}
+          allowDrag={allowDrag}
+          draggable={true}
+        />
+      );
+
+      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+        .getDecoratedComponent<DraggablePieceRef>()
+        .getDragHandlerId() as Identifier;
+
+      manager.getMonitor().canDragSource(dragSourceId);
+
+      expect(allowDrag).toBeCalledWith(PieceCode.WHITE_KING, { x: 20, y: 30 });
+      expect(allowDrag).toBeCalledTimes(1);
     });
   });
 
@@ -159,7 +185,7 @@ describe("DraggablePiece", () => {
   });
 
   describe("Drag and Drop", () => {
-    it("Can drag if draggable is true or a function which returns true", () => {
+    it("Can drag if draggable is true and allowDrag is not set or allowDrag returns true", () => {
       const ref = createRef<ReactDndRefType>();
 
       const { rerender } = render(
@@ -175,7 +201,6 @@ describe("DraggablePiece", () => {
       const dragSourceId: Identifier = (ref.current as ReactDndRefType)
         .getDecoratedComponent<DraggablePieceRef>()
         .getDragHandlerId() as Identifier;
-
       expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable prop is false by default
 
       rerender(
@@ -183,11 +208,22 @@ describe("DraggablePiece", () => {
           ref={ref}
           pieceCode={PieceCode.WHITE_KING}
           xYCoordinates={{ x: 0, y: 0 }}
-          draggable={() => false}
+          draggable={true}
+          allowDrag={() => false}
         />
       );
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable is true but allowDrag returns false
 
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable is function which returns false
+      rerender(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 0, y: 0 }}
+          draggable={false}
+          allowDrag={() => true}
+        />
+      );
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // allowDrag returns true but draggable is false
 
       rerender(
         <DraggablePieceWithDnd
@@ -197,19 +233,18 @@ describe("DraggablePiece", () => {
           draggable={true}
         />
       );
-
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is function which returns true
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true
 
       rerender(
         <DraggablePieceWithDnd
           ref={ref}
           pieceCode={PieceCode.WHITE_KING}
           xYCoordinates={{ x: 0, y: 0 }}
-          draggable={() => true}
+          draggable={true}
+          allowDrag={() => true}
         />
       );
-
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is function which returns true
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true and allowDrag returns true
     });
 
     it("checks drag source object", () => {

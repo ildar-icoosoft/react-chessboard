@@ -19,6 +19,7 @@ export interface DraggablePieceProps {
   draggable?:
     | ((pieceCode: PieceCode, xYCoordinates: XYCoordinates) => boolean)
     | boolean;
+  allowDrag?: (pieceCode: PieceCode, xYCoordinates: XYCoordinates) => boolean;
 }
 
 export interface DraggablePieceRef {
@@ -28,13 +29,16 @@ export interface DraggablePieceRef {
 export const DraggablePiece = forwardRef<
   DraggablePieceRef,
   DraggablePieceProps
->(({ pieceCode, xYCoordinates, draggable = false }, ref) => {
+>(({ pieceCode, xYCoordinates, draggable = false, allowDrag }, ref) => {
   const [{ dragHandlerId }, dragRef] = useDrag({
     canDrag() {
-      if (_isFunction(draggable)) {
-        return draggable(pieceCode, xYCoordinates);
+      if (!draggable) {
+        return false;
       }
-      return draggable;
+      if (allowDrag) {
+        return allowDrag(pieceCode, xYCoordinates);
+      }
+      return true;
     },
     item: {
       type: DragItemType.PIECE,
