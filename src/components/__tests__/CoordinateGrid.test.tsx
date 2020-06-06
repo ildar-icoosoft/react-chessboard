@@ -10,6 +10,7 @@ import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
 import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
 import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
+import { SquareRef } from "../Square";
 
 jest.useFakeTimers();
 
@@ -347,40 +348,90 @@ describe("CoordinateGrid", () => {
       // @todo
     });
 
-    it("Allows to drop piece", () => {
-      const dropRef = createRef<ReactDndRefType>();
-      render(<CoordinateGridWithDnd ref={dropRef} />);
+    describe("Drop", () => {
+      it("Allows to drop piece", () => {
+        const dropRef = createRef<ReactDndRefType>();
+        render(<CoordinateGridWithDnd ref={dropRef} />);
 
-      const dragRef = createRef<ReactDndRefType>();
-      render(
-        <DraggablePieceWithDnd
-          ref={dragRef}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 10, y: 20 }}
-          draggable={true}
-        />
-      );
+        const dragRef = createRef<ReactDndRefType>();
+        render(
+          <DraggablePieceWithDnd
+            ref={dragRef}
+            pieceCode={PieceCode.WHITE_KING}
+            xYCoordinates={{ x: 10, y: 20 }}
+            draggable={true}
+          />
+        );
 
-      const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
+        const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
 
-      const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
-        .getDecoratedComponent<CoordinateGridRef>()
-        .getDropHandlerId() as Identifier;
+        const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDropHandlerId() as Identifier;
 
-      const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
-        .getDecoratedComponent<DraggablePieceRef>()
-        .getDragHandlerId() as Identifier;
+        const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
+          .getDecoratedComponent<DraggablePieceRef>()
+          .getDragHandlerId() as Identifier;
 
-      const backend: ITestBackend = manager.getBackend() as ITestBackend;
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
 
-      act(() => {
-        backend.simulateBeginDrag([dragSourceId]);
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId]);
+        });
+
+        expect(manager.getMonitor().canDropOnTarget(dropSourceId)).toBeTruthy();
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
       });
 
-      expect(manager.getMonitor().canDropOnTarget(dropSourceId)).toBeTruthy();
+      it("onDrop event", () => {
+        const onDrop = jest.fn();
 
-      act(() => {
-        backend.simulateEndDrag();
+        const dropRef = createRef<ReactDndRefType>();
+        render(<CoordinateGridWithDnd ref={dropRef} onDrop={onDrop} />);
+
+        const dragRef = createRef<ReactDndRefType>();
+        render(
+          <DraggablePieceWithDnd
+            ref={dragRef}
+            pieceCode={PieceCode.WHITE_KING}
+            xYCoordinates={{ x: 10, y: 20 }}
+            draggable={true}
+          />
+        );
+
+        const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
+          .getDecoratedComponent<SquareRef>()
+          .getDragHandlerId() as Identifier;
+        const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+          .getDecoratedComponent<SquareRef>()
+          .getDropHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId]);
+          backend.simulateHover([dropSourceId], {
+            clientX: 100,
+            clientY: 119,
+          });
+          backend.simulateDrop();
+        });
+
+        expect(onDrop).toHaveBeenCalledTimes(1);
+        expect(onDrop).toBeCalledWith({
+          sourceCoordinates: "a2",
+          targetCoordinates: "a2",
+          pieceCode: PieceCode.WHITE_QUEEN,
+        });
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
       });
     });
   });
