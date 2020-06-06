@@ -31,7 +31,9 @@ export interface CoordinateGridProps {
   orientation?: PieceColor;
   position?: Position;
   width?: number;
-  draggable?: (pieceCode: PieceCode, coordinates: string) => boolean | boolean;
+  draggable?:
+    | ((pieceCode: PieceCode, coordinates: string) => boolean)
+    | boolean;
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;

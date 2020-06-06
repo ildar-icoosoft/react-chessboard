@@ -571,6 +571,28 @@ describe("Board", () => {
 
         expect(coordinateGrid.props.width).toBe(800);
       });
+
+      it("draggable", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.draggable).toBeFalsy();
+
+        testRenderer.update(<Board draggable={true} />);
+
+        expect(coordinateGrid.props.draggable).toBeTruthy();
+
+        // @todo
+        /*const draggableFn = jest.fn();
+
+        testRenderer.update(<Board draggable={draggableFn} />);
+
+        expect(coordinateGrid.props.draggable).toBe(draggableFn);*/
+      });
     });
   });
 
