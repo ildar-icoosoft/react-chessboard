@@ -7,6 +7,8 @@ import { wrapInTestContext } from "react-dnd-test-utils";
 import { Piece } from "../Piece";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import { DragDropManager, Identifier } from "dnd-core";
+import { SquareRef } from "../Square";
 
 jest.useFakeTimers();
 
@@ -124,6 +126,61 @@ describe("DraggablePiece", () => {
       expect(el).toHaveStyle({
         transform: `translate(200px, 200px)`,
       });
+    });
+  });
+
+  describe("Drag and Drop", () => {
+    it("Can drag if draggable is true or a function which returns true", () => {
+      const ref = createRef<ReactDndRefType>();
+
+      const { rerender } = render(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 0, y: 0 }}
+        />
+      );
+
+      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+        .getDecoratedComponent<SquareRef>()
+        .getDragHandlerId() as Identifier;
+
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable prop is false by default
+
+      rerender(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 0, y: 0 }}
+          draggable={() => false}
+        />
+      );
+
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable is function which returns false
+
+      rerender(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 0, y: 0 }}
+          draggable={true}
+        />
+      );
+
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is function which returns true
+
+      rerender(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 0, y: 0 }}
+          draggable={() => true}
+        />
+      );
+
+      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is function which returns true
     });
   });
 });

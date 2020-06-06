@@ -8,6 +8,7 @@ import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 import classNames from "classnames";
 import css from "./DraggablePiece.scss";
+import { isFunction as _isFunction } from "lodash";
 
 export interface DraggablePieceProps {
   pieceCode: PieceCode;
@@ -15,6 +16,10 @@ export interface DraggablePieceProps {
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
+  draggable?: (
+    pieceCode: string,
+    xYCoordinates: XYCoordinates
+  ) => boolean | boolean;
 }
 
 export interface DraggablePieceRef {
@@ -24,8 +29,14 @@ export interface DraggablePieceRef {
 export const DraggablePiece = forwardRef<
   DraggablePieceRef,
   DraggablePieceProps
->(({ pieceCode, xYCoordinates }, ref) => {
+>(({ pieceCode, xYCoordinates, draggable = false }, ref) => {
   const [{ dragHandlerId }] = useDrag({
+    canDrag() {
+      if (_isFunction(draggable)) {
+        return draggable(pieceCode, xYCoordinates);
+      }
+      return draggable;
+    },
     item: {
       type: DragItemType.PIECE,
       pieceCode,
