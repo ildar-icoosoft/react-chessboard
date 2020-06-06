@@ -6,6 +6,8 @@ import { DragItemType } from "../enums/DragItemType";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
+import classNames from "classnames";
+import css from "./DraggablePiece.scss";
 
 export interface DraggablePieceProps {
   pieceCode: PieceCode;
@@ -42,5 +44,9 @@ export const DraggablePiece = forwardRef<
     getDragHandlerId: (): Identifier | null => dragHandlerId,
   }));
 
-  return <Piece pieceCode={pieceCode} />;
+  return (
+    <div className={classNames(css.draggablePiece)}>
+      <Piece pieceCode={pieceCode} />
+    </div>
+  );
 });
