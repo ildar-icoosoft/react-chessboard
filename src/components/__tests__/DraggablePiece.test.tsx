@@ -21,7 +21,7 @@ describe("DraggablePiece", () => {
 
   describe("children components props", () => {
     describe("Piece", () => {
-      it("all props", () => {
+      it("pieceCode", () => {
         const testInstance = TestRenderer.create(
           <DraggablePieceWithDnd
             xYCoordinates={{ x: 100, y: 100 }}
@@ -42,17 +42,7 @@ describe("DraggablePiece", () => {
           Piece
         );
         expect(piece.props).toEqual({
-          xYCoordinates: { x: 100, y: 100 },
           pieceCode: PieceCode.BLACK_QUEEN,
-          transitionFrom: {
-            e2: {
-              algebraic: "e4",
-              x: 200,
-              y: 300,
-              phantomPiece: PieceCode.BLACK_BISHOP,
-            },
-          },
-          transitionDuration: 400,
         });
       });
     });
