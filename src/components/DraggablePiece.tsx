@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle } from "react";
-import { Piece, PieceProps } from "./Piece";
+import { Piece } from "./Piece";
 import { Identifier } from "dnd-core";
 import { useDrag } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
@@ -11,10 +11,10 @@ import css from "./DraggablePiece.scss";
 
 export interface DraggablePieceProps {
   pieceCode: PieceCode;
+  xYCoordinates: XYCoordinates;
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
-  xYCoordinates?: XYCoordinates;
 }
 
 export interface DraggablePieceRef {
@@ -24,9 +24,7 @@ export interface DraggablePieceRef {
 export const DraggablePiece = forwardRef<
   DraggablePieceRef,
   DraggablePieceProps
->((props: PieceProps, ref) => {
-  const { pieceCode, xYCoordinates } = props;
-
+>(({ pieceCode, xYCoordinates }, ref) => {
   const [{ dragHandlerId }] = useDrag({
     item: {
       type: DragItemType.PIECE,
@@ -45,7 +43,13 @@ export const DraggablePiece = forwardRef<
   }));
 
   return (
-    <div className={classNames(css.draggablePiece)}>
+    <div
+      className={classNames(css.draggablePiece)}
+      data-testid={`draggable-piece-${pieceCode}`}
+      style={{
+        transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
+      }}
+    >
       <Piece pieceCode={pieceCode} />
     </div>
   );
