@@ -122,8 +122,7 @@ describe("CoordinateGrid", () => {
 
         const draggablePiece = testInstance.findByType(DraggablePiece);
 
-        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
-        expect(draggablePiece.props.draggable()).toBe(false);
+        expect(draggablePiece.props.draggable).toBe(false);
 
         testRenderer.update(
           <CoordinateGridWithDnd
@@ -131,34 +130,44 @@ describe("CoordinateGrid", () => {
             draggable={true}
           />
         );
-        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
-        expect(draggablePiece.props.draggable()).toBe(true);
+        expect(draggablePiece.props.draggable).toBe(true);
+      });
 
-        const draggableFalseFn = jest.fn().mockReturnValue(false);
+      it("allowDrag", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
+        );
+        const testInstance = testRenderer.root;
+
+        const draggablePiece = testInstance.findByType(DraggablePiece);
+
+        expect(draggablePiece.props.allowDrag).toBeUndefined();
+
+        const allowDragFalse = jest.fn().mockReturnValue(false);
         testRenderer.update(
           <CoordinateGridWithDnd
             position={{ e2: PieceCode.WHITE_PAWN }}
-            draggable={draggableFalseFn}
+            allowDrag={allowDragFalse}
           />
         );
-        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+        expect(draggablePiece.props.allowDrag).toBeInstanceOf(Function);
         expect(
-          draggablePiece.props.draggable(PieceCode.WHITE_PAWN, {
+          draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
             x: 100,
             y: 100,
           })
         ).toBe(false);
 
-        const draggableTrueFn = jest.fn().mockReturnValue(true);
+        const allowDragTrue = jest.fn().mockReturnValue(true);
         testRenderer.update(
           <CoordinateGridWithDnd
             position={{ e2: PieceCode.WHITE_PAWN }}
-            draggable={draggableTrueFn}
+            allowDrag={allowDragTrue}
           />
         );
-        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+        expect(draggablePiece.props.allowDrag).toBeInstanceOf(Function);
         expect(
-          draggablePiece.props.draggable(PieceCode.WHITE_PAWN, {
+          draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
             x: 100,
             y: 100,
           })
@@ -168,26 +177,26 @@ describe("CoordinateGrid", () => {
   });
 
   describe("callback props", () => {
-    it("draggable", () => {
-      const draggable = jest.fn();
+    it("allowDrag", () => {
+      const allowDrag = jest.fn();
 
       const testRenderer = TestRenderer.create(
         <CoordinateGridWithDnd
           position={{ e2: PieceCode.WHITE_PAWN }}
-          draggable={draggable}
+          allowDrag={allowDrag}
         />
       );
       const testInstance = testRenderer.root;
 
       const draggablePiece = testInstance.findByType(DraggablePiece);
 
-      draggablePiece.props.draggable(PieceCode.WHITE_PAWN, {
+      draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
         x: 240,
         y: 360,
       });
 
-      expect(draggable).toBeCalledTimes(1);
-      expect(draggable).toBeCalledWith(PieceCode.WHITE_PAWN, "e2");
+      expect(allowDrag).toBeCalledTimes(1);
+      expect(allowDrag).toBeCalledWith(PieceCode.WHITE_PAWN, "e2");
     });
   });
 

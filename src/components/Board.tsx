@@ -175,6 +175,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
           >
             <CoordinateGrid
               draggable={draggable}
+              allowDrag={allowDrag}
               orientation={orientation}
               position={position}
               width={width}

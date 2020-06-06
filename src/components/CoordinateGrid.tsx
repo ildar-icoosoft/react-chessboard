@@ -31,9 +31,8 @@ export interface CoordinateGridProps {
   orientation?: PieceColor;
   position?: Position;
   width?: number;
-  draggable?:
-    | ((pieceCode: PieceCode, coordinates: string) => boolean)
-    | boolean;
+  draggable?: boolean;
+  allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;
@@ -49,6 +48,7 @@ export const CoordinateGrid = forwardRef<
       width = DEFAULT_BOARD_WIDTH,
       orientation = PieceColor.WHITE,
       draggable = false,
+      allowDrag,
       onClick,
       onRightClick,
     },
@@ -105,12 +105,12 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
-    const draggableHandler = (
+    const allowDragHandler = (
       pieceCode: PieceCode,
       xYCoordinates: XYCoordinates
     ): boolean => {
-      if (!_isFunction(draggable)) {
-        return draggable;
+      if (!allowDrag) {
+        return true;
       }
 
       const algebraicCoordinates: string = getSquareAlgebraicCoordinates(
@@ -119,7 +119,7 @@ export const CoordinateGrid = forwardRef<
         orientation
       );
 
-      return draggable(pieceCode, algebraicCoordinates);
+      return allowDrag(pieceCode, algebraicCoordinates);
     };
 
     return (
@@ -133,7 +133,8 @@ export const CoordinateGrid = forwardRef<
       >
         {_toPairs(position).map((pair) => (
           <DraggablePiece
-            draggable={draggableHandler}
+            draggable={draggable}
+            allowDrag={allowDrag ? allowDragHandler : undefined}
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}
