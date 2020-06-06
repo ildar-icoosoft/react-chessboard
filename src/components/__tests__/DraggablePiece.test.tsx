@@ -57,6 +57,34 @@ describe("DraggablePiece", () => {
     });
   });
 
+  describe("callback props", () => {
+    it("draggable callback", () => {
+      const draggable = jest.fn(() => true);
+
+      const ref = createRef<ReactDndRefType>();
+
+      render(
+        <DraggablePieceWithDnd
+          ref={ref}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 20, y: 30 }}
+          draggable={draggable}
+        />
+      );
+
+      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+        .getDecoratedComponent<SquareRef>()
+        .getDragHandlerId() as Identifier;
+
+      manager.getMonitor().canDragSource(dragSourceId);
+
+      expect(draggable).toBeCalledWith(PieceCode.WHITE_KING, { x: 20, y: 30 });
+      expect(draggable).toBeCalledTimes(1);
+    });
+  });
+
   describe("methods", () => {
     it("getDragHandlerId()", () => {
       const dragAndDropRef = createRef<ReactDndRefType>();
