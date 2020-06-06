@@ -8,7 +8,6 @@ import { Piece } from "../Piece";
 import { act, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { DragDropManager, Identifier } from "dnd-core";
-import { SquareRef } from "../Square";
 import { ITestBackend } from "react-dnd-test-backend";
 import { DragItemType } from "../../enums/DragItemType";
 
@@ -77,7 +76,7 @@ describe("DraggablePiece", () => {
       const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
       const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<SquareRef>()
+        .getDecoratedComponent<DraggablePieceRef>()
         .getDragHandlerId() as Identifier;
 
       manager.getMonitor().canDragSource(dragSourceId);
@@ -174,7 +173,7 @@ describe("DraggablePiece", () => {
       const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
       const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<SquareRef>()
+        .getDecoratedComponent<DraggablePieceRef>()
         .getDragHandlerId() as Identifier;
 
       expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable prop is false by default
@@ -228,7 +227,7 @@ describe("DraggablePiece", () => {
       const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
       const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<SquareRef>()
+        .getDecoratedComponent<DraggablePieceRef>()
         .getDragHandlerId() as Identifier;
 
       const backend: ITestBackend = manager.getBackend() as ITestBackend;

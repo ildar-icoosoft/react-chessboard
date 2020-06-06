@@ -3,16 +3,19 @@ import TestRenderer from "react-test-renderer";
 import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
 import { PieceCode } from "../../enums/PieceCode";
-import { createEvent, fireEvent, render } from "@testing-library/react";
+import { act, createEvent, fireEvent, render } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
-import { DraggablePiece } from "../DraggablePiece";
+import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
+import { DragDropManager, Identifier } from "dnd-core";
+import { ITestBackend } from "react-dnd-test-backend";
 
 jest.useFakeTimers();
 
 describe("CoordinateGrid", () => {
   const CoordinateGridWithDnd = wrapInTestContext(CoordinateGrid);
+  const DraggablePieceWithDnd = wrapInTestContext(DraggablePiece);
 
   it("Snapshot", () => {
     const tree = TestRenderer.create(<CoordinateGridWithDnd />).toJSON();
@@ -326,6 +329,49 @@ describe("CoordinateGrid", () => {
       expect(coordinateGridEl).toHaveStyle({
         width: "700px",
         height: "700px",
+      });
+    });
+  });
+
+  describe("Drag and Drop", () => {
+    it("checks if coordinate-grid has a ref to Connector drop source", () => {
+      // @todo
+    });
+
+    it("Allows to drop piece", () => {
+      const dropRef = createRef<ReactDndRefType>();
+      render(<CoordinateGridWithDnd ref={dropRef} />);
+
+      const dragRef = createRef<ReactDndRefType>();
+      render(
+        <DraggablePieceWithDnd
+          ref={dragRef}
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 10, y: 20 }}
+          draggable={true}
+        />
+      );
+
+      const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
+
+      const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+        .getDecoratedComponent<CoordinateGridRef>()
+        .getDropHandlerId() as Identifier;
+
+      const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
+        .getDecoratedComponent<DraggablePieceRef>()
+        .getDragHandlerId() as Identifier;
+
+      const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+      act(() => {
+        backend.simulateBeginDrag([dragSourceId]);
+      });
+
+      expect(manager.getMonitor().canDropOnTarget(dropSourceId)).toBeTruthy();
+
+      act(() => {
+        backend.simulateEndDrag();
       });
     });
   });
