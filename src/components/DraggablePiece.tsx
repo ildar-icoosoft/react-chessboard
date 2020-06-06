@@ -29,7 +29,7 @@ export const DraggablePiece = forwardRef<
   DraggablePieceRef,
   DraggablePieceProps
 >(({ pieceCode, xYCoordinates, draggable = false }, ref) => {
-  const [{ dragHandlerId }] = useDrag({
+  const [{ dragHandlerId }, dragRef] = useDrag({
     canDrag() {
       if (_isFunction(draggable)) {
         return draggable(pieceCode, xYCoordinates);
@@ -54,6 +54,7 @@ export const DraggablePiece = forwardRef<
 
   return (
     <div
+      ref={dragRef}
       className={classNames(css.draggablePiece)}
       data-testid={`draggable-piece-${pieceCode}`}
       style={{

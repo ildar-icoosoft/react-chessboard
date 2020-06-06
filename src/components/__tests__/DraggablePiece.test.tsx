@@ -243,5 +243,9 @@ describe("DraggablePiece", () => {
         xYCoordinates: { x: 10, y: 20 },
       });
     });
+
+    it("checks if draggable-piece has a ref to Connector drag source", () => {
+      // @todo
+    });
   });
 });
