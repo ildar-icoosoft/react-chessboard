@@ -103,26 +103,22 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
-    let draggableWrapper:
-      | ((pieceCode: PieceCode, xYCoordinates: XYCoordinates) => boolean)
-      | boolean;
+    const draggableHandler = (
+      pieceCode: PieceCode,
+      xYCoordinates: XYCoordinates
+    ): boolean => {
+      if (!_isFunction(draggable)) {
+        return draggable;
+      }
 
-    if (_isFunction(draggable)) {
-      draggableWrapper = (
-        pieceCode: PieceCode,
-        xYCoordinates: XYCoordinates
-      ) => {
-        const algebraicCoordinates: string = getSquareAlgebraicCoordinates(
-          xYCoordinates,
-          width,
-          orientation
-        );
+      const algebraicCoordinates: string = getSquareAlgebraicCoordinates(
+        xYCoordinates,
+        width,
+        orientation
+      );
 
-        return draggable(pieceCode, algebraicCoordinates);
-      };
-    } else {
-      draggableWrapper = draggable;
-    }
+      return draggable(pieceCode, algebraicCoordinates);
+    };
 
     return (
       <div
@@ -135,7 +131,7 @@ export const CoordinateGrid = forwardRef<
       >
         {_toPairs(position).map((pair) => (
           <DraggablePiece
-            draggable={draggableWrapper}
+            draggable={draggableHandler}
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}

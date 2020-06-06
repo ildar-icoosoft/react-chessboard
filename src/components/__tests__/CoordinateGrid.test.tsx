@@ -119,7 +119,8 @@ describe("CoordinateGrid", () => {
 
         const draggablePiece = testInstance.findByType(DraggablePiece);
 
-        expect(draggablePiece.props.draggable).toBe(false);
+        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+        expect(draggablePiece.props.draggable()).toBe(false);
 
         testRenderer.update(
           <CoordinateGridWithDnd
@@ -127,34 +128,63 @@ describe("CoordinateGrid", () => {
             draggable={true}
           />
         );
+        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+        expect(draggablePiece.props.draggable()).toBe(true);
 
-        expect(draggablePiece.props.draggable).toBe(true);
-
-        const draggableFn = jest.fn();
-
+        const draggableFalseFn = jest.fn().mockReturnValue(false);
         testRenderer.update(
           <CoordinateGridWithDnd
             position={{ e2: PieceCode.WHITE_PAWN }}
-            draggable={draggableFn}
+            draggable={draggableFalseFn}
           />
         );
-
         expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+        expect(
+          draggablePiece.props.draggable(PieceCode.WHITE_PAWN, {
+            x: 100,
+            y: 100,
+          })
+        ).toBe(false);
 
-        /* draggablePiece.props.draggable({
-          pieceCode: PieceCode.WHITE_PAWN,
-          xYCoordinates: {
-            x: 240,
-            y:360
-          }
-        });
-
-        expect(draggable).toBeCalledTimes(1);
-        expect(draggable).toBeCalledWith({
-          pieceCode: PieceCode.WHITE_PAWN,
-          coordinates: getSquareAlgebraicCoordinates({x: 240, y: 260}, 480, PieceColor.WHITE)
-        })*/
+        const draggableTrueFn = jest.fn().mockReturnValue(true);
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_PAWN }}
+            draggable={draggableTrueFn}
+          />
+        );
+        expect(draggablePiece.props.draggable).toBeInstanceOf(Function);
+        expect(
+          draggablePiece.props.draggable(PieceCode.WHITE_PAWN, {
+            x: 100,
+            y: 100,
+          })
+        ).toBe(true);
       });
+    });
+  });
+
+  describe("callback props", () => {
+    it("draggable", () => {
+      const draggable = jest.fn();
+
+      const testRenderer = TestRenderer.create(
+        <CoordinateGridWithDnd
+          position={{ e2: PieceCode.WHITE_PAWN }}
+          draggable={draggable}
+        />
+      );
+      const testInstance = testRenderer.root;
+
+      const draggablePiece = testInstance.findByType(DraggablePiece);
+
+      draggablePiece.props.draggable(PieceCode.WHITE_PAWN, {
+        x: 240,
+        y: 360,
+      });
+
+      expect(draggable).toBeCalledTimes(1);
+      expect(draggable).toBeCalledWith(PieceCode.WHITE_PAWN, "e2");
     });
   });
 
