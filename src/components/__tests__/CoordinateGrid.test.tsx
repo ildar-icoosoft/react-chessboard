@@ -416,17 +416,19 @@ describe("CoordinateGrid", () => {
         act(() => {
           backend.simulateBeginDrag([dragSourceId]);
           backend.simulateHover([dropSourceId], {
-            clientX: 100,
-            clientY: 119,
+            clientOffset: {
+              x: 60,
+              y: 60,
+            },
           });
           backend.simulateDrop();
         });
 
         expect(onDrop).toHaveBeenCalledTimes(1);
         expect(onDrop).toBeCalledWith({
-          sourceCoordinates: "a2",
-          targetCoordinates: "a2",
-          pieceCode: PieceCode.WHITE_QUEEN,
+          sourceCoordinates: "a8",
+          targetCoordinates: "b7",
+          pieceCode: PieceCode.WHITE_KING,
         });
 
         act(() => {
