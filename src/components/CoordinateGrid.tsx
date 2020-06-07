@@ -23,7 +23,7 @@ import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { PieceCode } from "../enums/PieceCode";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
-import { PieceDragObjectNew } from "../interfaces/PieceDragObjectNew";
+import { PieceDragObject } from "../interfaces/PieceDragObject";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -97,9 +97,7 @@ export const CoordinateGrid = forwardRef<
       }
     };
 
-    const calculateDragItem = (
-      monitor: DragSourceMonitor
-    ): PieceDragObjectNew => {
+    const calculateDragItem = (monitor: DragSourceMonitor): PieceDragObject => {
       const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
 
       const coordinates: string = getSquareAlgebraicCoordinates(
@@ -120,7 +118,7 @@ export const CoordinateGrid = forwardRef<
 
     const [{ dragHandlerId }, dragRef] = useDrag({
       canDrag(monitor) {
-        const item: PieceDragObjectNew = calculateDragItem(monitor);
+        const item: PieceDragObject = calculateDragItem(monitor);
 
         if (!item.pieceCode) {
           return false;
@@ -149,7 +147,7 @@ export const CoordinateGrid = forwardRef<
 
     const [{ dropHandlerId }, dropRef] = useDrop({
       accept: DragItemType.PIECE,
-      drop(item: PieceDragObjectNew, monitor) {
+      drop(item: PieceDragObject, monitor) {
         if (onDrop) {
           const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
 
