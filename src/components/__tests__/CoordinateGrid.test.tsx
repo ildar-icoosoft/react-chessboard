@@ -366,6 +366,70 @@ describe("CoordinateGrid", () => {
     });
 
     describe("Drag", () => {
+      it("allows drag anyway", () => {
+        // Can drag if contains piece and draggable is true and allowDrag is not set or allowDrag returns true
+
+        const ref = createRef<ReactDndRefType>();
+
+        const { rerender } = render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<DraggablePieceRef>()
+          .getDragHandlerId() as Identifier;
+        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable prop is false by default
+        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+            allowDrag={() => false}
+          />
+        );
+        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable is true but allowDrag returns false
+        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={false}
+            allowDrag={() => true}
+          />
+        );
+        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // allowDrag returns true but draggable is false
+        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+          />
+        );
+        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true
+        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+            allowDrag={() => true}
+          />
+        );
+        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true and allowDrag returns true
+        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+      });
+
       it("checks drag source object", () => {
         const ref = createRef<ReactDndRefType>();
         render(

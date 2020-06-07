@@ -99,12 +99,17 @@ export const CoordinateGrid = forwardRef<
     };
 
     const [{ dragHandlerId }, dragRef] = useDrag({
-      /*canDrag() {
+      /*canDrag(monitor) {
+        const item: PieceDragObjectNew = monitor.getItem();
+
+        if (!item.pieceCode) {
+          return false;
+        }
         if (!draggable) {
           return false;
         }
         if (allowDrag) {
-          return allowDrag(pieceCode, xYCoordinates);
+          return allowDrag(item.pieceCode, item.coordinates as string);
         }
         return true;
       },*/
