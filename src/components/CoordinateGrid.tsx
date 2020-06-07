@@ -25,6 +25,7 @@ import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
 import { PieceDragObject } from "../interfaces/PieceDragObject";
 import { getEmptyImage } from "react-dnd-html5-backend";
+import { useTransitionPieces } from "../hooks/useTransitionPieces";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -184,6 +185,14 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
+    const [
+      transitionPieces,
+      /*      disableTransitionInNextPosition,
+      enableTransitionInNextPosition,*/
+    ] = useTransitionPieces(position, (coordinates) =>
+      getSquareXYCoordinates(coordinates, width, orientation)
+    );
+
     return (
       <div
         data-testid={"coordinate-grid"}
@@ -193,13 +202,18 @@ export const CoordinateGrid = forwardRef<
         onContextMenu={handleContextMenu}
         ref={useCombinedRefs(dragRef, dropRef, domRef)}
       >
-        {_toPairs(position).map((pair) => (
+        {_toPairs(position).map(([algebraicCoordinates, pieceCode]) => (
           <DraggablePiece
-            pieceCode={pair[1]}
+            pieceCode={pieceCode}
             width={width / 8}
-            xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}
+            xYCoordinates={getSquareXYCoordinates(
+              algebraicCoordinates,
+              width,
+              orientation
+            )}
             transitionDuration={transitionDuration}
-            key={pair[0]}
+            transitionFrom={transitionPieces[algebraicCoordinates]}
+            key={algebraicCoordinates}
           />
         ))}
       </div>

@@ -137,6 +137,85 @@ describe("CoordinateGrid", () => {
 
         expect(draggablePiece.props.transitionDuration).toBe(600);
       });
+
+      describe("transitionPieces", () => {
+        it("Moves with transition", () => {
+          const testRenderer = TestRenderer.create(
+            <CoordinateGridWithDnd
+              position={{
+                a1: PieceCode.WHITE_BISHOP,
+                b2: PieceCode.WHITE_KING,
+                c3: PieceCode.WHITE_PAWN,
+              }}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const getWhiteKing = () =>
+            testInstance.find(
+              (item) =>
+                item.type === DraggablePiece &&
+                item.props.pieceCode === PieceCode.WHITE_KING
+            );
+          const getWhiteBishop = () =>
+            testInstance.find(
+              (item) =>
+                item.type === DraggablePiece &&
+                item.props.pieceCode === PieceCode.WHITE_BISHOP
+            );
+
+          expect(getWhiteKing().props.transitionFrom).toBeUndefined();
+
+          // b2-b4
+          testRenderer.update(
+            <CoordinateGridWithDnd
+              position={{
+                a1: PieceCode.WHITE_BISHOP,
+                b4: PieceCode.WHITE_KING,
+                c3: PieceCode.WHITE_PAWN,
+              }}
+            />
+          );
+          expect(getWhiteKing().props.transitionFrom).toEqual({
+            algebraic: "b2",
+            x: 0,
+            y: 120,
+          });
+
+          // position did not changed. Transition pieces still should contain the difference between b2 and b4 positions
+          testRenderer.update(
+            <CoordinateGridWithDnd
+              position={{
+                a1: PieceCode.WHITE_BISHOP,
+                b4: PieceCode.WHITE_KING,
+                c3: PieceCode.WHITE_PAWN,
+              }}
+            />
+          );
+          expect(getWhiteKing().props.transitionFrom).toEqual({
+            algebraic: "b2",
+            x: 0,
+            y: 120,
+          });
+
+          // a1xc3
+          testRenderer.update(
+            <CoordinateGridWithDnd
+              position={{
+                c3: PieceCode.WHITE_BISHOP,
+                b4: PieceCode.WHITE_KING,
+              }}
+            />
+          );
+
+          expect(getWhiteBishop().props.transitionFrom).toEqual({
+            algebraic: "a1",
+            x: -120,
+            y: 120,
+            phantomPiece: PieceCode.WHITE_PAWN,
+          });
+        });
+      });
     });
   });
 
