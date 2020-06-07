@@ -281,6 +281,10 @@ describe("CoordinateGrid", () => {
     });
 
     describe("Drag", () => {
+      it("drag preview should be empty image", () => {
+        // @todo
+      });
+
       it("allows drag", () => {
         // Can drag if contains piece and draggable is true and allowDrag is not set or allowDrag returns true
 

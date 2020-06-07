@@ -2,6 +2,7 @@ import React, {
   forwardRef,
   MouseEvent,
   RefObject,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from "react";
@@ -23,6 +24,7 @@ import { PieceCode } from "../enums/PieceCode";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
 import { PieceDragObject } from "../interfaces/PieceDragObject";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -115,7 +117,7 @@ export const CoordinateGrid = forwardRef<
       };
     };
 
-    const [{ dragHandlerId }, dragRef] = useDrag({
+    const [{ dragHandlerId }, dragRef, preview] = useDrag({
       canDrag(monitor) {
         const item: PieceDragObject = calculateDragItem(monitor);
 
@@ -143,6 +145,10 @@ export const CoordinateGrid = forwardRef<
         };
       },
     });
+
+    useEffect(() => {
+      preview(getEmptyImage());
+    }, []);
 
     const [{ dropHandlerId }, dropRef] = useDrop({
       accept: DragItemType.PIECE,
