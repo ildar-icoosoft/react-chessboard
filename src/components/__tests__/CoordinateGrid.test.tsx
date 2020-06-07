@@ -543,12 +543,13 @@ describe("CoordinateGrid", () => {
     });
 
     describe("Drop", () => {
-      /*it("Allows to drop piece", () => {
+      it("Allows to drop piece", () => {
         const ref = createRef<ReactDndRefType>();
         render(
           <CoordinateGridWithDnd
             ref={ref}
             position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
           />
         );
 
@@ -583,7 +584,7 @@ describe("CoordinateGrid", () => {
         act(() => {
           backend.simulateEndDrag();
         });
-      });*/
+      });
 
       it("onDrop event", () => {
         const onDrop = jest.fn();
