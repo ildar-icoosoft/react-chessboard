@@ -11,7 +11,6 @@ import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
 import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
 import { SquareRef } from "../Square";
-import { DragItemType } from "../../enums/DragItemType";
 import { XYCoord } from "react-dnd";
 
 jest.useFakeTimers();
@@ -366,7 +365,7 @@ describe("CoordinateGrid", () => {
     });
 
     describe("Drag", () => {
-      it("allows drag anyway", () => {
+      it("allows drag", () => {
         // Can drag if contains piece and draggable is true and allowDrag is not set or allowDrag returns true
 
         const ref = createRef<ReactDndRefType>();
@@ -377,14 +376,30 @@ describe("CoordinateGrid", () => {
             position={{ b7: PieceCode.WHITE_KING }}
           />
         );
-
         const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
         const dragSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<DraggablePieceRef>()
           .getDragHandlerId() as Identifier;
-        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable prop is false by default
-        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        const clientOffset: XYCoord = {
+          x: 60,
+          y: 60,
+        };
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        // @todo
+        // better to use canDragSource() function: manager.getMonitor().canDragSource(dragSourceId)
+        // https://github.com/react-dnd/react-dnd/issues/2564
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable prop is false by default
 
         rerender(
           <CoordinateGridWithDnd
@@ -394,8 +409,15 @@ describe("CoordinateGrid", () => {
             allowDrag={() => false}
           />
         );
-        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable is true but allowDrag returns false
-        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable is true but allowDrag returns false
 
         rerender(
           <CoordinateGridWithDnd
@@ -405,8 +427,15 @@ describe("CoordinateGrid", () => {
             allowDrag={() => true}
           />
         );
-        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // allowDrag returns true but draggable is false
-        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // allowDrag returns true but draggable is false
 
         rerender(
           <CoordinateGridWithDnd
@@ -415,8 +444,19 @@ describe("CoordinateGrid", () => {
             draggable={true}
           />
         );
-        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true
-        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeTruthy(); // draggable is true
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
 
         rerender(
           <CoordinateGridWithDnd
@@ -426,11 +466,38 @@ describe("CoordinateGrid", () => {
             allowDrag={() => true}
           />
         );
-        // expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true and allowDrag returns true
-        expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy();
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeTruthy(); // draggable is true and allowDrag returns true
+        act(() => {
+          backend.simulateEndDrag();
+        });
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ c7: PieceCode.WHITE_KING }}
+            draggable={true}
+          />
+        );
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable is true, but there is no piece on b7
       });
 
-      it("checks drag source object", () => {
+      /*it("checks drag source object", () => {
         const ref = createRef<ReactDndRefType>();
         render(
           <CoordinateGridWithDnd
@@ -470,38 +537,43 @@ describe("CoordinateGrid", () => {
         act(() => {
           backend.simulateEndDrag();
         });
-      });
+      });*/
     });
 
     describe("Drop", () => {
-      it("Allows to drop piece", () => {
-        const dropRef = createRef<ReactDndRefType>();
-        render(<CoordinateGridWithDnd ref={dropRef} />);
-
-        const dragRef = createRef<ReactDndRefType>();
+      /*it("Allows to drop piece", () => {
+        const ref = createRef<ReactDndRefType>();
         render(
-          <DraggablePieceWithDnd
-            ref={dragRef}
-            pieceCode={PieceCode.WHITE_KING}
-            xYCoordinates={{ x: 10, y: 20 }}
-            draggable={true}
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
           />
         );
 
-        const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
-        const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+        const dropSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<CoordinateGridRef>()
           .getDropHandlerId() as Identifier;
 
-        const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<DraggablePieceRef>()
           .getDragHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
 
+        const clientOffset: XYCoord = {
+          x: 60,
+          y: 60,
+        };
+
         act(() => {
-          backend.simulateBeginDrag([dragSourceId]);
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
         });
 
         expect(manager.getMonitor().canDropOnTarget(dropSourceId)).toBeTruthy();
@@ -509,7 +581,7 @@ describe("CoordinateGrid", () => {
         act(() => {
           backend.simulateEndDrag();
         });
-      });
+      });*/
 
       it("onDrop event", () => {
         const onDrop = jest.fn();

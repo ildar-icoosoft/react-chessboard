@@ -14,7 +14,7 @@ import {
   getSquareAlgebraicCoordinates,
   getSquareXYCoordinates,
 } from "../utils/chess";
-import { useDrag, useDrop } from "react-dnd";
+import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
@@ -98,9 +98,30 @@ export const CoordinateGrid = forwardRef<
       }
     };
 
+    const calculateDragItem = (
+      monitor: DragSourceMonitor
+    ): PieceDragObjectNew => {
+      const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
+
+      const coordinates: string = getSquareAlgebraicCoordinates(
+        {
+          x: (monitor.getClientOffset() as XYCoord).x - rect.left,
+          y: (monitor.getClientOffset() as XYCoord).y - rect.top,
+        },
+        width,
+        orientation
+      );
+
+      return {
+        type: DragItemType.PIECE,
+        pieceCode: position[coordinates],
+        coordinates,
+      };
+    };
+
     const [{ dragHandlerId }, dragRef] = useDrag({
-      /*canDrag(monitor) {
-        const item: PieceDragObjectNew = monitor.getItem();
+      canDrag(monitor) {
+        const item: PieceDragObjectNew = calculateDragItem(monitor);
 
         if (!item.pieceCode) {
           return false;
@@ -111,28 +132,14 @@ export const CoordinateGrid = forwardRef<
         if (allowDrag) {
           return allowDrag(item.pieceCode, item.coordinates as string);
         }
+
         return true;
-      },*/
+      },
       item: {
         type: DragItemType.PIECE,
       },
       begin(monitor) {
-        const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
-
-        const coordinates: string = getSquareAlgebraicCoordinates(
-          {
-            x: (monitor.getClientOffset() as XYCoord).x - rect.left,
-            y: (monitor.getClientOffset() as XYCoord).y - rect.top,
-          },
-          width,
-          orientation
-        );
-
-        return {
-          type: DragItemType.PIECE,
-          pieceCode: position[coordinates],
-          coordinates,
-        } as PieceDragObjectNew;
+        return calculateDragItem(monitor);
       },
       collect(monitor) {
         return {
