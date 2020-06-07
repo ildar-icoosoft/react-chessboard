@@ -46,7 +46,11 @@ export const PieceDragLayer = forwardRef<
     <div
       data-testid={"piece-drag-layer"}
       className={css.pieceDragLayer}
-      style={{ transform: `translate(${x - width / 2}px, ${y - width / 2}px)` }}
+      style={{
+        transform: `translate(${x - width / 2}px, ${y - width / 2}px)`,
+        width: `${width}px`,
+        height: `${width}px`,
+      }}
     >
       <Piece pieceCode={pieceCode} width={width} />
     </div>

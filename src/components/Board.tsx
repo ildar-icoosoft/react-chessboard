@@ -161,7 +161,6 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               );
             })}
           </div>
-          <PieceDragLayer width={width / 8} />
         </DndProvider>
 
         <DndProvider backend={Backend}>
@@ -185,6 +184,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
 
             {showCoordinates && <Coords orientation={orientation} />}
           </div>
+          <PieceDragLayer width={width / 8} />
         </DndProvider>
       </>
     );
