@@ -11,6 +11,8 @@ import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
 import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
 import { SquareRef } from "../Square";
+import { DragItemType } from "../../enums/DragItemType";
+import { XYCoord } from "react-dnd";
 
 jest.useFakeTimers();
 
@@ -361,6 +363,50 @@ describe("CoordinateGrid", () => {
 
     it("checks if coordinate-grid has a ref to Connector drag source", () => {
       // @todo
+    });
+
+    describe("Drag", () => {
+      it("checks drag source object", () => {
+        const ref = createRef<ReactDndRefType>();
+        render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<DraggablePieceRef>()
+          .getDragHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        const clientOffset: XYCoord = {
+          x: 60,
+          y: 60,
+        };
+
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+
+        expect(manager.getMonitor().getItem()).toEqual({
+          type: DragItemType.PIECE,
+          pieceCode: PieceCode.WHITE_KING,
+          coordinates: "b7",
+        });
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
+      });
     });
 
     describe("Drop", () => {

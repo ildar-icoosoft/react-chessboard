@@ -276,6 +276,10 @@ describe("DraggablePiece", () => {
         pieceCode: PieceCode.WHITE_KING,
         xYCoordinates: { x: 10, y: 20 },
       });
+
+      act(() => {
+        backend.simulateEndDrag();
+      });
     });
   });
 });

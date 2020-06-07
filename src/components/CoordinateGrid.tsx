@@ -24,6 +24,7 @@ import { PieceCode } from "../enums/PieceCode";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { PieceDragObject } from "../interfaces/PieceDragObject";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
+import { PieceDragObjectNew } from "../interfaces/PieceDragObjectNew";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -109,6 +110,24 @@ export const CoordinateGrid = forwardRef<
       },*/
       item: {
         type: DragItemType.PIECE,
+      },
+      begin(monitor) {
+        const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
+
+        const coordinates: string = getSquareAlgebraicCoordinates(
+          {
+            x: (monitor.getClientOffset() as XYCoord).x - rect.left,
+            y: (monitor.getClientOffset() as XYCoord).y - rect.top,
+          },
+          width,
+          orientation
+        );
+
+        return {
+          type: DragItemType.PIECE,
+          pieceCode: position[coordinates],
+          coordinates,
+        } as PieceDragObjectNew;
       },
       collect(monitor) {
         return {
