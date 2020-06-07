@@ -12,6 +12,7 @@ import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
 import { SquareRef } from "../Square";
 import { XYCoord } from "react-dnd";
+import { DragItemType } from "../../enums/DragItemType";
 
 jest.useFakeTimers();
 
@@ -497,12 +498,13 @@ describe("CoordinateGrid", () => {
         expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable is true, but there is no piece on b7
       });
 
-      /*it("checks drag source object", () => {
+      it("checks drag source object", () => {
         const ref = createRef<ReactDndRefType>();
         render(
           <CoordinateGridWithDnd
             ref={ref}
             position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
           />
         );
 
@@ -537,7 +539,7 @@ describe("CoordinateGrid", () => {
         act(() => {
           backend.simulateEndDrag();
         });
-      });*/
+      });
     });
 
     describe("Drop", () => {
