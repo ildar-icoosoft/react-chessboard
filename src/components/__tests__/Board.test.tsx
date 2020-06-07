@@ -238,21 +238,6 @@ describe("Board", () => {
         }
       });
 
-      it("transitionDuration", () => {
-        const testRenderer = TestRenderer.create(<Board />);
-        const testInstance = testRenderer.root;
-
-        const rank: TestRenderer.ReactTestInstance = testInstance.findByProps({
-          rankName: "2",
-        });
-
-        expect(rank.props.transitionDuration).toBe(300);
-
-        testRenderer.update(<Board transitionDuration={600} />);
-
-        expect(rank.props.transitionDuration).toBe(600);
-      });
-
       describe("transitionPieces", () => {
         it("Moves with transition", () => {
           const testRenderer = TestRenderer.create(
@@ -602,6 +587,21 @@ describe("Board", () => {
         testRenderer.update(<Board allowDrag={allowDrag} />);
 
         expect(coordinateGrid.props.allowDrag).toBe(allowDrag);
+      });
+
+      it("transitionDuration", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.transitionDuration).toBe(300);
+
+        testRenderer.update(<Board transitionDuration={600} />);
+
+        expect(coordinateGrid.props.transitionDuration).toBe(600);
       });
     });
   });

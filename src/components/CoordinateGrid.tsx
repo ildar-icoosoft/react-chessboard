@@ -37,6 +37,7 @@ export interface CoordinateGridProps {
   width?: number;
   draggable?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
+  transitionDuration?: number;
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;
