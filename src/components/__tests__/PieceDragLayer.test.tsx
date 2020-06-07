@@ -19,6 +19,7 @@ describe("PieceDragLayer", () => {
   const PieceDragLayerWithDnd = wrapInTestContext(PieceDragLayer);
 
   let dragSourceId: Identifier;
+  let dropSourceId: Identifier;
   let backend: ITestBackend;
 
   beforeEach(() => {
@@ -36,6 +37,9 @@ describe("PieceDragLayer", () => {
     dragSourceId = (ref.current as ReactDndRefType)
       .getDecoratedComponent<CoordinateGridRef>()
       .getDragHandlerId() as Identifier;
+    dropSourceId = (ref.current as ReactDndRefType)
+      .getDecoratedComponent<CoordinateGridRef>()
+      .getDropHandlerId() as Identifier;
 
     backend = manager.getBackend() as ITestBackend;
   });
@@ -70,15 +74,26 @@ describe("PieceDragLayer", () => {
 
       const piece = testInstance.findByType(Piece);
 
-      expect(piece.props.pieceCode).toBe(PieceCode.WHITE_QUEEN);
+      expect(piece.props.pieceCode).toBe(PieceCode.WHITE_KING);
       expect(piece.props.width).toBe(70);
     });
 
     it("should not render if there is no clientOffset", () => {
       const { container } = render(<PieceDragLayerWithDnd />);
 
+      const clientOffset: XYCoord = {
+        x: 100,
+        y: 100,
+      };
+
       act(() => {
-        backend.simulateBeginDrag([dragSourceId]);
+        backend.simulateBeginDrag([dragSourceId], {
+          clientOffset: clientOffset,
+          getSourceClientOffset() {
+            return clientOffset;
+          },
+        });
+        backend.simulateHover([dropSourceId]);
       });
 
       expect(container).toBeEmpty();
