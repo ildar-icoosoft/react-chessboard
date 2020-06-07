@@ -115,6 +115,28 @@ describe("CoordinateGrid", () => {
           y: 180,
         });
       });
+
+      it("transitionDuration", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
+        );
+        const testInstance = testRenderer.root;
+
+        const draggablePiece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          DraggablePiece
+        );
+
+        expect(draggablePiece.props.transitionDuration).toBeUndefined();
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_PAWN }}
+            transitionDuration={600}
+          />
+        );
+
+        expect(draggablePiece.props.transitionDuration).toBe(600);
+      });
     });
   });
 

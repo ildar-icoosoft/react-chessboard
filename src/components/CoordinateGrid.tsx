@@ -55,6 +55,7 @@ export const CoordinateGrid = forwardRef<
       orientation = PieceColor.WHITE,
       draggable = false,
       allowDrag,
+      transitionDuration,
       onClick,
       onRightClick,
       onDrop,
@@ -197,6 +198,7 @@ export const CoordinateGrid = forwardRef<
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}
+            transitionDuration={transitionDuration}
             key={pair[0]}
           />
         ))}
