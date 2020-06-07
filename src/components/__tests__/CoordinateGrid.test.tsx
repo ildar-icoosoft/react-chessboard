@@ -7,7 +7,7 @@ import { act, createEvent, fireEvent, render } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
-import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
+import { DraggablePiece } from "../DraggablePiece";
 import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
 import { SquareRef } from "../Square";
@@ -115,90 +115,6 @@ describe("CoordinateGrid", () => {
           y: 180,
         });
       });
-
-      it("draggable", () => {
-        const testRenderer = TestRenderer.create(
-          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
-        );
-        const testInstance = testRenderer.root;
-
-        const draggablePiece = testInstance.findByType(DraggablePiece);
-
-        expect(draggablePiece.props.draggable).toBe(false);
-
-        testRenderer.update(
-          <CoordinateGridWithDnd
-            position={{ e2: PieceCode.WHITE_PAWN }}
-            draggable={true}
-          />
-        );
-        expect(draggablePiece.props.draggable).toBe(true);
-      });
-
-      it("allowDrag", () => {
-        const testRenderer = TestRenderer.create(
-          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
-        );
-        const testInstance = testRenderer.root;
-
-        const draggablePiece = testInstance.findByType(DraggablePiece);
-
-        expect(draggablePiece.props.allowDrag).toBeUndefined();
-
-        const allowDragFalse = jest.fn().mockReturnValue(false);
-        testRenderer.update(
-          <CoordinateGridWithDnd
-            position={{ e2: PieceCode.WHITE_PAWN }}
-            allowDrag={allowDragFalse}
-          />
-        );
-        expect(draggablePiece.props.allowDrag).toBeInstanceOf(Function);
-        expect(
-          draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
-            x: 100,
-            y: 100,
-          })
-        ).toBe(false);
-
-        const allowDragTrue = jest.fn().mockReturnValue(true);
-        testRenderer.update(
-          <CoordinateGridWithDnd
-            position={{ e2: PieceCode.WHITE_PAWN }}
-            allowDrag={allowDragTrue}
-          />
-        );
-        expect(draggablePiece.props.allowDrag).toBeInstanceOf(Function);
-        expect(
-          draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
-            x: 100,
-            y: 100,
-          })
-        ).toBe(true);
-      });
-    });
-  });
-
-  describe("callback props", () => {
-    it("allowDrag", () => {
-      const allowDrag = jest.fn();
-
-      const testRenderer = TestRenderer.create(
-        <CoordinateGridWithDnd
-          position={{ e2: PieceCode.WHITE_PAWN }}
-          allowDrag={allowDrag}
-        />
-      );
-      const testInstance = testRenderer.root;
-
-      const draggablePiece = testInstance.findByType(DraggablePiece);
-
-      draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
-        x: 240,
-        y: 360,
-      });
-
-      expect(allowDrag).toBeCalledTimes(1);
-      expect(allowDrag).toBeCalledWith(PieceCode.WHITE_PAWN, "e2");
     });
   });
 
@@ -379,7 +295,7 @@ describe("CoordinateGrid", () => {
         const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
         const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-          .getDecoratedComponent<DraggablePieceRef>()
+          .getDecoratedComponent<CoordinateGridRef>()
           .getDragHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
@@ -510,7 +426,7 @@ describe("CoordinateGrid", () => {
         const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
         const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-          .getDecoratedComponent<DraggablePieceRef>()
+          .getDecoratedComponent<CoordinateGridRef>()
           .getDragHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
@@ -559,7 +475,7 @@ describe("CoordinateGrid", () => {
           .getDropHandlerId() as Identifier;
 
         const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-          .getDecoratedComponent<DraggablePieceRef>()
+          .getDecoratedComponent<CoordinateGridRef>()
           .getDragHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;

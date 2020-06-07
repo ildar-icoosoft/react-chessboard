@@ -1,25 +1,18 @@
-import React, { createRef } from "react";
-import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
+import React from "react";
 import { PieceCode } from "../../enums/PieceCode";
-import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
+import { DraggablePiece } from "../DraggablePiece";
 import TestRenderer from "react-test-renderer";
-import { wrapInTestContext } from "react-dnd-test-utils";
 import { Piece } from "../Piece";
-import { act, render } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { DragDropManager, Identifier } from "dnd-core";
-import { ITestBackend } from "react-dnd-test-backend";
-import { DragItemType } from "../../enums/DragItemType";
 
 jest.useFakeTimers();
 
 describe("DraggablePiece", () => {
-  const DraggablePieceWithDnd = wrapInTestContext(DraggablePiece);
-
   describe("children components", () => {
     it("contains 1 Piece", () => {
       const testInstance = TestRenderer.create(
-        <DraggablePieceWithDnd
+        <DraggablePiece
           pieceCode={PieceCode.BLACK_QUEEN}
           xYCoordinates={{ x: 0, y: 0 }}
         />
@@ -33,16 +26,14 @@ describe("DraggablePiece", () => {
     describe("Piece", () => {
       it("pieceCode", () => {
         const testInstance = TestRenderer.create(
-          <DraggablePieceWithDnd
+          <DraggablePiece
             xYCoordinates={{ x: 100, y: 100 }}
             pieceCode={PieceCode.BLACK_QUEEN}
             transitionFrom={{
-              e2: {
-                algebraic: "e4",
-                x: 200,
-                y: 300,
-                phantomPiece: PieceCode.BLACK_BISHOP,
-              },
+              algebraic: "e4",
+              x: 200,
+              y: 300,
+              phantomPiece: PieceCode.BLACK_BISHOP,
             }}
             transitionDuration={400}
           />
@@ -58,84 +49,10 @@ describe("DraggablePiece", () => {
     });
   });
 
-  describe("callback props", () => {
-    it("allowDrag callback is not called if draggable is false", () => {
-      const allowDrag = jest.fn().mockReturnValue(true);
-
-      const ref = createRef<ReactDndRefType>();
-
-      render(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 20, y: 30 }}
-          allowDrag={allowDrag}
-        />
-      );
-
-      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
-
-      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<DraggablePieceRef>()
-        .getDragHandlerId() as Identifier;
-
-      manager.getMonitor().canDragSource(dragSourceId);
-
-      expect(allowDrag).toBeCalledTimes(0);
-    });
-
-    it("allowDrag callback is called if draggable is true", () => {
-      const allowDrag = jest.fn().mockReturnValue(true);
-
-      const ref = createRef<ReactDndRefType>();
-
-      render(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 20, y: 30 }}
-          allowDrag={allowDrag}
-          draggable={true}
-        />
-      );
-
-      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
-
-      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<DraggablePieceRef>()
-        .getDragHandlerId() as Identifier;
-
-      manager.getMonitor().canDragSource(dragSourceId);
-
-      expect(allowDrag).toBeCalledWith(PieceCode.WHITE_KING, { x: 20, y: 30 });
-      expect(allowDrag).toBeCalledTimes(1);
-    });
-  });
-
-  describe("methods", () => {
-    it("getDragHandlerId()", () => {
-      const dragAndDropRef = createRef<ReactDndRefType>();
-
-      TestRenderer.create(
-        <DraggablePieceWithDnd
-          ref={dragAndDropRef}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 0, y: 0 }}
-        />
-      );
-
-      const draggablePieceRef: DraggablePieceRef = (dragAndDropRef.current as ReactDndRefType).getDecoratedComponent<
-        DraggablePieceRef
-      >();
-
-      expect(draggablePieceRef.getDragHandlerId()).toBeTruthy();
-    });
-  });
-
   describe("DOM structure", () => {
     it("contains data-testid draggable-piece-{pieceCode}", () => {
       const { queryByTestId, rerender } = render(
-        <DraggablePieceWithDnd
+        <DraggablePiece
           pieceCode={PieceCode.WHITE_KING}
           xYCoordinates={{ x: 0, y: 0 }}
         />
@@ -145,7 +62,7 @@ describe("DraggablePiece", () => {
       ).toBeInTheDocument();
 
       rerender(
-        <DraggablePieceWithDnd
+        <DraggablePiece
           pieceCode={PieceCode.WHITE_QUEEN}
           xYCoordinates={{ x: 0, y: 0 }}
         />
@@ -157,7 +74,7 @@ describe("DraggablePiece", () => {
 
     it("contains CSS transform style", () => {
       const { getByTestId, rerender } = render(
-        <DraggablePieceWithDnd
+        <DraggablePiece
           pieceCode={PieceCode.WHITE_KING}
           xYCoordinates={{ x: 0, y: 0 }}
         />
@@ -172,7 +89,7 @@ describe("DraggablePiece", () => {
       });
 
       rerender(
-        <DraggablePieceWithDnd
+        <DraggablePiece
           pieceCode={PieceCode.WHITE_KING}
           xYCoordinates={{ x: 10, y: 20 }}
         />
@@ -180,105 +97,6 @@ describe("DraggablePiece", () => {
 
       expect(el).toHaveStyle({
         transform: `translate(10px, 20px)`,
-      });
-    });
-  });
-
-  describe("Drag and Drop", () => {
-    it("Can drag if draggable is true and allowDrag is not set or allowDrag returns true", () => {
-      const ref = createRef<ReactDndRefType>();
-
-      const { rerender } = render(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 0, y: 0 }}
-        />
-      );
-
-      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
-
-      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<DraggablePieceRef>()
-        .getDragHandlerId() as Identifier;
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable prop is false by default
-
-      rerender(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 0, y: 0 }}
-          draggable={true}
-          allowDrag={() => false}
-        />
-      );
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // draggable is true but allowDrag returns false
-
-      rerender(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 0, y: 0 }}
-          draggable={false}
-          allowDrag={() => true}
-        />
-      );
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeFalsy(); // allowDrag returns true but draggable is false
-
-      rerender(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 0, y: 0 }}
-          draggable={true}
-        />
-      );
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true
-
-      rerender(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 0, y: 0 }}
-          draggable={true}
-          allowDrag={() => true}
-        />
-      );
-      expect(manager.getMonitor().canDragSource(dragSourceId)).toBeTruthy(); // draggable is true and allowDrag returns true
-    });
-
-    it("checks drag source object", () => {
-      const ref = createRef<ReactDndRefType>();
-
-      render(
-        <DraggablePieceWithDnd
-          ref={ref}
-          pieceCode={PieceCode.WHITE_KING}
-          xYCoordinates={{ x: 10, y: 20 }}
-          draggable={true}
-        />
-      );
-
-      const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
-
-      const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-        .getDecoratedComponent<DraggablePieceRef>()
-        .getDragHandlerId() as Identifier;
-
-      const backend: ITestBackend = manager.getBackend() as ITestBackend;
-
-      act(() => {
-        backend.simulateBeginDrag([dragSourceId]);
-      });
-
-      expect(manager.getMonitor().getItem()).toEqual({
-        type: DragItemType.PIECE,
-        pieceCode: PieceCode.WHITE_KING,
-        xYCoordinates: { x: 10, y: 20 },
-      });
-
-      act(() => {
-        backend.simulateEndDrag();
       });
     });
   });

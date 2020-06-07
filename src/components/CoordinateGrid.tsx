@@ -19,7 +19,6 @@ import { DragItemType } from "../enums/DragItemType";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
 import { DraggablePiece } from "./DraggablePiece";
-import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { PieceCode } from "../enums/PieceCode";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
@@ -177,23 +176,6 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
-    const allowDragHandler = (
-      pieceCode: PieceCode,
-      xYCoordinates: XYCoordinates
-    ): boolean => {
-      if (!allowDrag) {
-        return true;
-      }
-
-      const algebraicCoordinates: string = getSquareAlgebraicCoordinates(
-        xYCoordinates,
-        width,
-        orientation
-      );
-
-      return allowDrag(pieceCode, algebraicCoordinates);
-    };
-
     return (
       <div
         data-testid={"coordinate-grid"}
@@ -205,8 +187,6 @@ export const CoordinateGrid = forwardRef<
       >
         {_toPairs(position).map((pair) => (
           <DraggablePiece
-            draggable={draggable}
-            allowDrag={allowDrag ? allowDragHandler : undefined}
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}

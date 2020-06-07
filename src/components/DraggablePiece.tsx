@@ -1,8 +1,5 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { FC } from "react";
 import { Piece } from "./Piece";
-import { Identifier } from "dnd-core";
-import { useDrag } from "react-dnd";
-import { DragItemType } from "../enums/DragItemType";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
@@ -15,44 +12,12 @@ export interface DraggablePieceProps {
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
-  draggable?: boolean;
-  allowDrag?: (pieceCode: PieceCode, xYCoordinates: XYCoordinates) => boolean;
 }
 
-export interface DraggablePieceRef {
-  getDragHandlerId(): Identifier | null;
-}
-
-export const DraggablePiece = forwardRef<
-  DraggablePieceRef,
-  DraggablePieceProps
->(({ pieceCode, xYCoordinates, draggable = false, allowDrag }, ref) => {
-  const [{ dragHandlerId }] = useDrag({
-    canDrag() {
-      if (!draggable) {
-        return false;
-      }
-      if (allowDrag) {
-        return allowDrag(pieceCode, xYCoordinates);
-      }
-      return true;
-    },
-    item: {
-      type: DragItemType.PIECE,
-      pieceCode,
-      xYCoordinates,
-    },
-    collect(monitor) {
-      return {
-        dragHandlerId: monitor.getHandlerId(),
-      };
-    },
-  });
-
-  useImperativeHandle(ref, () => ({
-    getDragHandlerId: (): Identifier | null => dragHandlerId,
-  }));
-
+export const DraggablePiece: FC<DraggablePieceProps> = ({
+  pieceCode,
+  xYCoordinates,
+}) => {
   return (
     <div
       className={classNames(css.draggablePiece)}
@@ -64,4 +29,4 @@ export const DraggablePiece = forwardRef<
       <Piece pieceCode={pieceCode} />
     </div>
   );
-});
+};
