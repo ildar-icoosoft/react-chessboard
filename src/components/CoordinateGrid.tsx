@@ -14,19 +14,19 @@ import {
   getSquareAlgebraicCoordinates,
   getSquareXYCoordinates,
 } from "../utils/chess";
-import { useDrop } from "react-dnd";
+import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
 import { DraggablePiece } from "./DraggablePiece";
-import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { PieceCode } from "../enums/PieceCode";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
-import { PieceDragObject } from "../interfaces/PieceDragObject";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
+import { PieceDragObject } from "../interfaces/PieceDragObject";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
+  getDragHandlerId(): Identifier | null;
 }
 
 export interface CoordinateGridProps {
@@ -96,6 +96,54 @@ export const CoordinateGrid = forwardRef<
       }
     };
 
+    const calculateDragItem = (monitor: DragSourceMonitor): PieceDragObject => {
+      const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
+
+      const coordinates: string = getSquareAlgebraicCoordinates(
+        {
+          x: (monitor.getClientOffset() as XYCoord).x - rect.left,
+          y: (monitor.getClientOffset() as XYCoord).y - rect.top,
+        },
+        width,
+        orientation
+      );
+
+      return {
+        type: DragItemType.PIECE,
+        pieceCode: position[coordinates],
+        coordinates,
+      };
+    };
+
+    const [{ dragHandlerId }, dragRef] = useDrag({
+      canDrag(monitor) {
+        const item: PieceDragObject = calculateDragItem(monitor);
+
+        if (!item.pieceCode) {
+          return false;
+        }
+        if (!draggable) {
+          return false;
+        }
+        if (allowDrag) {
+          return allowDrag(item.pieceCode, item.coordinates as string);
+        }
+
+        return true;
+      },
+      item: {
+        type: DragItemType.PIECE,
+      },
+      begin(monitor) {
+        return calculateDragItem(monitor);
+      },
+      collect(monitor) {
+        return {
+          dragHandlerId: monitor.getHandlerId(),
+        };
+      },
+    });
+
     const [{ dropHandlerId }, dropRef] = useDrop({
       accept: DragItemType.PIECE,
       drop(item: PieceDragObject, monitor) {
@@ -103,11 +151,7 @@ export const CoordinateGrid = forwardRef<
           const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
 
           onDrop({
-            sourceCoordinates: getSquareAlgebraicCoordinates(
-              item.xYCoordinates,
-              width,
-              orientation
-            ),
+            sourceCoordinates: item.coordinates as string,
             targetCoordinates: getSquareAlgebraicCoordinates(
               {
                 x: (monitor.getClientOffset() as XYCoord).x - rect.left,
@@ -116,7 +160,7 @@ export const CoordinateGrid = forwardRef<
               width,
               orientation
             ),
-            pieceCode: item.pieceCode,
+            pieceCode: item.pieceCode as PieceCode,
           });
         }
       },
@@ -128,25 +172,9 @@ export const CoordinateGrid = forwardRef<
     });
 
     useImperativeHandle(ref, () => ({
+      getDragHandlerId: (): Identifier | null => dragHandlerId,
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
-
-    const allowDragHandler = (
-      pieceCode: PieceCode,
-      xYCoordinates: XYCoordinates
-    ): boolean => {
-      if (!allowDrag) {
-        return true;
-      }
-
-      const algebraicCoordinates: string = getSquareAlgebraicCoordinates(
-        xYCoordinates,
-        width,
-        orientation
-      );
-
-      return allowDrag(pieceCode, algebraicCoordinates);
-    };
 
     return (
       <div
@@ -155,12 +183,10 @@ export const CoordinateGrid = forwardRef<
         style={{ width: `${width}px`, height: `${width}px` }}
         onClick={handleClick}
         onContextMenu={handleContextMenu}
-        ref={useCombinedRefs(dropRef, domRef)}
+        ref={useCombinedRefs(dragRef, dropRef, domRef)}
       >
         {_toPairs(position).map((pair) => (
           <DraggablePiece
-            draggable={draggable}
-            allowDrag={allowDrag ? allowDragHandler : undefined}
             pieceCode={pair[1]}
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(pair[0], width, orientation)}

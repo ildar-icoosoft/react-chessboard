@@ -7,16 +7,17 @@ import { act, createEvent, fireEvent, render } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
-import { DraggablePiece, DraggablePieceRef } from "../DraggablePiece";
+import { DraggablePiece } from "../DraggablePiece";
 import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
 import { SquareRef } from "../Square";
+import { XYCoord } from "react-dnd";
+import { DragItemType } from "../../enums/DragItemType";
 
 jest.useFakeTimers();
 
 describe("CoordinateGrid", () => {
   const CoordinateGridWithDnd = wrapInTestContext(CoordinateGrid);
-  const DraggablePieceWithDnd = wrapInTestContext(DraggablePiece);
 
   it("Snapshot", () => {
     const tree = TestRenderer.create(<CoordinateGridWithDnd />).toJSON();
@@ -114,90 +115,6 @@ describe("CoordinateGrid", () => {
           y: 180,
         });
       });
-
-      it("draggable", () => {
-        const testRenderer = TestRenderer.create(
-          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
-        );
-        const testInstance = testRenderer.root;
-
-        const draggablePiece = testInstance.findByType(DraggablePiece);
-
-        expect(draggablePiece.props.draggable).toBe(false);
-
-        testRenderer.update(
-          <CoordinateGridWithDnd
-            position={{ e2: PieceCode.WHITE_PAWN }}
-            draggable={true}
-          />
-        );
-        expect(draggablePiece.props.draggable).toBe(true);
-      });
-
-      it("allowDrag", () => {
-        const testRenderer = TestRenderer.create(
-          <CoordinateGridWithDnd position={{ e2: PieceCode.WHITE_PAWN }} />
-        );
-        const testInstance = testRenderer.root;
-
-        const draggablePiece = testInstance.findByType(DraggablePiece);
-
-        expect(draggablePiece.props.allowDrag).toBeUndefined();
-
-        const allowDragFalse = jest.fn().mockReturnValue(false);
-        testRenderer.update(
-          <CoordinateGridWithDnd
-            position={{ e2: PieceCode.WHITE_PAWN }}
-            allowDrag={allowDragFalse}
-          />
-        );
-        expect(draggablePiece.props.allowDrag).toBeInstanceOf(Function);
-        expect(
-          draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
-            x: 100,
-            y: 100,
-          })
-        ).toBe(false);
-
-        const allowDragTrue = jest.fn().mockReturnValue(true);
-        testRenderer.update(
-          <CoordinateGridWithDnd
-            position={{ e2: PieceCode.WHITE_PAWN }}
-            allowDrag={allowDragTrue}
-          />
-        );
-        expect(draggablePiece.props.allowDrag).toBeInstanceOf(Function);
-        expect(
-          draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
-            x: 100,
-            y: 100,
-          })
-        ).toBe(true);
-      });
-    });
-  });
-
-  describe("callback props", () => {
-    it("allowDrag", () => {
-      const allowDrag = jest.fn();
-
-      const testRenderer = TestRenderer.create(
-        <CoordinateGridWithDnd
-          position={{ e2: PieceCode.WHITE_PAWN }}
-          allowDrag={allowDrag}
-        />
-      );
-      const testInstance = testRenderer.root;
-
-      const draggablePiece = testInstance.findByType(DraggablePiece);
-
-      draggablePiece.props.allowDrag(PieceCode.WHITE_PAWN, {
-        x: 240,
-        y: 360,
-      });
-
-      expect(allowDrag).toBeCalledTimes(1);
-      expect(allowDrag).toBeCalledWith(PieceCode.WHITE_PAWN, "e2");
     });
   });
 
@@ -316,6 +233,17 @@ describe("CoordinateGrid", () => {
 
       expect(coordinateGridRef.getDropHandlerId()).toBeTruthy();
     });
+    it("getDragHandlerId()", () => {
+      const dragAndDropRef = createRef<ReactDndRefType>();
+
+      TestRenderer.create(<CoordinateGridWithDnd ref={dragAndDropRef} />);
+
+      const coordinateGridRef: CoordinateGridRef = (dragAndDropRef.current as ReactDndRefType).getDecoratedComponent<
+        CoordinateGridRef
+      >();
+
+      expect(coordinateGridRef.getDragHandlerId()).toBeTruthy();
+    });
   });
 
   describe("DOM structure", () => {
@@ -348,35 +276,222 @@ describe("CoordinateGrid", () => {
       // @todo
     });
 
-    describe("Drop", () => {
-      it("Allows to drop piece", () => {
-        const dropRef = createRef<ReactDndRefType>();
-        render(<CoordinateGridWithDnd ref={dropRef} />);
+    it("checks if coordinate-grid has a ref to Connector drag source", () => {
+      // @todo
+    });
 
-        const dragRef = createRef<ReactDndRefType>();
-        render(
-          <DraggablePieceWithDnd
-            ref={dragRef}
-            pieceCode={PieceCode.WHITE_KING}
-            xYCoordinates={{ x: 10, y: 20 }}
-            draggable={true}
+    describe("Drag", () => {
+      it("allows drag", () => {
+        // Can drag if contains piece and draggable is true and allowDrag is not set or allowDrag returns true
+
+        const ref = createRef<ReactDndRefType>();
+
+        const { rerender } = render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
           />
         );
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
-        const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
-
-        const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<CoordinateGridRef>()
-          .getDropHandlerId() as Identifier;
-
-        const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
-          .getDecoratedComponent<DraggablePieceRef>()
           .getDragHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
 
+        const clientOffset: XYCoord = {
+          x: 60,
+          y: 60,
+        };
         act(() => {
-          backend.simulateBeginDrag([dragSourceId]);
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        // @todo
+        // better to use canDragSource() function: manager.getMonitor().canDragSource(dragSourceId)
+        // https://github.com/react-dnd/react-dnd/issues/2564
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable prop is false by default
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+            allowDrag={() => false}
+          />
+        );
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable is true but allowDrag returns false
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={false}
+            allowDrag={() => true}
+          />
+        );
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // allowDrag returns true but draggable is false
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+          />
+        );
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeTruthy(); // draggable is true
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+            allowDrag={() => true}
+          />
+        );
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeTruthy(); // draggable is true and allowDrag returns true
+        act(() => {
+          backend.simulateEndDrag();
+        });
+
+        rerender(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ c7: PieceCode.WHITE_KING }}
+            draggable={true}
+          />
+        );
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+        expect(manager.getMonitor().isDragging()).toBeFalsy(); // draggable is true, but there is no piece on b7
+      });
+
+      it("checks drag source object", () => {
+        const ref = createRef<ReactDndRefType>();
+        render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDragHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        const clientOffset: XYCoord = {
+          x: 60,
+          y: 60,
+        };
+
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+
+        expect(manager.getMonitor().getItem()).toEqual({
+          type: DragItemType.PIECE,
+          pieceCode: PieceCode.WHITE_KING,
+          coordinates: "b7",
+        });
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
+      });
+    });
+
+    describe("Drop", () => {
+      it("Allows to drop piece", () => {
+        const ref = createRef<ReactDndRefType>();
+        render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ b7: PieceCode.WHITE_KING }}
+            draggable={true}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dropSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDropHandlerId() as Identifier;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDragHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        const clientOffset: XYCoord = {
+          x: 60,
+          y: 60,
+        };
+
+        act(() => {
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
         });
 
         expect(manager.getMonitor().canDropOnTarget(dropSourceId)).toBeTruthy();
@@ -389,32 +504,42 @@ describe("CoordinateGrid", () => {
       it("onDrop event", () => {
         const onDrop = jest.fn();
 
-        const dropRef = createRef<ReactDndRefType>();
-        render(<CoordinateGridWithDnd ref={dropRef} onDrop={onDrop} />);
-
-        const dragRef = createRef<ReactDndRefType>();
+        const ref = createRef<ReactDndRefType>();
         render(
-          <DraggablePieceWithDnd
-            ref={dragRef}
-            pieceCode={PieceCode.WHITE_KING}
-            xYCoordinates={{ x: 10, y: 20 }}
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ a8: PieceCode.WHITE_KING }}
             draggable={true}
+            onDrop={onDrop}
           />
         );
 
-        const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
-        const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<SquareRef>()
           .getDragHandlerId() as Identifier;
-        const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+        const dropSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<SquareRef>()
           .getDropHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
 
         act(() => {
-          backend.simulateBeginDrag([dragSourceId]);
+          // move from a8
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: {
+              x: 30,
+              y: 30,
+            },
+            getSourceClientOffset() {
+              return {
+                x: 30,
+                y: 30,
+              };
+            },
+          });
+          // move to b7
           backend.simulateHover([dropSourceId], {
             clientOffset: {
               x: 60,
