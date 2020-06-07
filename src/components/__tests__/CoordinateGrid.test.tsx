@@ -18,7 +18,6 @@ jest.useFakeTimers();
 
 describe("CoordinateGrid", () => {
   const CoordinateGridWithDnd = wrapInTestContext(CoordinateGrid);
-  const DraggablePieceWithDnd = wrapInTestContext(DraggablePiece);
 
   it("Snapshot", () => {
     const tree = TestRenderer.create(<CoordinateGridWithDnd />).toJSON();
@@ -589,32 +588,42 @@ describe("CoordinateGrid", () => {
       it("onDrop event", () => {
         const onDrop = jest.fn();
 
-        const dropRef = createRef<ReactDndRefType>();
-        render(<CoordinateGridWithDnd ref={dropRef} onDrop={onDrop} />);
-
-        const dragRef = createRef<ReactDndRefType>();
+        const ref = createRef<ReactDndRefType>();
         render(
-          <DraggablePieceWithDnd
-            ref={dragRef}
-            pieceCode={PieceCode.WHITE_KING}
-            xYCoordinates={{ x: 10, y: 20 }}
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ a8: PieceCode.WHITE_KING }}
             draggable={true}
+            onDrop={onDrop}
           />
         );
 
-        const manager: DragDropManager = (dropRef.current as ReactDndRefType).getManager() as DragDropManager;
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
-        const dragSourceId: Identifier = (dragRef.current as ReactDndRefType)
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<SquareRef>()
           .getDragHandlerId() as Identifier;
-        const dropSourceId: Identifier = (dropRef.current as ReactDndRefType)
+        const dropSourceId: Identifier = (ref.current as ReactDndRefType)
           .getDecoratedComponent<SquareRef>()
           .getDropHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
 
         act(() => {
-          backend.simulateBeginDrag([dragSourceId]);
+          // move from a8
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: {
+              x: 30,
+              y: 30,
+            },
+            getSourceClientOffset() {
+              return {
+                x: 30,
+                y: 30,
+              };
+            },
+          });
+          // move to b7
           backend.simulateHover([dropSourceId], {
             clientOffset: {
               x: 60,
