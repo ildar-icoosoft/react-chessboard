@@ -14,7 +14,7 @@ import { useDrag, useDrop } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
-import { PieceDragObject } from "../interfaces/PieceDragObject";
+import { PieceDragObjectOld } from "../interfaces/PieceDragObjectOld";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
 import { Notation } from "./Notation";
@@ -87,7 +87,7 @@ export const Square = forwardRef<SquareRef, SquareProps>(
   ) => {
     const [{ isOver, dropHandlerId }, dropRef] = useDrop({
       accept: DragItemType.PIECE,
-      drop(item: PieceDragObject) {
+      drop(item: PieceDragObjectOld) {
         if (onDrop) {
           onDrop({
             sourceCoordinates: item.coordinates,
@@ -96,7 +96,7 @@ export const Square = forwardRef<SquareRef, SquareProps>(
           });
         }
       },
-      hover(_item: PieceDragObject, monitor) {
+      hover(_item: PieceDragObjectOld, monitor) {
         // we could also use HTML onDragEnter event, but for some reason it called twice on beginning of the drag
         if (!monitor.isOver({ shallow: true })) {
           if (onDragEnterSquare) {

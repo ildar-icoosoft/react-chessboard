@@ -712,7 +712,7 @@ describe("Board", () => {
       expect(onDragEnterSquare).toBeCalledWith("e2");
     });
 
-    it("onDrop", () => {
+    it("onDrop old", () => {
       const onDrop = jest.fn();
 
       const testInstance = TestRenderer.create(<Board onDrop={onDrop} />).root;
@@ -720,6 +720,30 @@ describe("Board", () => {
       const rank: TestRenderer.ReactTestInstance = testInstance.findByProps({
         rankName: "2",
       });
+
+      const dropEvent: PieceDropEvent = {
+        sourceCoordinates: "e2",
+        targetCoordinates: "e4",
+        pieceCode: PieceCode.WHITE_PAWN,
+      };
+
+      TestRenderer.act(() => {
+        rank.props.onDrop(dropEvent);
+      });
+
+      expect(onDrop).toHaveBeenCalledTimes(1);
+
+      expect(onDrop).toBeCalledWith(expect.objectContaining(dropEvent));
+    });
+
+    it("onDrop", () => {
+      const onDrop = jest.fn();
+
+      const testInstance = TestRenderer.create(<Board onDrop={onDrop} />).root;
+
+      const rank: TestRenderer.ReactTestInstance = testInstance.findByType(
+        CoordinateGrid
+      );
 
       const dropEvent: PieceDropEvent = {
         sourceCoordinates: "e2",

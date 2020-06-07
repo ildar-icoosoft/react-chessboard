@@ -180,6 +180,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               position={position}
               width={width}
               onClick={onSquareClick}
+              onDrop={handleDrop}
             />
 
             {showCoordinates && <Coords orientation={orientation} />}
