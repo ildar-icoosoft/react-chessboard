@@ -316,6 +316,17 @@ describe("CoordinateGrid", () => {
 
       expect(coordinateGridRef.getDropHandlerId()).toBeTruthy();
     });
+    it("getDragHandlerId()", () => {
+      const dragAndDropRef = createRef<ReactDndRefType>();
+
+      TestRenderer.create(<CoordinateGridWithDnd ref={dragAndDropRef} />);
+
+      const coordinateGridRef: CoordinateGridRef = (dragAndDropRef.current as ReactDndRefType).getDecoratedComponent<
+        CoordinateGridRef
+      >();
+
+      expect(coordinateGridRef.getDragHandlerId()).toBeTruthy();
+    });
   });
 
   describe("DOM structure", () => {
@@ -345,6 +356,10 @@ describe("CoordinateGrid", () => {
 
   describe("Drag and Drop", () => {
     it("checks if coordinate-grid has a ref to Connector drop source", () => {
+      // @todo
+    });
+
+    it("checks if coordinate-grid has a ref to Connector drag source", () => {
       // @todo
     });
 

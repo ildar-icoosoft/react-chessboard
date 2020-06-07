@@ -14,7 +14,7 @@ import {
   getSquareAlgebraicCoordinates,
   getSquareXYCoordinates,
 } from "../utils/chess";
-import { useDrop } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
 import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
@@ -27,6 +27,7 @@ import { XYCoord } from "react-dnd/lib/interfaces/monitors";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
+  getDragHandlerId(): Identifier | null;
 }
 
 export interface CoordinateGridProps {
@@ -96,6 +97,26 @@ export const CoordinateGrid = forwardRef<
       }
     };
 
+    const [{ dragHandlerId }, dragRef] = useDrag({
+      /*canDrag() {
+        if (!draggable) {
+          return false;
+        }
+        if (allowDrag) {
+          return allowDrag(pieceCode, xYCoordinates);
+        }
+        return true;
+      },*/
+      item: {
+        type: DragItemType.PIECE,
+      },
+      collect(monitor) {
+        return {
+          dragHandlerId: monitor.getHandlerId(),
+        };
+      },
+    });
+
     const [{ dropHandlerId }, dropRef] = useDrop({
       accept: DragItemType.PIECE,
       drop(item: PieceDragObject, monitor) {
@@ -128,6 +149,7 @@ export const CoordinateGrid = forwardRef<
     });
 
     useImperativeHandle(ref, () => ({
+      getDragHandlerId: (): Identifier | null => dragHandlerId,
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
@@ -155,7 +177,7 @@ export const CoordinateGrid = forwardRef<
         style={{ width: `${width}px`, height: `${width}px` }}
         onClick={handleClick}
         onContextMenu={handleContextMenu}
-        ref={useCombinedRefs(dropRef, domRef)}
+        ref={useCombinedRefs(dragRef, dropRef, domRef)}
       >
         {_toPairs(position).map((pair) => (
           <DraggablePiece
