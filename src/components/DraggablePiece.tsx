@@ -21,8 +21,7 @@ export interface DraggablePieceProps {
 const getTransitionStyles = (
   transitionFrom: SquareTransitionFrom | undefined,
   state: TransitionStatus,
-  transitionDuration: number,
-  xYCoordinates: XYCoordinates
+  transitionDuration: number
 ): CSSProperties => {
   if (!transitionFrom) {
     return {};
@@ -33,7 +32,6 @@ const getTransitionStyles = (
       transform: `translate(${transitionFrom.x}px, ${transitionFrom.y}px)`,
     },
     entering: {
-      transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
       transition: `transform ${transitionDuration}ms`,
       zIndex: 10,
     },
@@ -65,12 +63,7 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
             data-testid={`draggable-piece-${pieceCode}`}
             style={{
               transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
-              ...getTransitionStyles(
-                transitionFrom,
-                state,
-                transitionDuration,
-                xYCoordinates
-              ),
+              ...getTransitionStyles(transitionFrom, state, transitionDuration),
             }}
           >
             <Piece pieceCode={pieceCode} />

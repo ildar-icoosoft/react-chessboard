@@ -5,6 +5,7 @@ import TestRenderer from "react-test-renderer";
 import { Piece } from "../Piece";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import { Transition } from "react-transition-group";
 
 jest.useFakeTimers();
 
@@ -19,6 +20,19 @@ describe("DraggablePiece", () => {
       ).root;
 
       expect(testInstance.findAllByType(Piece).length).toBe(1);
+    });
+
+    it("contains 1 Transition", () => {
+      const testInstance = TestRenderer.create(
+        <DraggablePiece
+          pieceCode={PieceCode.BLACK_QUEEN}
+          xYCoordinates={{ x: 0, y: 0 }}
+        />
+      ).root;
+
+      // We include only 1 Transition element.
+      // It looks like Transition element renders another one Transition element inside
+      expect(testInstance.findAllByType(Transition).length).toBe(2);
     });
   });
 
@@ -100,7 +114,7 @@ describe("DraggablePiece", () => {
       });
     });
 
-    it("contains Piece move CSS transition styles", () => {
+    it("checks Piece move CSS transition styles with default transitionDuration (300ms)", () => {
       const { getByTestId } = render(
         <DraggablePiece
           pieceCode={PieceCode.WHITE_KING}
@@ -128,6 +142,61 @@ describe("DraggablePiece", () => {
       expect(el).toHaveStyle({
         transform: "translate(420px, 120px)",
         transition: "transform 300ms",
+        zIndex: 10,
+      });
+
+      // transition is not finished
+      jest.advanceTimersByTime(150);
+      expect(el).toHaveStyle({
+        transform: "translate(420px, 120px)",
+        transition: "transform 300ms",
+        zIndex: 10,
+      });
+
+      // transition is finished
+      jest.advanceTimersByTime(150);
+      expect(el.style.transform).toBe("translate(420px, 120px)");
+      expect(el.style.transition).toBe("");
+      expect(el.style.zIndex).toBe("");
+    });
+
+    it("checks Piece move CSS transition styles with 600ms transitionDuration", () => {
+      const { getByTestId } = render(
+        <DraggablePiece
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 420, y: 120 }}
+          transitionFrom={{
+            algebraic: "e7",
+            x: 240,
+            y: 60,
+          }}
+          transitionDuration={600}
+        />
+      );
+
+      const el: HTMLElement = getByTestId(
+        `draggable-piece-${PieceCode.WHITE_KING}`
+      );
+
+      // @todo
+      // this style must be in the first render,
+      // but for some reason we don't see the first render in tests
+      // expect(el).toHaveStyle({
+      //   transform: `translate(240px, 60px)`
+      // });
+
+      // right after first render start
+      expect(el).toHaveStyle({
+        transform: "translate(420px, 120px)",
+        transition: "transform 600ms",
+        zIndex: 10,
+      });
+
+      // transition is not finished
+      jest.advanceTimersByTime(300);
+      expect(el).toHaveStyle({
+        transform: "translate(420px, 120px)",
+        transition: "transform 600ms",
         zIndex: 10,
       });
 
