@@ -130,12 +130,11 @@ describe("DraggablePiece", () => {
         `draggable-piece-${PieceCode.WHITE_KING}`
       );
 
-      // @todo
-      // this style must be in the first render,
-      // but for some reason we don't see the first render in tests
-      // expect(el).toHaveStyle({
-      //   transform: `translate(240px, 60px)`
-      // });
+      // first render
+      expect(el).toHaveStyle({
+        transform: `translate(240px, 60px)`,
+      });
+      jest.advanceTimersByTime(1);
 
       // right after first render start
       expect(el).toHaveStyle({
@@ -177,12 +176,11 @@ describe("DraggablePiece", () => {
         `draggable-piece-${PieceCode.WHITE_KING}`
       );
 
-      // @todo
-      // this style must be in the first render,
-      // but for some reason we don't see the first render in tests
-      // expect(el).toHaveStyle({
-      //   transform: `translate(240px, 60px)`
-      // });
+      // first render
+      expect(el).toHaveStyle({
+        transform: `translate(240px, 60px)`,
+      });
+      jest.advanceTimersByTime(1);
 
       // right after first render start
       expect(el).toHaveStyle({
