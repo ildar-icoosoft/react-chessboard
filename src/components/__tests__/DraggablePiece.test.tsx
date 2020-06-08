@@ -99,5 +99,43 @@ describe("DraggablePiece", () => {
         transform: `translate(10px, 20px)`,
       });
     });
+
+    it("contains Piece move CSS transition styles", () => {
+      const { getByTestId } = render(
+        <DraggablePiece
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 420, y: 120 }}
+          transitionFrom={{
+            algebraic: "e7",
+            x: 240,
+            y: 60,
+          }}
+        />
+      );
+
+      const el: HTMLElement = getByTestId(
+        `draggable-piece-${PieceCode.WHITE_KING}`
+      );
+
+      // @todo
+      // this style must be in the first render,
+      // but for some reason we don't see the first render in tests
+      // expect(el).toHaveStyle({
+      //   transform: `translate(240px, 60px)`
+      // });
+
+      // right after first render start
+      expect(el).toHaveStyle({
+        transform: "translate(420px, 120px)",
+        transition: "transform 300ms",
+        zIndex: 10,
+      });
+
+      // transition is finished
+      jest.advanceTimersByTime(300);
+      expect(el.style.transform).toBe("translate(420px, 120px)");
+      expect(el.style.transition).toBe("");
+      expect(el.style.zIndex).toBe("");
+    });
   });
 });

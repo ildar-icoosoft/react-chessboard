@@ -1,10 +1,14 @@
-import React, { FC } from "react";
+import React, { CSSProperties, FC, useEffect, useState } from "react";
 import { Piece } from "./Piece";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 import classNames from "classnames";
 import css from "./DraggablePiece.scss";
+import { TransitionStatus } from "react-transition-group/Transition";
+import { PartialRecord } from "../types/PartialRecord";
+import { DEFAULT_TRANSITION_DURATION } from "../constants/constants";
+import { Transition } from "react-transition-group";
 
 export interface DraggablePieceProps {
   pieceCode: PieceCode;
@@ -14,19 +18,65 @@ export interface DraggablePieceProps {
   transitionDuration?: number;
 }
 
+const getTransitionStyles = (
+  transitionFrom: SquareTransitionFrom | undefined,
+  state: TransitionStatus,
+  transitionDuration: number,
+  xYCoordinates: XYCoordinates
+): CSSProperties => {
+  if (!transitionFrom) {
+    return {};
+  }
+
+  const styles: PartialRecord<TransitionStatus, CSSProperties> = {
+    exited: {
+      transform: `translate(${transitionFrom.x}px, ${transitionFrom.y}px)`,
+    },
+    entering: {
+      transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
+      transition: `transform ${transitionDuration}ms`,
+      zIndex: 10,
+    },
+  };
+
+  return styles[state] || {};
+};
+
 export const DraggablePiece: FC<DraggablePieceProps> = ({
   pieceCode,
   xYCoordinates,
+  transitionFrom,
+  transitionDuration = DEFAULT_TRANSITION_DURATION,
 }) => {
+  const [inProp, setInProp] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (transitionFrom) {
+      setInProp(true);
+    }
+  }, [transitionFrom]);
+
   return (
-    <div
-      className={classNames(css.draggablePiece)}
-      data-testid={`draggable-piece-${pieceCode}`}
-      style={{
-        transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
+    <Transition in={inProp} timeout={transitionDuration}>
+      {(state) => {
+        return (
+          <div
+            className={classNames(css.draggablePiece)}
+            data-testid={`draggable-piece-${pieceCode}`}
+            style={{
+              transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
+              ...getTransitionStyles(
+                transitionFrom,
+                state,
+                transitionDuration,
+                xYCoordinates
+              ),
+            }}
+          >
+            <Piece pieceCode={pieceCode} />
+          </div>
+        );
       }}
-    >
-      <Piece pieceCode={pieceCode} />
-    </div>
+    </Transition>
   );
 };

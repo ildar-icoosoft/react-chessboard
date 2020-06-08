@@ -53,14 +53,10 @@ export const useTransitionPieces = (
       const sourceX = sourceXYCoordinates.x;
       const sourceY = sourceXYCoordinates.y;
 
-      const targetXYCoordinates = getSquareXYCoordinates(targetCoordinates);
-      const targetX = targetXYCoordinates.x;
-      const targetY = targetXYCoordinates.y;
-
       return {
         algebraic: sourceCoordinates,
-        x: sourceX - targetX,
-        y: sourceY - targetY,
+        x: sourceX,
+        y: sourceY,
         phantomPiece: (prevPosition as Position)[targetCoordinates],
       };
     }

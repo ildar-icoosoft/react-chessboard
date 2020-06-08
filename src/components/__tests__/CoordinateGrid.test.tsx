@@ -178,8 +178,8 @@ describe("CoordinateGrid", () => {
           );
           expect(getWhiteKing().props.transitionFrom).toEqual({
             algebraic: "b2",
-            x: 0,
-            y: 120,
+            x: 60,
+            y: 360,
           });
 
           // position did not changed. Transition pieces still should contain the difference between b2 and b4 positions
@@ -194,8 +194,8 @@ describe("CoordinateGrid", () => {
           );
           expect(getWhiteKing().props.transitionFrom).toEqual({
             algebraic: "b2",
-            x: 0,
-            y: 120,
+            x: 60,
+            y: 360,
           });
 
           // a1xc3
@@ -210,8 +210,8 @@ describe("CoordinateGrid", () => {
 
           expect(getWhiteBishop().props.transitionFrom).toEqual({
             algebraic: "a1",
-            x: -120,
-            y: 120,
+            x: 0,
+            y: 420,
             phantomPiece: PieceCode.WHITE_PAWN,
           });
         });
