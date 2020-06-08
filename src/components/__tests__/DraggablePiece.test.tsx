@@ -30,8 +30,7 @@ describe("DraggablePiece", () => {
         />
       ).root;
 
-      // We include only 1 Transition element.
-      // It looks like Transition element renders another one Transition element inside
+      // @todo. After remove Transition in Piece there will be only 1 Transition
       expect(testInstance.findAllByType(Transition).length).toBe(2);
     });
   });
