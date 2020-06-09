@@ -3,13 +3,23 @@ import { PieceCode } from "../../enums/PieceCode";
 import { DraggablePiece } from "../DraggablePiece";
 import TestRenderer from "react-test-renderer";
 import { Piece } from "../Piece";
-import { render } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { Transition } from "react-transition-group";
 
 jest.useFakeTimers();
 
 describe("DraggablePiece", () => {
+  // @todo. maybe we should add this code to each test suite
+  beforeEach(() => {
+    TestRenderer.act(() => {
+      jest.runAllTimers();
+    });
+    act(() => {
+      jest.runAllTimers();
+    });
+  });
+
   describe("children components", () => {
     it("contains 1 Piece", () => {
       const testInstance = TestRenderer.create(
@@ -134,7 +144,9 @@ describe("DraggablePiece", () => {
       expect(el).toHaveStyle({
         transform: `translate(240px, 60px)`,
       });
-      jest.advanceTimersByTime(1);
+      act(() => {
+        jest.advanceTimersByTime(1);
+      });
 
       // right after first render start
       expect(el).toHaveStyle({
@@ -180,7 +192,9 @@ describe("DraggablePiece", () => {
       expect(el).toHaveStyle({
         transform: `translate(240px, 60px)`,
       });
-      jest.advanceTimersByTime(1);
+      act(() => {
+        jest.advanceTimersByTime(1);
+      });
 
       // right after first render start
       expect(el).toHaveStyle({
