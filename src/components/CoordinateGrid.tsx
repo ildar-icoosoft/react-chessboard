@@ -155,10 +155,8 @@ export const CoordinateGrid = forwardRef<
 
     const [
       transitionPieces,
-      /*disableTransitionInNextPosition*/
-      /*enableTransitionInNextPosition*/
-      ,
-      ,
+      disableTransitionInNextPosition,
+      enableTransitionInNextPosition,
     ] = useTransitionPieces(position, (coordinates) =>
       getSquareXYCoordinates(coordinates, width, orientation)
     );
@@ -168,6 +166,8 @@ export const CoordinateGrid = forwardRef<
       drop(item: PieceDragObject, monitor) {
         if (onDrop) {
           const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
+
+          disableTransitionInNextPosition();
 
           onDrop({
             sourceCoordinates: item.coordinates as string,
@@ -180,7 +180,7 @@ export const CoordinateGrid = forwardRef<
               orientation
             ),
             pieceCode: item.pieceCode as PieceCode,
-            cancelMove: () => {}, // enableTransitionInNextPosition,
+            cancelMove: enableTransitionInNextPosition,
           });
         }
       },

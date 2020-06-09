@@ -218,6 +218,80 @@ describe("CoordinateGrid", () => {
         });
 
         describe("Transition on drag drop moves", () => {
+          it("disabled transition if event.cancelMove() was not called", () => {
+            const onDrop = jest.fn();
+
+            const ref = createRef<ReactDndRefType>();
+
+            const { getByTestId, rerender } = render(
+              <CoordinateGridWithDnd
+                ref={ref}
+                onDrop={onDrop}
+                position={{
+                  a8: PieceCode.WHITE_BISHOP,
+                }}
+                draggable={true}
+              />
+            );
+
+            const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+            const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+              .getDecoratedComponent<CoordinateGridRef>()
+              .getDragHandlerId() as Identifier;
+            const dropSourceId: Identifier = (ref.current as ReactDndRefType)
+              .getDecoratedComponent<CoordinateGridRef>()
+              .getDropHandlerId() as Identifier;
+
+            const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+            const clientOffset: XYCoord = {
+              x: 0,
+              y: 0,
+            };
+            act(() => {
+              // move from a8
+              backend.simulateBeginDrag([dragSourceId], {
+                clientOffset: clientOffset,
+                getSourceClientOffset() {
+                  return clientOffset;
+                },
+              });
+              // move to b7
+              backend.simulateHover([dropSourceId], {
+                clientOffset: {
+                  x: 60,
+                  y: 60,
+                },
+              });
+              backend.simulateDrop();
+            });
+
+            // rerender with new position (after a8-b7)
+            rerender(
+              <CoordinateGridWithDnd
+                ref={ref}
+                onDrop={onDrop}
+                position={{
+                  b7: PieceCode.WHITE_BISHOP,
+                }}
+                draggable={true}
+              />
+            );
+
+            // better to test it with react-test-renderer (draggablePiece.props.transitionFrom value)
+            // but dnd does not work with react-test-renderer, so I created data-test-transition attribute for tests
+            const coordinateGridEl = getByTestId("coordinate-grid");
+
+            expect(
+              JSON.parse(coordinateGridEl.dataset.testTransition as string)
+            ).toEqual({});
+
+            act(() => {
+              backend.simulateEndDrag();
+            });
+          });
+
           it("enabled transition if event.cancelMove() was called", () => {
             const onDrop = jest.fn((event: BoardDropEvent) => {
               event.cancelMove();
