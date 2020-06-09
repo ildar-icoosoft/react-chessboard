@@ -153,6 +153,16 @@ export const CoordinateGrid = forwardRef<
       preview(getEmptyImage());
     }, []);
 
+    const [
+      transitionPieces,
+      /*disableTransitionInNextPosition*/
+      /*enableTransitionInNextPosition*/
+      ,
+      ,
+    ] = useTransitionPieces(position, (coordinates) =>
+      getSquareXYCoordinates(coordinates, width, orientation)
+    );
+
     const [{ dropHandlerId }, dropRef] = useDrop({
       accept: DragItemType.PIECE,
       drop(item: PieceDragObject, monitor) {
@@ -170,7 +180,7 @@ export const CoordinateGrid = forwardRef<
               orientation
             ),
             pieceCode: item.pieceCode as PieceCode,
-            cancelMove: () => {},
+            cancelMove: () => {}, // enableTransitionInNextPosition,
           });
         }
       },
@@ -186,17 +196,10 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
-    const [
-      transitionPieces,
-      /*      disableTransitionInNextPosition,
-      enableTransitionInNextPosition,*/
-    ] = useTransitionPieces(position, (coordinates) =>
-      getSquareXYCoordinates(coordinates, width, orientation)
-    );
-
     return (
       <div
         data-testid={"coordinate-grid"}
+        data-test-transition={JSON.stringify(transitionPieces)}
         className={css.coordinateGrid}
         style={{ width: `${width}px`, height: `${width}px` }}
         onClick={handleClick}

@@ -13,6 +13,7 @@ import { ITestBackend } from "react-dnd-test-backend";
 import { SquareRef } from "../Square";
 import { XYCoord } from "react-dnd";
 import { DragItemType } from "../../enums/DragItemType";
+import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 
 jest.useFakeTimers();
 
@@ -217,14 +218,14 @@ describe("CoordinateGrid", () => {
         });
 
         describe("Transition on drag drop moves", () => {
-          /*it("enabled transition if event.cancelMove() was called", () => {
+          it("enabled transition if event.cancelMove() was called", () => {
             const onDrop = jest.fn((event: BoardDropEvent) => {
               event.cancelMove();
             });
 
             const ref = createRef<ReactDndRefType>();
 
-            const testRenderer = TestRenderer.create(
+            const { getByTestId, rerender } = render(
               <CoordinateGridWithDnd
                 ref={ref}
                 onDrop={onDrop}
@@ -234,7 +235,6 @@ describe("CoordinateGrid", () => {
                 draggable={true}
               />
             );
-            const testInstance = testRenderer.root;
 
             const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
@@ -269,14 +269,36 @@ describe("CoordinateGrid", () => {
               backend.simulateDrop();
             });
 
-            const draggablePiece: TestRenderer.ReactTestInstance = testInstance.find(
-              (item) =>
-                item.type === DraggablePiece &&
-                item.props.pieceCode === PieceCode.WHITE_BISHOP
+            // rerender with new position (after a8-b7)
+            rerender(
+              <CoordinateGridWithDnd
+                ref={ref}
+                onDrop={onDrop}
+                position={{
+                  b7: PieceCode.WHITE_BISHOP,
+                }}
+                draggable={true}
+              />
             );
 
-            expect(draggablePiece.props.transitionFrom).toBeUndefined();
-          });*/
+            // better to test it with react-test-renderer (draggablePiece.props.transitionFrom value)
+            // but dnd does not work with react-test-renderer, so I created data-test-transition attribute for tests
+            const coordinateGridEl = getByTestId("coordinate-grid");
+
+            expect(
+              JSON.parse(coordinateGridEl.dataset.testTransition as string)
+            ).toEqual({
+              b7: {
+                algebraic: "a8",
+                x: 0,
+                y: 0,
+              },
+            });
+
+            act(() => {
+              backend.simulateEndDrag();
+            });
+          });
         });
       });
     });
