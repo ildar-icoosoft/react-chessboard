@@ -21,11 +21,11 @@ import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
 import { DraggablePiece } from "./DraggablePiece";
 import { PieceCode } from "../enums/PieceCode";
-import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { XYCoord } from "react-dnd/lib/interfaces/monitors";
 import { PieceDragObject } from "../interfaces/PieceDragObject";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useTransitionPieces } from "../hooks/useTransitionPieces";
+import { BoardDropEvent } from "../interfaces/BoardDropEvent";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -42,7 +42,7 @@ export interface CoordinateGridProps {
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;
-  onDrop?(event: PieceDropEvent): void;
+  onDrop?(event: BoardDropEvent): void;
 }
 
 export const CoordinateGrid = forwardRef<
@@ -170,6 +170,7 @@ export const CoordinateGrid = forwardRef<
               orientation
             ),
             pieceCode: item.pieceCode as PieceCode,
+            cancelMove: () => {},
           });
         }
       },
