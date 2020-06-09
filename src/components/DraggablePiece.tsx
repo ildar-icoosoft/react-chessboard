@@ -49,7 +49,6 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
   const [inProp, setInProp] = useState<boolean>(false);
 
   useEffect(() => {
-    // https://stackoverflow.com/questions/62268128/do-something-after-component-rendering-in-react
     // https://github.com/facebook/react/issues/19100
     setTimeout(() => {
       if (transitionFrom) {
