@@ -215,6 +215,69 @@ describe("CoordinateGrid", () => {
             phantomPiece: PieceCode.WHITE_PAWN,
           });
         });
+
+        describe("Transition on drag drop moves", () => {
+          /*it("enabled transition if event.cancelMove() was called", () => {
+            const onDrop = jest.fn((event: BoardDropEvent) => {
+              event.cancelMove();
+            });
+
+            const ref = createRef<ReactDndRefType>();
+
+            const testRenderer = TestRenderer.create(
+              <CoordinateGridWithDnd
+                ref={ref}
+                onDrop={onDrop}
+                position={{
+                  a8: PieceCode.WHITE_BISHOP,
+                }}
+                draggable={true}
+              />
+            );
+            const testInstance = testRenderer.root;
+
+            const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+            const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+              .getDecoratedComponent<CoordinateGridRef>()
+              .getDragHandlerId() as Identifier;
+            const dropSourceId: Identifier = (ref.current as ReactDndRefType)
+              .getDecoratedComponent<CoordinateGridRef>()
+              .getDropHandlerId() as Identifier;
+
+            const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+            const clientOffset: XYCoord = {
+              x: 0,
+              y: 0,
+            };
+            act(() => {
+              // move from a8
+              backend.simulateBeginDrag([dragSourceId], {
+                clientOffset: clientOffset,
+                getSourceClientOffset() {
+                  return clientOffset;
+                },
+              });
+              // move to b7
+              backend.simulateHover([dropSourceId], {
+                clientOffset: {
+                  x: 60,
+                  y: 60,
+                },
+              });
+              backend.simulateDrop();
+            });
+
+            const draggablePiece: TestRenderer.ReactTestInstance = testInstance.find(
+              (item) =>
+                item.type === DraggablePiece &&
+                item.props.pieceCode === PieceCode.WHITE_BISHOP
+            );
+
+            expect(draggablePiece.props.transitionFrom).toBeUndefined();
+          });*/
+        });
       });
     });
   });
@@ -655,11 +718,14 @@ describe("CoordinateGrid", () => {
         });
 
         expect(onDrop).toHaveBeenCalledTimes(1);
-        expect(onDrop).toBeCalledWith({
-          sourceCoordinates: "a8",
-          targetCoordinates: "b7",
-          pieceCode: PieceCode.WHITE_KING,
-        });
+        expect(onDrop).toBeCalledWith(
+          expect.objectContaining({
+            sourceCoordinates: "a8",
+            targetCoordinates: "b7",
+            pieceCode: PieceCode.WHITE_KING,
+            cancelMove: expect.any(Function),
+          })
+        );
 
         act(() => {
           backend.simulateEndDrag();
