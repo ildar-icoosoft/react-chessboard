@@ -545,6 +545,54 @@ describe("CoordinateGrid", () => {
         // @todo
       });
 
+      it("onDragStart event", () => {
+        const onDragStart = jest.fn();
+
+        const ref = createRef<ReactDndRefType>();
+        render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ a8: PieceCode.WHITE_KING }}
+            draggable={true}
+            onDragStart={onDragStart}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<SquareRef>()
+          .getDragHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        act(() => {
+          // move from a8
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: {
+              x: 30,
+              y: 30,
+            },
+            getSourceClientOffset() {
+              return {
+                x: 30,
+                y: 30,
+              };
+            },
+          });
+        });
+
+        expect(onDragStart).toHaveBeenCalledTimes(1);
+        expect(onDragStart).toBeCalledWith({
+          coordinates: "a8",
+          pieceCode: PieceCode.WHITE_KING,
+        });
+
+        act(() => {
+          backend.simulateEndDrag();
+        });
+      });
+
       it("allows drag", () => {
         // Can drag if contains piece and draggable is true and allowDrag is not set or allowDrag returns true
 

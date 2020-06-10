@@ -26,6 +26,7 @@ import { PieceDragObject } from "../interfaces/PieceDragObject";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useTransitionPieces } from "../hooks/useTransitionPieces";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
+import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -43,6 +44,7 @@ export interface CoordinateGridProps {
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;
   onDrop?(event: BoardDropEvent): void;
+  onDragStart?(event: PieceDragStartEvent): void;
 }
 
 export const CoordinateGrid = forwardRef<
@@ -60,6 +62,7 @@ export const CoordinateGrid = forwardRef<
       onClick,
       onRightClick,
       onDrop,
+      onDragStart,
     },
     ref
   ) => {
@@ -140,7 +143,16 @@ export const CoordinateGrid = forwardRef<
         type: DragItemType.PIECE,
       },
       begin(monitor) {
-        return calculateDragItem(monitor);
+        const item: PieceDragObject = calculateDragItem(monitor);
+
+        if (onDragStart) {
+          onDragStart({
+            coordinates: item.coordinates as string,
+            pieceCode: item.pieceCode as PieceCode,
+          });
+        }
+
+        return item;
       },
       collect(monitor) {
         return {
