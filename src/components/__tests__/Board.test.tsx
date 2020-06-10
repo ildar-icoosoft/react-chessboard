@@ -667,7 +667,7 @@ describe("Board", () => {
       expect(onSquareRightClick).toBeCalledWith("e2");
     });
 
-    it("onDragStart", () => {
+    it("onDragStart old", () => {
       const onDragStart = jest.fn();
 
       const testInstance = TestRenderer.create(
@@ -685,6 +685,31 @@ describe("Board", () => {
 
       TestRenderer.act(() => {
         rank.props.onDragStart(dragStartEvent);
+      });
+
+      expect(onDragStart).toHaveBeenCalledTimes(1);
+
+      expect(onDragStart).toBeCalledWith(dragStartEvent);
+    });
+
+    it("onDragStart", () => {
+      const onDragStart = jest.fn();
+
+      const testInstance = TestRenderer.create(
+        <Board onDragStart={onDragStart} />
+      ).root;
+
+      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+        CoordinateGrid
+      );
+
+      const dragStartEvent: PieceDragStartEvent = {
+        coordinates: "e2",
+        pieceCode: PieceCode.WHITE_PAWN,
+      };
+
+      TestRenderer.act(() => {
+        coordinateGrid.props.onDragStart(dragStartEvent);
       });
 
       expect(onDragStart).toHaveBeenCalledTimes(1);
