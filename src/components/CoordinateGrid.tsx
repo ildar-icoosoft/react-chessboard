@@ -229,7 +229,7 @@ export const CoordinateGrid = forwardRef<
             )}
             transitionDuration={transitionDuration}
             transitionFrom={transitionPieces[algebraicCoordinates]}
-            key={algebraicCoordinates}
+            key={`${algebraicCoordinates}:${pieceCode}`}
           />
         ))}
       </div>

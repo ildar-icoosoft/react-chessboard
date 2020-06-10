@@ -58,6 +58,65 @@ describe("CoordinateGrid", () => {
     });
   });
 
+  describe("children components remounting", () => {
+    describe("DraggablePiece", () => {
+      it("remounts if coordinates or pieceCode is changed", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd
+            position={{ d1: PieceCode.WHITE_QUEEN, d8: PieceCode.BLACK_QUEEN }}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        let piece: TestRenderer.ReactTestInstance;
+        piece = testInstance.find(
+          (item) =>
+            item.type === DraggablePiece &&
+            item.props.pieceCode === PieceCode.WHITE_QUEEN
+        );
+
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ d8: PieceCode.WHITE_QUEEN }} />
+        );
+
+        // old piece on "d8" is unmounted because pieceCode is changed (from BLACK_QUEEN to WHITE_QUEEN)
+        expect(testInstance.findAll((item) => item === piece).length).toBe(0);
+
+        piece = testInstance.find(
+          (item) =>
+            item.type === DraggablePiece &&
+            item.props.pieceCode === PieceCode.WHITE_QUEEN
+        );
+
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ d1: PieceCode.WHITE_QUEEN }} />
+        );
+
+        // old piece on d8 is unmounted because coordinates are changed (from d8 to d1)
+        expect(testInstance.findAll((item) => item === piece).length).toBe(0);
+
+        piece = testInstance.find(
+          (item) =>
+            item.type === DraggablePiece &&
+            item.props.pieceCode === PieceCode.WHITE_QUEEN
+        );
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{
+              c1: PieceCode.WHITE_BISHOP,
+              d1: PieceCode.WHITE_QUEEN,
+              e1: PieceCode.WHITE_KING,
+            }}
+          />
+        );
+
+        // old piece on d8 is not unmounted because neither coordinates nor PieceCode have changed
+        expect(testInstance.findAll((item) => item === piece).length).toBe(1);
+      });
+    });
+  });
+
   describe("children components props", () => {
     describe("DraggablePiece", () => {
       it("pieceCode", () => {
