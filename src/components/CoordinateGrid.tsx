@@ -28,6 +28,8 @@ import { useTransitionPieces } from "../hooks/useTransitionPieces";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
 import { PhantomPiece } from "./PhantomPiece";
+import { HighlightedSquare, HighlightedSquareType } from "./HightlightedSquare";
+import { useNormalizedHighlightedSquares } from "../hooks/useNomalizedHighlightedSquares";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -41,6 +43,11 @@ export interface CoordinateGridProps {
   draggable?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   transitionDuration?: number;
+  selectionSquares?: HighlightedSquareType[];
+  occupationSquares?: HighlightedSquareType[];
+  destinationSquares?: HighlightedSquareType[];
+  lastMoveSquares?: HighlightedSquareType[];
+  currentMoveSquares?: HighlightedSquareType[];
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;
@@ -58,6 +65,11 @@ export const CoordinateGrid = forwardRef<
       width = DEFAULT_BOARD_WIDTH,
       orientation = PieceColor.WHITE,
       draggable = false,
+      selectionSquares = [],
+      occupationSquares = [],
+      destinationSquares = [],
+      lastMoveSquares = [],
+      currentMoveSquares = [],
       allowDrag,
       transitionDuration,
       onClick,
@@ -209,6 +221,14 @@ export const CoordinateGrid = forwardRef<
       getDropHandlerId: (): Identifier | null => dropHandlerId,
     }));
 
+    const normalizedHighlightedSquares = useNormalizedHighlightedSquares({
+      [HighlightedSquareType.SELECTION]: selectionSquares,
+      [HighlightedSquareType.OCCUPATION]: occupationSquares,
+      [HighlightedSquareType.DESTINATION]: destinationSquares,
+      [HighlightedSquareType.LAST_MOVE]: lastMoveSquares,
+      [HighlightedSquareType.CURRENT_PREMOVE]: currentMoveSquares,
+    });
+
     return (
       <div
         data-testid={"coordinate-grid"}
@@ -253,6 +273,9 @@ export const CoordinateGrid = forwardRef<
               />
             )
         )}
+        {normalizedHighlightedSquares.map((square, index) => (
+          <HighlightedSquare types={square.types} key={index} />
+        ))}
       </div>
     );
   }

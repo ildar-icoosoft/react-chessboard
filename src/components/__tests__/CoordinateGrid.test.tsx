@@ -15,6 +15,7 @@ import { XYCoord } from "react-dnd";
 import { DragItemType } from "../../enums/DragItemType";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 import { PhantomPiece } from "../PhantomPiece";
+import { HighlightedSquare } from "../HightlightedSquare";
 
 jest.useFakeTimers();
 
@@ -80,6 +81,35 @@ describe("CoordinateGrid", () => {
           );
         }).length
       ).toBe(1);
+    });
+
+    it("contains HighlightedSquare", () => {
+      const testRenderer = TestRenderer.create(<CoordinateGridWithDnd />);
+      const testInstance = testRenderer.root;
+
+      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(0);
+
+      testRenderer.update(
+        <CoordinateGridWithDnd
+          selectionSquares={["a1", "b1"]}
+          occupationSquares={["a2", "b2"]}
+          destinationSquares={["a1", "b2"]}
+          lastMoveSquares={["c3", "d4"]}
+          currentMoveSquares={["e5"]}
+        />
+      );
+
+      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(7); // a1, b1, a2, b2, c3, d4, e5
+
+      testRenderer.update(
+        <CoordinateGridWithDnd
+          selectionSquares={["a1", "b2", "c3"]}
+          occupationSquares={["b2", "d4"]}
+          currentMoveSquares={[]}
+        />
+      );
+
+      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(4); // a1, b2, c3, d4
     });
   });
 
