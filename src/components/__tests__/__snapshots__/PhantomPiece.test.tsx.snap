@@ -4,6 +4,11 @@ exports[`PhantomPiece Snapshot 1`] = `
 <div
   className="phantomPiece"
   data-testid="phantom-piece-wK"
+  style={
+    Object {
+      "transform": "translate(0px, 0px)",
+    }
+  }
 >
   <div
     className="piece wK"

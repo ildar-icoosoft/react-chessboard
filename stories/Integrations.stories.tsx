@@ -15,7 +15,7 @@ export const SimpleMoveStory = () => (
         draggable={draggable}
         onDrop={onDrop}
         onSquareClick={onSquareClick}
-        transitionDuration={300}
+        transitionDuration={10000}
         squareCssClasses={squareCssClasses}
       />
     )}

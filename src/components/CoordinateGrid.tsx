@@ -27,6 +27,7 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 import { useTransitionPieces } from "../hooks/useTransitionPieces";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
+import { PhantomPiece } from "./PhantomPiece";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -232,6 +233,26 @@ export const CoordinateGrid = forwardRef<
             key={`${algebraicCoordinates}:${pieceCode}`}
           />
         ))}
+        {_toPairs(position).map(
+          ([algebraicCoordinates]) =>
+            transitionPieces[algebraicCoordinates] &&
+            transitionPieces[algebraicCoordinates].phantomPiece && (
+              <PhantomPiece
+                pieceCode={
+                  transitionPieces[algebraicCoordinates]
+                    .phantomPiece as PieceCode
+                }
+                width={width / 8}
+                xYCoordinates={getSquareXYCoordinates(
+                  algebraicCoordinates,
+                  width,
+                  orientation
+                )}
+                transitionDuration={transitionDuration}
+                key={`${algebraicCoordinates}:${transitionPieces[algebraicCoordinates].phantomPiece}`}
+              />
+            )
+        )}
       </div>
     );
   }

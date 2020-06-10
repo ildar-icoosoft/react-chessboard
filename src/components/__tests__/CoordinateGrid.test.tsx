@@ -14,6 +14,7 @@ import { SquareRef } from "../Square";
 import { XYCoord } from "react-dnd";
 import { DragItemType } from "../../enums/DragItemType";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
+import { PhantomPiece } from "../PhantomPiece";
 
 jest.useFakeTimers();
 
@@ -52,6 +53,30 @@ describe("CoordinateGrid", () => {
           return (
             item.type === DraggablePiece &&
             item.props.pieceCode === PieceCode.BLACK_BISHOP
+          );
+        }).length
+      ).toBe(1);
+    });
+
+    it("contains PhantomPiece", () => {
+      const testRenderer = TestRenderer.create(
+        <CoordinateGridWithDnd
+          position={{ e2: PieceCode.WHITE_ROOK, e7: PieceCode.BLACK_PAWN }}
+        />
+      );
+      const testInstance = testRenderer.root;
+
+      expect(testInstance.findAllByType(PhantomPiece).length).toBe(0);
+
+      testRenderer.update(
+        <CoordinateGridWithDnd position={{ e7: PieceCode.WHITE_ROOK }} />
+      );
+
+      expect(
+        testInstance.findAll((item) => {
+          return (
+            item.type === PhantomPiece &&
+            item.props.pieceCode === PieceCode.BLACK_PAWN
           );
         }).length
       ).toBe(1);
@@ -113,6 +138,91 @@ describe("CoordinateGrid", () => {
 
         // old piece on d8 is not unmounted because neither coordinates nor PieceCode have changed
         expect(testInstance.findAll((item) => item === piece).length).toBe(1);
+      });
+    });
+
+    describe("PhantomPiece", () => {
+      it("remounts if coordinates or pieceCode is changed", () => {
+        let testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd
+            position={{ d1: PieceCode.WHITE_QUEEN, d8: PieceCode.BLACK_QUEEN }}
+          />
+        );
+        let testInstance = testRenderer.root;
+
+        // d8 phantomPiece is BLACK_QUEEN
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ d8: PieceCode.WHITE_QUEEN, a1: PieceCode.BLACK_BISHOP }}
+          />
+        );
+
+        let phantomPiece: TestRenderer.ReactTestInstance;
+        phantomPiece = testInstance.find(
+          (item) =>
+            item.type === PhantomPiece &&
+            item.props.pieceCode === PieceCode.BLACK_QUEEN
+        );
+
+        // d8 phantomPiece is WHITE_QUEEN
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ d8: PieceCode.BLACK_BISHOP }} />
+        );
+
+        // old phantomPiece on "d8" is unmounted because pieceCode is changed (from BLACK_QUEEN to WHITE_QUEEN)
+        expect(
+          testInstance.findAll((item) => item === phantomPiece).length
+        ).toBe(0);
+
+        testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd
+            position={{
+              a1: PieceCode.WHITE_ROOK,
+              h1: PieceCode.WHITE_ROOK,
+              a8: PieceCode.BLACK_ROOK,
+            }}
+          />
+        );
+        testInstance = testRenderer.root;
+
+        // a8xa1 a1 phantomPiece is WHITE_ROOK
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ a1: PieceCode.BLACK_ROOK, h1: PieceCode.WHITE_ROOK }}
+          />
+        );
+
+        phantomPiece = testInstance.find(
+          (item) =>
+            item.type === PhantomPiece &&
+            item.props.pieceCode === PieceCode.WHITE_ROOK
+        );
+
+        // a1xh1 h1 phantomPiece is WHITE_QUEEN
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ h1: PieceCode.BLACK_ROOK }} />
+        );
+
+        // old phantomPiece on a1 is unmounted because coordinates are changed (from a1 to h1)
+        expect(
+          testInstance.findAll((item) => item === phantomPiece).length
+        ).toBe(0);
+
+        phantomPiece = testInstance.find(
+          (item) =>
+            item.type === PhantomPiece &&
+            item.props.pieceCode === PieceCode.WHITE_ROOK
+        );
+
+        // position is not changed
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ h1: PieceCode.BLACK_ROOK }} />
+        );
+
+        // old phantomPiece on h1 is not unmounted because neither coordinates nor PieceCode have changed
+        expect(
+          testInstance.findAll((item) => item === phantomPiece).length
+        ).toBe(1);
       });
     });
   });
@@ -433,6 +543,81 @@ describe("CoordinateGrid", () => {
             });
           });
         });
+      });
+    });
+
+    describe("PhantomPiece", () => {
+      it("pieceCode", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_ROOK, e7: PieceCode.BLACK_PAWN }}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ e7: PieceCode.WHITE_ROOK }} />
+        );
+
+        const phantomPiece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          PhantomPiece
+        );
+        expect(phantomPiece.props.pieceCode).toBe(PieceCode.BLACK_PAWN);
+      });
+
+      it("width", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_ROOK, e7: PieceCode.BLACK_PAWN }}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ e7: PieceCode.WHITE_ROOK }} />
+        );
+
+        const phantomPiece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          PhantomPiece
+        );
+        expect(phantomPiece.props.width).toBe(60);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ e7: PieceCode.WHITE_ROOK }}
+            width={240}
+          />
+        );
+
+        expect(phantomPiece.props.width).toBe(30);
+      });
+
+      it("transitionDuration", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd
+            position={{ e2: PieceCode.WHITE_ROOK, e7: PieceCode.BLACK_PAWN }}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        testRenderer.update(
+          <CoordinateGridWithDnd position={{ e7: PieceCode.WHITE_ROOK }} />
+        );
+
+        const phantomPiece: TestRenderer.ReactTestInstance = testInstance.findByType(
+          PhantomPiece
+        );
+
+        expect(phantomPiece.props.transitionDuration).toBeUndefined();
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            position={{ e7: PieceCode.WHITE_ROOK }}
+            transitionDuration={600}
+          />
+        );
+
+        expect(phantomPiece.props.transitionDuration).toBe(600);
       });
     });
   });

@@ -237,6 +237,7 @@ export const Square = forwardRef<SquareRef, SquareProps>(
             pieceCode={transitionFrom.phantomPiece}
             transitionDuration={transitionDuration}
             width={width}
+            xYCoordinates={{ x: 0, y: 0 }}
             key={`phantom-piece-${transitionFrom.algebraic}`}
           />
         )}
