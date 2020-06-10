@@ -179,6 +179,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               position={position}
               width={width}
               onClick={onSquareClick}
+              onRightClick={onSquareRightClick}
               onDrop={onDrop}
               onDragStart={onDragStart}
               transitionDuration={transitionDuration}

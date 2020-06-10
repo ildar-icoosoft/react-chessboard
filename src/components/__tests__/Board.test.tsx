@@ -647,7 +647,7 @@ describe("Board", () => {
       expect(onSquareClick).toBeCalledWith("e2");
     });
 
-    it("onSquareRightClick", () => {
+    it("onSquareRightClick old", () => {
       const onSquareRightClick = jest.fn();
 
       const testInstance = TestRenderer.create(
@@ -660,6 +660,26 @@ describe("Board", () => {
 
       TestRenderer.act(() => {
         rank.props.onSquareRightClick("e2");
+      });
+
+      expect(onSquareRightClick).toHaveBeenCalledTimes(1);
+
+      expect(onSquareRightClick).toBeCalledWith("e2");
+    });
+
+    it("onSquareRightClick", () => {
+      const onSquareRightClick = jest.fn();
+
+      const testInstance = TestRenderer.create(
+        <Board onSquareRightClick={onSquareRightClick} />
+      ).root;
+
+      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+        CoordinateGrid
+      );
+
+      TestRenderer.act(() => {
+        coordinateGrid.props.onRightClick("e2");
       });
 
       expect(onSquareRightClick).toHaveBeenCalledTimes(1);
