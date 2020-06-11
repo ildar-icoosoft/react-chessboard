@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
-// import css from "./HighlightedSquare.scss";
-// import classNames from "classnames";
+import css from "./HighlightedSquare.scss";
+import classNames from "classnames";
 
 export enum HighlightedSquareType {
   SELECTION = "selection",
@@ -17,10 +17,21 @@ export interface CoordsProps {
   width?: number;
 }
 
-export const HighlightedSquare: FC<CoordsProps> = ({ types = [] }) => {
+export const HighlightedSquare: FC<CoordsProps> = ({
+  xYCoordinates,
+  types = [],
+}) => {
   if (!types.length) {
     return null;
   }
 
-  return <div data-testid={"highlighted-square"}></div>;
+  return (
+    <div
+      data-testid={"highlighted-square"}
+      className={classNames(css.highlightedSquare)}
+      style={{
+        transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
+      }}
+    ></div>
+  );
 };
