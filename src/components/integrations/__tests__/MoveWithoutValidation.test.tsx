@@ -211,6 +211,59 @@ describe("MoveWithoutValidation", () => {
           );
         });
 
+        it("clear highlighted squares after props.children({onDrop})", () => {
+          const childrenCallback = jest.fn();
+          let callbackCounter: number = 0;
+
+          TestRenderer.create(
+            <MoveWithoutValidation initialPosition={initialPosition}>
+              {(props) => {
+                childrenCallback(props);
+
+                callbackCounter++;
+
+                if (callbackCounter === 1) {
+                  props.onDragStart({
+                    coordinates: "e2",
+                    pieceCode: PieceCode.WHITE_PAWN,
+                  });
+                }
+                if (callbackCounter === 2) {
+                  props.onDrop({
+                    sourceCoordinates: "e2",
+                    targetCoordinates: "e4",
+                    pieceCode: PieceCode.WHITE_PAWN,
+                    cancelMove() {},
+                  });
+                }
+
+                return null;
+              }}
+            </MoveWithoutValidation>
+          );
+
+          expect(childrenCallback).toHaveBeenCalledTimes(3);
+
+          expect(childrenCallback).nthCalledWith(
+            1,
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+          expect(childrenCallback).nthCalledWith(
+            2,
+            expect.objectContaining({
+              selectionSquares: ["e2"],
+            })
+          );
+          expect(childrenCallback).nthCalledWith(
+            3,
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+        });
+
         it("call props.children({onDrop}) e2-e2", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
