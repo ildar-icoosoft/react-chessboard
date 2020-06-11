@@ -36,7 +36,7 @@ describe("MoveWithoutValidation", () => {
     });
 
     it("props.children default position", () => {
-      const childrenCallback = jest.fn((res) => res.position);
+      const childrenCallback = jest.fn();
 
       TestRenderer.create(
         <MoveWithoutValidation>
@@ -47,11 +47,15 @@ describe("MoveWithoutValidation", () => {
         </MoveWithoutValidation>
       );
 
-      expect(childrenCallback).toHaveReturnedWith({});
+      expect(childrenCallback).toBeCalledWith(
+        expect.objectContaining({
+          position: {},
+        })
+      );
     });
 
     it("props.children position", () => {
-      const childrenCallback = jest.fn((res) => res.position);
+      const childrenCallback = jest.fn();
 
       TestRenderer.create(
         <MoveWithoutValidation initialPosition={initialPosition}>
@@ -62,11 +66,15 @@ describe("MoveWithoutValidation", () => {
         </MoveWithoutValidation>
       );
 
-      expect(childrenCallback).toHaveReturnedWith(initialPosition);
+      expect(childrenCallback).toBeCalledWith(
+        expect.objectContaining({
+          position: initialPosition,
+        })
+      );
     });
 
     it("props.children draggable", () => {
-      const childrenCallback = jest.fn((res) => res.draggable);
+      const childrenCallback = jest.fn();
 
       TestRenderer.create(
         <MoveWithoutValidation>
@@ -77,7 +85,11 @@ describe("MoveWithoutValidation", () => {
         </MoveWithoutValidation>
       );
 
-      expect(childrenCallback).toReturnWith(true);
+      expect(childrenCallback).toBeCalledWith(
+        expect.objectContaining({
+          draggable: true,
+        })
+      );
     });
 
     it("props.children onDrop is a function", () => {
