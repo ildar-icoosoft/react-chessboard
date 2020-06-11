@@ -13,10 +13,14 @@ export enum HighlightedSquareType {
 
 export interface CoordsProps {
   xYCoordinates: XYCoordinates;
-  types: HighlightedSquareType[];
+  types?: HighlightedSquareType[];
   width?: number;
 }
 
-export const HighlightedSquare: FC<CoordsProps> = () => {
-  return <div></div>;
+export const HighlightedSquare: FC<CoordsProps> = ({ types = [] }) => {
+  if (!types.length) {
+    return null;
+  }
+
+  return <div data-testid={"highlighted-square"}></div>;
 };
