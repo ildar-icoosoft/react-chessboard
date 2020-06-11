@@ -382,7 +382,7 @@ describe("MoveWithoutValidation", () => {
           );
         });
 
-        it("props.children({onSquareClick}) on empty square", () => {
+        it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares", () => {
           const childrenCallback = jest.fn();
           let callbackCounter: number = 0;
 
