@@ -14,7 +14,6 @@ import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 import { Coords } from "../Coords";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
-
 jest.useFakeTimers();
 
 describe("Board", () => {
@@ -602,6 +601,81 @@ describe("Board", () => {
         testRenderer.update(<Board transitionDuration={600} />);
 
         expect(coordinateGrid.props.transitionDuration).toBe(600);
+      });
+
+      it("selectionSquares", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.selectionSquares).toBeUndefined();
+
+        testRenderer.update(<Board selectionSquares={["a1"]} />);
+
+        expect(coordinateGrid.props.selectionSquares).toEqual(["a1"]);
+      });
+
+      it("occupationSquares", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.occupationSquares).toBeUndefined();
+
+        testRenderer.update(<Board occupationSquares={["a1"]} />);
+
+        expect(coordinateGrid.props.occupationSquares).toEqual(["a1"]);
+      });
+
+      it("destinationSquares", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.destinationSquares).toBeUndefined();
+
+        testRenderer.update(<Board destinationSquares={["a1"]} />);
+
+        expect(coordinateGrid.props.destinationSquares).toEqual(["a1"]);
+      });
+
+      it("lastMoveSquares", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.lastMoveSquares).toBeUndefined();
+
+        testRenderer.update(<Board lastMoveSquares={["a1"]} />);
+
+        expect(coordinateGrid.props.lastMoveSquares).toEqual(["a1"]);
+      });
+
+      it("currentPremoveSquares", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.currentPremoveSquares).toBeUndefined();
+
+        testRenderer.update(<Board currentPremoveSquares={["a1"]} />);
+
+        expect(coordinateGrid.props.currentPremoveSquares).toEqual(["a1"]);
       });
     });
   });

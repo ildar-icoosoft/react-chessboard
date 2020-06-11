@@ -46,11 +46,11 @@ export interface CoordinateGridProps {
   draggable?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   transitionDuration?: number;
-  selectionSquares?: HighlightedSquareType[];
-  occupationSquares?: HighlightedSquareType[];
-  destinationSquares?: HighlightedSquareType[];
-  lastMoveSquares?: HighlightedSquareType[];
-  currentPremoveSquares?: HighlightedSquareType[];
+  selectionSquares?: string[];
+  occupationSquares?: string[];
+  destinationSquares?: string[];
+  lastMoveSquares?: string[];
+  currentPremoveSquares?: string[];
 
   onClick?(coordinates: string): void;
   onRightClick?(coordinates: string): void;

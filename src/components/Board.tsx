@@ -38,6 +38,11 @@ export interface BoardProps {
   showNotation?: boolean;
   showCoordinates?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
+  selectionSquares?: string[];
+  occupationSquares?: string[];
+  destinationSquares?: string[];
+  lastMoveSquares?: string[];
+  currentPremoveSquares?: string[];
 
   onSquareClick?(coordinates: string): void;
 
@@ -68,6 +73,11 @@ export const Board = forwardRef<BoardRef, BoardProps>(
       transitionDuration = DEFAULT_TRANSITION_DURATION,
       dragStartCssClass,
       dragEnterSquareCssClass,
+      selectionSquares,
+      occupationSquares,
+      destinationSquares,
+      lastMoveSquares,
+      currentPremoveSquares,
       onSquareClick,
       onSquareRightClick,
       onDragStart,
@@ -178,6 +188,11 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               orientation={orientation}
               position={position}
               width={width}
+              selectionSquares={selectionSquares}
+              occupationSquares={occupationSquares}
+              destinationSquares={destinationSquares}
+              lastMoveSquares={lastMoveSquares}
+              currentPremoveSquares={currentPremoveSquares}
               onClick={onSquareClick}
               onRightClick={onSquareRightClick}
               onDrop={onDrop}
