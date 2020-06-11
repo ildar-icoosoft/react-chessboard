@@ -29,7 +29,9 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   return children({
     position,
     draggable: true,
-    onDragStart(_event: PieceDragStartEvent) {},
+    onDragStart(event: PieceDragStartEvent) {
+      setSelectionSquares([event.coordinates]);
+    },
     onDrop(event) {
       setPosition((prevPosition) => {
         const newPosition: Position = {

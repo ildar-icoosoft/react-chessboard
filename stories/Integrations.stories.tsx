@@ -9,10 +9,18 @@ export default {
 
 export const SimpleMoveStory = () => (
   <MoveWithoutValidation initialPosition={startPosition}>
-    {({ position, draggable, onDrop, onSquareClick, selectionSquares }) => (
+    {({
+      position,
+      draggable,
+      onDragStart,
+      onDrop,
+      onSquareClick,
+      selectionSquares,
+    }) => (
       <Board
         position={position}
         draggable={draggable}
+        onDragStart={onDragStart}
         onDrop={onDrop}
         onSquareClick={onSquareClick}
         transitionDuration={10000}
