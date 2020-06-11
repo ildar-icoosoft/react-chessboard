@@ -3,7 +3,6 @@ import React from "react";
 import { MoveWithoutValidation } from "../MoveWithoutValidation";
 import { Position } from "../../../interfaces/Position";
 import { PieceCode } from "../../../enums/PieceCode";
-import { is } from "ramda";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
@@ -113,9 +112,7 @@ describe("MoveWithoutValidation", () => {
 
     describe("Move by drag and drop", () => {
       it("props.children call onDrop()", () => {
-        const childrenCallback = jest.fn((res) => {
-          return res.position;
-        });
+        const childrenCallback = jest.fn();
         let isFirstCallbackCall: boolean = true;
 
         TestRenderer.create(
@@ -141,14 +138,22 @@ describe("MoveWithoutValidation", () => {
 
         expect(childrenCallback).toHaveBeenCalledTimes(2);
 
-        expect(childrenCallback).nthReturnedWith(1, initialPosition);
-        expect(childrenCallback).nthReturnedWith(2, positionAfterFirstMove);
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            position: initialPosition,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            position: positionAfterFirstMove,
+          })
+        );
       });
 
       it("props.children call onDrop() on the same square", () => {
-        const childrenCallback = jest.fn((res) => {
-          return res.position;
-        });
+        const childrenCallback = jest.fn();
         let isFirstCallbackCall: boolean = true;
 
         TestRenderer.create(
@@ -174,15 +179,23 @@ describe("MoveWithoutValidation", () => {
 
         expect(childrenCallback).toHaveBeenCalledTimes(2);
 
-        expect(childrenCallback).nthReturnedWith(1, initialPosition);
-        expect(childrenCallback).nthReturnedWith(2, initialPosition);
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            position: initialPosition,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            position: initialPosition,
+          })
+        );
       });
     });
 
     it("props.children onSquareClick is a function", () => {
-      const childrenCallback = jest.fn((res) => {
-        return is(Function, res.onSquareClick);
-      });
+      const childrenCallback = jest.fn();
 
       TestRenderer.create(
         <MoveWithoutValidation>
@@ -193,7 +206,11 @@ describe("MoveWithoutValidation", () => {
         </MoveWithoutValidation>
       );
 
-      expect(childrenCallback).toReturnWith(true);
+      expect(childrenCallback).toBeCalledWith(
+        expect.objectContaining({
+          onSquareClick: expect.any(Function),
+        })
+      );
     });
 
     describe("Move by click", () => {
