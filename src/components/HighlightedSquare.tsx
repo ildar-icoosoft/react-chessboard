@@ -28,7 +28,15 @@ export const HighlightedSquare: FC<CoordsProps> = ({
   return (
     <div
       data-testid={"highlighted-square"}
-      className={classNames(css.highlightedSquare)}
+      className={classNames(css.highlightedSquare, {
+        [css.selected]: types.includes(HighlightedSquareType.SELECTION),
+        [css.dest]: types.includes(HighlightedSquareType.DESTINATION),
+        [css.oc]: types.includes(HighlightedSquareType.OCCUPATION),
+        [css.lastMove]: types.includes(HighlightedSquareType.LAST_MOVE),
+        [css.currentPremove]: types.includes(
+          HighlightedSquareType.CURRENT_PREMOVE
+        ),
+      })}
       style={{
         transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
       }}

@@ -1,2 +1,9 @@
 .highlightedSquare {
+  position: absolute;
+  width: 12.5%;
+  height: 12.5%;
+  pointer-events: none;
+}
+.selected {
+  background-color: rgba(20, 85, 30, 0.5);
 }
