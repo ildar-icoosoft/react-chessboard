@@ -93,9 +93,7 @@ describe("MoveWithoutValidation", () => {
     });
 
     it("props.children onDrop is a function", () => {
-      const childrenCallback = jest.fn((res) => {
-        return is(Function, res.onDrop);
-      });
+      const childrenCallback = jest.fn();
 
       TestRenderer.create(
         <MoveWithoutValidation>
@@ -106,7 +104,11 @@ describe("MoveWithoutValidation", () => {
         </MoveWithoutValidation>
       );
 
-      expect(childrenCallback).toReturnWith(true);
+      expect(childrenCallback).toBeCalledWith(
+        expect.objectContaining({
+          onDrop: expect.any(Function),
+        })
+      );
     });
 
     describe("Move by drag and drop", () => {
