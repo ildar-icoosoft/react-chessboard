@@ -15,7 +15,11 @@ import { XYCoord } from "react-dnd";
 import { DragItemType } from "../../enums/DragItemType";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 import { PhantomPiece } from "../PhantomPiece";
-import { HighlightedSquare } from "../HightlightedSquare";
+import {
+  HighlightedSquare,
+  HighlightedSquareType,
+} from "../HightlightedSquare";
+import { isEqual as _isEqual } from "lodash";
 
 jest.useFakeTimers();
 
@@ -95,7 +99,7 @@ describe("CoordinateGrid", () => {
           occupationSquares={["a2", "b2"]}
           destinationSquares={["a1", "b2"]}
           lastMoveSquares={["c3", "d4"]}
-          currentMoveSquares={["e5"]}
+          currentPremoveSquares={["e5"]}
         />
       );
 
@@ -105,7 +109,7 @@ describe("CoordinateGrid", () => {
         <CoordinateGridWithDnd
           selectionSquares={["a1", "b2", "c3"]}
           occupationSquares={["b2", "d4"]}
-          currentMoveSquares={[]}
+          currentPremoveSquares={[]}
         />
       );
 
@@ -648,6 +652,117 @@ describe("CoordinateGrid", () => {
         );
 
         expect(phantomPiece.props.transitionDuration).toBe(600);
+      });
+    });
+
+    describe("HighlightedSquare", () => {
+      it("width", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd selectionSquares={["a1"]} />
+        );
+        const testInstance = testRenderer.root;
+
+        const a1Square = testInstance.findByType(HighlightedSquare);
+
+        expect(a1Square.props.width).toBe(60);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd width={240} selectionSquares={["a1"]} />
+        );
+
+        expect(a1Square.props.width).toBe(30);
+      });
+
+      it("xYCoordinates and types", () => {
+        const testRenderer = TestRenderer.create(<CoordinateGridWithDnd />);
+        const testInstance = testRenderer.root;
+
+        expect(testInstance.findAllByType(HighlightedSquare).length).toBe(0);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd
+            selectionSquares={["a1", "b1"]}
+            occupationSquares={["a2", "b2"]}
+            destinationSquares={["a1", "b2"]}
+            lastMoveSquares={["c3", "b1"]}
+            currentPremoveSquares={["a1"]}
+          />
+        );
+
+        // a1
+        const a1Square = testInstance.find(
+          (item) =>
+            item.type === HighlightedSquare &&
+            _isEqual(item.props.xYCoordinates, {
+              x: 0,
+              y: 420,
+            })
+        );
+        expect(a1Square.props.types).toEqual(
+          expect.arrayContaining([
+            HighlightedSquareType.SELECTION,
+            HighlightedSquareType.DESTINATION,
+            HighlightedSquareType.CURRENT_PREMOVE,
+          ])
+        );
+
+        // b1
+        const b1Square = testInstance.find(
+          (item) =>
+            item.type === HighlightedSquare &&
+            _isEqual(item.props.xYCoordinates, {
+              x: 60,
+              y: 420,
+            })
+        );
+        expect(b1Square.props.types).toEqual(
+          expect.arrayContaining([
+            HighlightedSquareType.SELECTION,
+            HighlightedSquareType.LAST_MOVE,
+          ])
+        );
+
+        // a2
+        const a2Square = testInstance.find(
+          (item) =>
+            item.type === HighlightedSquare &&
+            _isEqual(item.props.xYCoordinates, {
+              x: 0,
+              y: 360,
+            })
+        );
+        expect(a2Square.props.types).toEqual(
+          expect.arrayContaining([HighlightedSquareType.OCCUPATION])
+        );
+
+        // b2
+        const b2Square = testInstance.find(
+          (item) =>
+            item.type === HighlightedSquare &&
+            _isEqual(item.props.xYCoordinates, {
+              x: 60,
+              y: 360,
+            })
+        );
+        expect(b2Square.props.types).toEqual(
+          expect.arrayContaining([
+            HighlightedSquareType.OCCUPATION,
+            HighlightedSquareType.DESTINATION,
+          ])
+        );
+
+        // c3
+        const c3Square = testInstance.find(
+          (item) =>
+            item.type === HighlightedSquare &&
+            _isEqual(item.props.xYCoordinates, {
+              x: 120,
+              y: 300,
+            })
+        );
+        expect(c3Square.props.types).toEqual(
+          expect.arrayContaining([HighlightedSquareType.LAST_MOVE])
+        );
       });
     });
   });

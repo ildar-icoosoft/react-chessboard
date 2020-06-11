@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { XYCoordinates } from "../interfaces/XYCoordinates";
 // import css from "./HighlightedSquare.scss";
 // import classNames from "classnames";
 
@@ -11,7 +12,9 @@ export enum HighlightedSquareType {
 }
 
 export interface CoordsProps {
+  xYCoordinates: XYCoordinates;
   types: HighlightedSquareType[];
+  width?: number;
 }
 
 export const HighlightedSquare: FC<CoordsProps> = () => {
