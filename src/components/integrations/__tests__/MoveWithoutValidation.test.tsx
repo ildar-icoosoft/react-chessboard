@@ -266,7 +266,7 @@ describe("MoveWithoutValidation", () => {
           );
         });
 
-        it("call props.children({onDrop}) e2-e2", () => {
+        it("call props.children({onDrop}) e2-e2 affects position and lastMoveSquares", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
 
@@ -297,12 +297,14 @@ describe("MoveWithoutValidation", () => {
             1,
             expect.objectContaining({
               position: initialPosition,
+              lastMoveSquares: [],
             })
           );
           expect(childrenCallback).nthCalledWith(
             2,
             expect.objectContaining({
               position: initialPosition,
+              lastMoveSquares: [],
             })
           );
         });

@@ -35,7 +35,9 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
       setSelectionSquares([event.coordinates]);
     },
     onDrop(event) {
-      setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+      if (event.sourceCoordinates !== event.targetCoordinates) {
+        setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+      }
       setSelectionSquares([]);
 
       setPosition((prevPosition) => {
