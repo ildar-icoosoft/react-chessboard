@@ -1,12 +1,11 @@
 import { FC, ReactElement, useState } from "react";
 import { Position } from "../../interfaces/Position";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
-import { SquareCssClasses } from "../../interfaces/SquareCssClasses";
 
 export interface MoveWithoutValidationCallbackProps {
   position: Position;
   draggable: boolean;
-  squareCssClasses: SquareCssClasses;
+  selectionSquares: string[];
   onDrop(event: BoardDropEvent): void;
   onSquareClick(coordinates: string): void;
 }
@@ -26,11 +25,6 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   const [currentMoveSelection, setCurrentMoveSelection] = useState<
     string | null
   >(null);
-
-  const squareCssClasses: SquareCssClasses = {};
-  if (currentMoveSelection) {
-    squareCssClasses[currentMoveSelection] = "selectedSquare";
-  }
 
   return children({
     position,
@@ -72,6 +66,6 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
         return coordinates;
       });
     },
-    squareCssClasses,
+    selectionSquares: currentMoveSelection ? [currentMoveSelection] : [],
   });
 };

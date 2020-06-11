@@ -218,9 +218,7 @@ describe("MoveWithoutValidation", () => {
           2,
           expect.objectContaining({
             position: initialPosition,
-            squareCssClasses: {
-              e2: "selectedSquare",
-            },
+            selectionSquares: ["e2"],
           })
         );
 
@@ -228,7 +226,7 @@ describe("MoveWithoutValidation", () => {
           4,
           expect.objectContaining({
             position: positionAfterFirstMove,
-            squareCssClasses: {},
+            selectionSquares: [],
           })
         );
       });
@@ -262,23 +260,21 @@ describe("MoveWithoutValidation", () => {
           1,
           expect.objectContaining({
             position: initialPosition,
-            squareCssClasses: {},
+            selectionSquares: [],
           })
         );
         expect(childrenCallback).nthCalledWith(
           2,
           expect.objectContaining({
             position: initialPosition,
-            squareCssClasses: {},
+            selectionSquares: [],
           })
         );
         expect(childrenCallback).nthCalledWith(
           3,
           expect.objectContaining({
             position: initialPosition,
-            squareCssClasses: {
-              e2: "selectedSquare",
-            },
+            selectionSquares: ["e2"],
           })
         );
       });
