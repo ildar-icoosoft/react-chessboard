@@ -330,7 +330,7 @@ describe("MoveWithoutValidation", () => {
       });
 
       describe("Move by click", () => {
-        it("props.children({onSquareClick}) e2-e4", () => {
+        it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, lastMoveSquares", () => {
           const childrenCallback = jest.fn();
           let callbackCounter: number = 0;
 
@@ -353,12 +353,14 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(4);
+          expect(childrenCallback).toHaveBeenCalledTimes(3);
 
           expect(childrenCallback).nthCalledWith(
             1,
             expect.objectContaining({
               position: initialPosition,
+              selectionSquares: [],
+              lastMoveSquares: [],
             })
           );
           expect(childrenCallback).nthCalledWith(
@@ -366,14 +368,16 @@ describe("MoveWithoutValidation", () => {
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],
+              lastMoveSquares: [],
             })
           );
 
           expect(childrenCallback).nthCalledWith(
-            4,
+            3,
             expect.objectContaining({
               position: positionAfterFirstMove,
               selectionSquares: [],
+              lastMoveSquares: ["e2", "e4"],
             })
           );
         });
@@ -391,8 +395,6 @@ describe("MoveWithoutValidation", () => {
 
                 if (callbackCounter === 1) {
                   props.onSquareClick("e4");
-                }
-                if (callbackCounter === 2) {
                   props.onSquareClick("e2");
                 }
 
@@ -401,7 +403,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(3);
+          expect(childrenCallback).toHaveBeenCalledTimes(2);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -412,13 +414,6 @@ describe("MoveWithoutValidation", () => {
           );
           expect(childrenCallback).nthCalledWith(
             2,
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
-          expect(childrenCallback).nthCalledWith(
-            3,
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],

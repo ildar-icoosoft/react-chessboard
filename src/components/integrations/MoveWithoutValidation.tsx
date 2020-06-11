@@ -52,28 +52,29 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
       });
     },
     onSquareClick(coordinates: string) {
-      setSelectionSquares((currentSelectionSquares) => {
-        if (currentSelectionSquares.length === 0 && !position[coordinates]) {
-          return currentSelectionSquares;
-        }
+      if (!selectionSquares.length && !position[coordinates]) {
+        // ignore first click on empty square
+        return;
+      }
 
-        if (currentSelectionSquares.length) {
-          setPosition((prevPosition) => {
-            const newPosition: Position = {
-              ...prevPosition,
-            };
-            delete newPosition[currentSelectionSquares[0]];
+      if (selectionSquares.length) {
+        // second click. change position, set lastMoveSquares and clear selectionSquares
 
-            newPosition[coordinates] = prevPosition[currentSelectionSquares[0]];
+        const newPosition: Position = {
+          ...position,
+        };
+        delete newPosition[selectionSquares[0]];
 
-            return newPosition;
-          });
+        newPosition[coordinates] = position[selectionSquares[0]];
 
-          return [];
-        }
+        setPosition(newPosition);
+        setLastMoveSquares([selectionSquares[0], coordinates]);
+        setSelectionSquares([]);
+      } else {
+        // first click. set selectionSquares
 
-        return [coordinates];
-      });
+        setSelectionSquares([coordinates]);
+      }
     },
     selectionSquares,
     lastMoveSquares,
