@@ -16,6 +16,7 @@ export const SimpleMoveStory = () => (
       onDrop,
       onSquareClick,
       selectionSquares,
+      lastMoveSquares,
     }) => (
       <Board
         position={position}
@@ -25,6 +26,7 @@ export const SimpleMoveStory = () => (
         onSquareClick={onSquareClick}
         transitionDuration={10000}
         selectionSquares={selectionSquares}
+        lastMoveSquares={lastMoveSquares}
       />
     )}
   </MoveWithoutValidation>
