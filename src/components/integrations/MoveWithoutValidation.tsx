@@ -24,9 +24,7 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   initialPosition = {},
 }) => {
   const [position, setPosition] = useState(initialPosition);
-  const [currentMoveSelection, setCurrentMoveSelection] = useState<
-    string | null
-  >(null);
+  const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
 
   return children({
     position,
@@ -45,29 +43,29 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
       });
     },
     onSquareClick(coordinates: string) {
-      setCurrentMoveSelection((currentSelection) => {
-        if (currentSelection === null && !position[coordinates]) {
-          return currentSelection;
+      setSelectionSquares((currentSelectionSquares) => {
+        if (currentSelectionSquares.length === 0 && !position[coordinates]) {
+          return currentSelectionSquares;
         }
 
-        if (currentSelection) {
+        if (currentSelectionSquares.length) {
           setPosition((prevPosition) => {
             const newPosition: Position = {
               ...prevPosition,
             };
-            delete newPosition[currentSelection];
+            delete newPosition[currentSelectionSquares[0]];
 
-            newPosition[coordinates] = prevPosition[currentSelection];
+            newPosition[coordinates] = prevPosition[currentSelectionSquares[0]];
 
             return newPosition;
           });
 
-          return null;
+          return [];
         }
 
-        return coordinates;
+        return [coordinates];
       });
     },
-    selectionSquares: currentMoveSelection ? [currentMoveSelection] : [],
+    selectionSquares,
   });
 };

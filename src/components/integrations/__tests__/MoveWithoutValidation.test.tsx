@@ -131,6 +131,45 @@ describe("MoveWithoutValidation", () => {
       });
 
       describe("Move by drag and drop", () => {
+        it("call props.children({onDragStart})", () => {
+          const childrenCallback = jest.fn();
+          let isFirstCallbackCall: boolean = true;
+
+          TestRenderer.create(
+            <MoveWithoutValidation initialPosition={initialPosition}>
+              {(props) => {
+                childrenCallback(props);
+
+                if (isFirstCallbackCall) {
+                  isFirstCallbackCall = false;
+
+                  props.onDragStart({
+                    coordinates: "e2",
+                    pieceCode: PieceCode.WHITE_PAWN,
+                  });
+                }
+
+                return null;
+              }}
+            </MoveWithoutValidation>
+          );
+
+          expect(childrenCallback).toHaveBeenCalledTimes(2);
+
+          expect(childrenCallback).nthCalledWith(
+            1,
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+          expect(childrenCallback).nthCalledWith(
+            2,
+            expect.objectContaining({
+              selectionSquares: ["e2"],
+            })
+          );
+        });
+
         it("call props.children({onDrop}) e2-e4", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
