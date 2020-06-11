@@ -28,7 +28,7 @@ import { useTransitionPieces } from "../hooks/useTransitionPieces";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
 import { PhantomPiece } from "./PhantomPiece";
-import { HighlightedSquare, HighlightedSquareType } from "./HightlightedSquare";
+import { HighlightedSquare, HighlightedSquareType } from "./HighlightedSquare";
 import {
   NormalizedHighlightedSquare,
   useNormalizedHighlightedSquares,
@@ -278,7 +278,7 @@ export const CoordinateGrid = forwardRef<
               />
             )
         )}
-        {normalizedHighlightedSquares.map((square, index) => (
+        {normalizedHighlightedSquares.map((square) => (
           <HighlightedSquare
             width={width / 8}
             xYCoordinates={getSquareXYCoordinates(
@@ -287,7 +287,7 @@ export const CoordinateGrid = forwardRef<
               orientation
             )}
             types={square.types}
-            key={index}
+            key={square.coordinates}
           />
         ))}
       </div>

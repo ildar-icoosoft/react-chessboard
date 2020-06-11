@@ -4,7 +4,7 @@ import {
   NormalizedHighlightedSquare,
   useNormalizedHighlightedSquares,
 } from "../useNomalizedHighlightedSquares";
-import { HighlightedSquareType } from "../../components/HightlightedSquare";
+import { HighlightedSquareType } from "../../components/HighlightedSquare";
 
 describe("useNormalizedHighlightedSquares()", () => {
   it("should return normalized highlighted squares list", () => {

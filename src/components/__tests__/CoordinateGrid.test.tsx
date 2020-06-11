@@ -15,10 +15,7 @@ import { XYCoord } from "react-dnd";
 import { DragItemType } from "../../enums/DragItemType";
 import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 import { PhantomPiece } from "../PhantomPiece";
-import {
-  HighlightedSquare,
-  HighlightedSquareType,
-} from "../HightlightedSquare";
+import { HighlightedSquare, HighlightedSquareType } from "../HighlightedSquare";
 import { isEqual as _isEqual } from "lodash";
 
 jest.useFakeTimers();
@@ -256,6 +253,38 @@ describe("CoordinateGrid", () => {
         // old phantomPiece on h1 is not unmounted because neither coordinates nor PieceCode have changed
         expect(
           testInstance.findAll((item) => item === phantomPiece).length
+        ).toBe(1);
+      });
+    });
+
+    describe("HighlightedSquare", () => {
+      it("remounts if coordinates are is changed", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd selectionSquares={["a1"]} />
+        );
+        const testInstance = testRenderer.root;
+
+        let highlightedSquare: TestRenderer.ReactTestInstance;
+        highlightedSquare = testInstance.findByType(HighlightedSquare);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd selectionSquares={["b1"]} />
+        );
+
+        // square is unmounted because coordinates are changed (from a1 to b1)
+        expect(
+          testInstance.findAll((item) => item === highlightedSquare).length
+        ).toBe(0);
+
+        highlightedSquare = testInstance.findByType(HighlightedSquare);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd selectionSquares={["a1", "b1", "c1"]} />
+        );
+
+        // square a1 is not unmounted because coordinates are not changed
+        expect(
+          testInstance.findAll((item) => item === highlightedSquare).length
         ).toBe(1);
       });
     });

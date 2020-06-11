@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { HighlightedSquareType } from "../components/HightlightedSquare";
+import { HighlightedSquareType } from "../components/HighlightedSquare";
 
 export interface NormalizedHighlightedSquare {
   coordinates: string;
