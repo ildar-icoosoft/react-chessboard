@@ -131,7 +131,7 @@ describe("MoveWithoutValidation", () => {
       });
 
       describe("Move by drag and drop", () => {
-        it("call props.children({onDragStart})", () => {
+        it("call props.children({onDragStart}) affects selectionSquares", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
 
@@ -170,7 +170,7 @@ describe("MoveWithoutValidation", () => {
           );
         });
 
-        it("call props.children({onDrop}) e2-e4", () => {
+        it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
 
@@ -201,17 +201,19 @@ describe("MoveWithoutValidation", () => {
             1,
             expect.objectContaining({
               position: initialPosition,
+              lastMoveSquares: [],
             })
           );
           expect(childrenCallback).nthCalledWith(
             2,
             expect.objectContaining({
               position: positionAfterFirstMove,
+              lastMoveSquares: ["e2", "e4"],
             })
           );
         });
 
-        it("clear highlighted squares after props.children({onDrop})", () => {
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares", () => {
           const childrenCallback = jest.fn();
           let callbackCounter: number = 0;
 
