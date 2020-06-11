@@ -513,10 +513,10 @@ describe("Square", () => {
 
       fireEvent.click(getByTestId("square-a1"));
 
-      expect(onSquareClick).toHaveBeenCalledTimes(1);
+      expect(onSquareClick).toBeCalledTimes(1);
       expect(onSquareClick).toBeCalledWith("a1");
 
-      expect(onSquareRightClick).toHaveBeenCalledTimes(0);
+      expect(onSquareRightClick).toBeCalledTimes(0);
     });
 
     it("Click if no callback", () => {
@@ -540,10 +540,10 @@ describe("Square", () => {
 
       fireEvent.contextMenu(getByTestId("square-a1"));
 
-      expect(onSquareRightClick).toHaveBeenCalledTimes(1);
+      expect(onSquareRightClick).toBeCalledTimes(1);
       expect(onSquareRightClick).toBeCalledWith("a1");
 
-      expect(onSquareClick).toHaveBeenCalledTimes(0);
+      expect(onSquareClick).toBeCalledTimes(0);
     });
 
     it("Right Click if no callback", () => {
@@ -565,7 +565,7 @@ describe("Square", () => {
 
       fireEvent.mouseOver(getByTestId("square-a1"));
 
-      expect(onMouseEnterSquare).toHaveBeenCalledTimes(1);
+      expect(onMouseEnterSquare).toBeCalledTimes(1);
       expect(onMouseEnterSquare).toBeCalledWith("a1");
     });
 
@@ -588,7 +588,7 @@ describe("Square", () => {
 
       fireEvent.mouseOut(getByTestId("square-a1"));
 
-      expect(onMouseLeaveSquare).toHaveBeenCalledTimes(1);
+      expect(onMouseLeaveSquare).toBeCalledTimes(1);
       expect(onMouseLeaveSquare).toBeCalledWith("a1");
     });
 
@@ -685,7 +685,7 @@ describe("Square", () => {
           backend.simulateBeginDrag([dragSourceId]);
         });
 
-        expect(onDragStart).toHaveBeenCalledTimes(1);
+        expect(onDragStart).toBeCalledTimes(1);
         expect(onDragStart).toBeCalledWith({
           coordinates: "a2",
           pieceCode: PieceCode.WHITE_QUEEN,
@@ -763,7 +763,7 @@ describe("Square", () => {
           backend.simulateHover([dropSourceId]);
         });
 
-        expect(onDragEnterSquare).toHaveBeenCalledTimes(1);
+        expect(onDragEnterSquare).toBeCalledTimes(1);
         expect(onDragEnterSquare).toBeCalledWith("a2");
 
         act(() => {
@@ -843,7 +843,7 @@ describe("Square", () => {
           backend.simulateDrop();
         });
 
-        expect(onDrop).toHaveBeenCalledTimes(1);
+        expect(onDrop).toBeCalledTimes(1);
         expect(onDrop).toBeCalledWith({
           sourceCoordinates: "a2",
           targetCoordinates: "a2",

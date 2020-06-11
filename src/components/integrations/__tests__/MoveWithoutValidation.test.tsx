@@ -32,7 +32,7 @@ describe("MoveWithoutValidation", () => {
           </MoveWithoutValidation>
         );
 
-        expect(childrenCallback).toHaveBeenCalledTimes(1);
+        expect(childrenCallback).toBeCalledTimes(1);
       });
 
       it("props.children({position}) if has not initialPosition prop", () => {
@@ -154,7 +154,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(2);
+          expect(childrenCallback).toBeCalledTimes(2);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -195,7 +195,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(2);
+          expect(childrenCallback).toBeCalledTimes(2);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -244,7 +244,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(3);
+          expect(childrenCallback).toBeCalledTimes(3);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -266,8 +266,9 @@ describe("MoveWithoutValidation", () => {
           );
         });
 
-        it("call props.children({onDrop}) e2-e2 affects position and lastMoveSquares", () => {
+        it("call props.children({onDrop}) e2-e2 affects position, lastMoveSquares and cancelMove() must be called", () => {
           const childrenCallback = jest.fn();
+          const cancelMove = jest.fn();
           let isFirstCallbackCall: boolean = true;
 
           TestRenderer.create(
@@ -282,7 +283,7 @@ describe("MoveWithoutValidation", () => {
                     sourceCoordinates: "e2",
                     targetCoordinates: "e2",
                     pieceCode: PieceCode.WHITE_PAWN,
-                    cancelMove() {},
+                    cancelMove,
                   });
                 }
 
@@ -291,7 +292,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(2);
+          expect(childrenCallback).toBeCalledTimes(2);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -307,6 +308,8 @@ describe("MoveWithoutValidation", () => {
               lastMoveSquares: [],
             })
           );
+
+          expect(cancelMove).toBeCalledTimes(1);
         });
       });
 
@@ -353,7 +356,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(3);
+          expect(childrenCallback).toBeCalledTimes(3);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -403,7 +406,7 @@ describe("MoveWithoutValidation", () => {
             </MoveWithoutValidation>
           );
 
-          expect(childrenCallback).toHaveBeenCalledTimes(2);
+          expect(childrenCallback).toBeCalledTimes(2);
 
           expect(childrenCallback).nthCalledWith(
             1,

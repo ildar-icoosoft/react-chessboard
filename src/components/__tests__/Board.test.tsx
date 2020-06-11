@@ -696,7 +696,7 @@ describe("Board", () => {
         coordinateGrid.props.onClick("e2");
       });
 
-      expect(onSquareClick).toHaveBeenCalledTimes(1);
+      expect(onSquareClick).toBeCalledTimes(1);
 
       expect(onSquareClick).toBeCalledWith("e2");
     });
@@ -716,7 +716,7 @@ describe("Board", () => {
         rank.props.onSquareClick("e2");
       });
 
-      expect(onSquareClick).toHaveBeenCalledTimes(1);
+      expect(onSquareClick).toBeCalledTimes(1);
 
       expect(onSquareClick).toBeCalledWith("e2");
     });
@@ -736,7 +736,7 @@ describe("Board", () => {
         rank.props.onSquareRightClick("e2");
       });
 
-      expect(onSquareRightClick).toHaveBeenCalledTimes(1);
+      expect(onSquareRightClick).toBeCalledTimes(1);
 
       expect(onSquareRightClick).toBeCalledWith("e2");
     });
@@ -756,7 +756,7 @@ describe("Board", () => {
         coordinateGrid.props.onRightClick("e2");
       });
 
-      expect(onSquareRightClick).toHaveBeenCalledTimes(1);
+      expect(onSquareRightClick).toBeCalledTimes(1);
 
       expect(onSquareRightClick).toBeCalledWith("e2");
     });
@@ -781,7 +781,7 @@ describe("Board", () => {
         rank.props.onDragStart(dragStartEvent);
       });
 
-      expect(onDragStart).toHaveBeenCalledTimes(1);
+      expect(onDragStart).toBeCalledTimes(1);
 
       expect(onDragStart).toBeCalledWith(dragStartEvent);
     });
@@ -806,7 +806,7 @@ describe("Board", () => {
         coordinateGrid.props.onDragStart(dragStartEvent);
       });
 
-      expect(onDragStart).toHaveBeenCalledTimes(1);
+      expect(onDragStart).toBeCalledTimes(1);
 
       expect(onDragStart).toBeCalledWith(dragStartEvent);
     });
@@ -826,7 +826,7 @@ describe("Board", () => {
         rank.props.onDragEnterSquare("e2");
       });
 
-      expect(onDragEnterSquare).toHaveBeenCalledTimes(1);
+      expect(onDragEnterSquare).toBeCalledTimes(1);
 
       expect(onDragEnterSquare).toBeCalledWith("e2");
     });
@@ -850,7 +850,7 @@ describe("Board", () => {
         rank.props.onDrop(dropEvent);
       });
 
-      expect(onDrop).toHaveBeenCalledTimes(1);
+      expect(onDrop).toBeCalledTimes(1);
 
       expect(onDrop).toBeCalledWith(expect.objectContaining(dropEvent));
     });
@@ -876,7 +876,7 @@ describe("Board", () => {
         coordinateGrid.props.onDrop(dropEvent);
       });
 
-      expect(onDrop).toHaveBeenCalledTimes(1);
+      expect(onDrop).toBeCalledTimes(1);
 
       expect(onDrop).toBeCalledWith(dropEvent);
     });
@@ -896,7 +896,7 @@ describe("Board", () => {
         rank.props.onMouseEnterSquare("e2");
       });
 
-      expect(onMouseEnterSquare).toHaveBeenCalledTimes(1);
+      expect(onMouseEnterSquare).toBeCalledTimes(1);
 
       expect(onMouseEnterSquare).toBeCalledWith("e2");
     });
@@ -916,7 +916,7 @@ describe("Board", () => {
         rank.props.onMouseLeaveSquare("e2");
       });
 
-      expect(onMouseLeaveSquare).toHaveBeenCalledTimes(1);
+      expect(onMouseLeaveSquare).toBeCalledTimes(1);
 
       expect(onMouseLeaveSquare).toBeCalledWith("e2");
     });

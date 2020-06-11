@@ -325,7 +325,7 @@ describe("Rank", () => {
         square.props.onSquareClick("e2");
       });
 
-      expect(onSquareClick).toHaveBeenCalledTimes(1);
+      expect(onSquareClick).toBeCalledTimes(1);
 
       expect(onSquareClick).toBeCalledWith("e2");
     });
@@ -345,7 +345,7 @@ describe("Rank", () => {
         square.props.onSquareRightClick("e2");
       });
 
-      expect(onSquareRightClick).toHaveBeenCalledTimes(1);
+      expect(onSquareRightClick).toBeCalledTimes(1);
 
       expect(onSquareRightClick).toBeCalledWith("e2");
     });
@@ -370,7 +370,7 @@ describe("Rank", () => {
         square.props.onDragStart(dragStartEvent);
       });
 
-      expect(onDragStart).toHaveBeenCalledTimes(1);
+      expect(onDragStart).toBeCalledTimes(1);
 
       expect(onDragStart).toBeCalledWith(dragStartEvent);
     });
@@ -390,7 +390,7 @@ describe("Rank", () => {
         square.props.onDragEnterSquare("e2");
       });
 
-      expect(onDragEnterSquare).toHaveBeenCalledTimes(1);
+      expect(onDragEnterSquare).toBeCalledTimes(1);
 
       expect(onDragEnterSquare).toBeCalledWith("e2");
     });
@@ -416,7 +416,7 @@ describe("Rank", () => {
         square.props.onDrop(dropEvent);
       });
 
-      expect(onDrop).toHaveBeenCalledTimes(1);
+      expect(onDrop).toBeCalledTimes(1);
 
       expect(onDrop).toBeCalledWith(dropEvent);
     });
@@ -436,7 +436,7 @@ describe("Rank", () => {
         square.props.onMouseEnterSquare("e2");
       });
 
-      expect(onMouseEnterSquare).toHaveBeenCalledTimes(1);
+      expect(onMouseEnterSquare).toBeCalledTimes(1);
 
       expect(onMouseEnterSquare).toBeCalledWith("e2");
     });
@@ -456,7 +456,7 @@ describe("Rank", () => {
         square.props.onMouseLeaveSquare("e2");
       });
 
-      expect(onMouseLeaveSquare).toHaveBeenCalledTimes(1);
+      expect(onMouseLeaveSquare).toBeCalledTimes(1);
 
       expect(onMouseLeaveSquare).toBeCalledWith("e2");
     });

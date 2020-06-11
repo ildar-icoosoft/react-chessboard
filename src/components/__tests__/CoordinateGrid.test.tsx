@@ -825,12 +825,12 @@ describe("CoordinateGrid", () => {
         clientY: 0,
       });
 
-      expect(onClick).toHaveBeenCalledTimes(2);
+      expect(onClick).toBeCalledTimes(2);
 
       expect(onClick).toHaveBeenNthCalledWith(1, "b7");
       expect(onClick).toHaveBeenNthCalledWith(2, "a1");
 
-      expect(onRightClick).toHaveBeenCalledTimes(0);
+      expect(onRightClick).toBeCalledTimes(0);
     });
 
     it("Click if no callback", () => {
@@ -868,12 +868,12 @@ describe("CoordinateGrid", () => {
         clientY: 0,
       });
 
-      expect(onRightClick).toHaveBeenCalledTimes(2);
+      expect(onRightClick).toBeCalledTimes(2);
 
       expect(onRightClick).toHaveBeenNthCalledWith(1, "b7");
       expect(onRightClick).toHaveBeenNthCalledWith(2, "a1");
 
-      expect(onClick).toHaveBeenCalledTimes(0);
+      expect(onClick).toBeCalledTimes(0);
     });
 
     it("Right Click event must be prevented", () => {
@@ -1000,7 +1000,7 @@ describe("CoordinateGrid", () => {
           });
         });
 
-        expect(onDragStart).toHaveBeenCalledTimes(1);
+        expect(onDragStart).toBeCalledTimes(1);
         expect(onDragStart).toBeCalledWith({
           coordinates: "a8",
           pieceCode: PieceCode.WHITE_KING,
@@ -1279,7 +1279,7 @@ describe("CoordinateGrid", () => {
           backend.simulateDrop();
         });
 
-        expect(onDrop).toHaveBeenCalledTimes(1);
+        expect(onDrop).toBeCalledTimes(1);
         expect(onDrop).toBeCalledWith(
           expect.objectContaining({
             sourceCoordinates: "a8",
