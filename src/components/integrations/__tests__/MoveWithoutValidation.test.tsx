@@ -92,6 +92,25 @@ describe("MoveWithoutValidation", () => {
         );
       });
 
+      it("props.children({onDragStart}) is a function", () => {
+        const childrenCallback = jest.fn();
+
+        TestRenderer.create(
+          <MoveWithoutValidation>
+            {(props) => {
+              childrenCallback(props);
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledWith(
+          expect.objectContaining({
+            onDragStart: expect.any(Function),
+          })
+        );
+      });
+
       it("props.children({onDrop}) is a function", () => {
         const childrenCallback = jest.fn();
 
