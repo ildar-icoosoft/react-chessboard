@@ -509,6 +509,21 @@ describe("Board", () => {
     });
 
     describe("CoordinateGrid", () => {
+      it("allowMarkers", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.allowMarkers).toBe(false);
+
+        testRenderer.update(<Board allowMarkers={true} />);
+
+        expect(coordinateGrid.props.allowMarkers).toBe(true);
+      });
+
       it("orientation", () => {
         const testRenderer = TestRenderer.create(<Board />);
         const testInstance = testRenderer.root;

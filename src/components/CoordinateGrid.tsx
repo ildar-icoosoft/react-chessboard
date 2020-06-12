@@ -41,6 +41,7 @@ export interface CoordinateGridRef {
 }
 
 export interface CoordinateGridProps {
+  allowMarkers?: boolean;
   orientation?: PieceColor;
   position?: Position;
   width?: number;
