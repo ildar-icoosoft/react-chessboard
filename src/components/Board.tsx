@@ -211,6 +211,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               onDrop={onDrop}
               onDragStart={onDragStart}
               transitionDuration={transitionDuration}
+              roundMarkers={["e2", "e3", "e4"]}
             />
 
             {showCoordinates && <Coords orientation={orientation} />}

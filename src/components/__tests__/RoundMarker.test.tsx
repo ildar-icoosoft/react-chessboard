@@ -7,27 +7,35 @@ describe("RoundMarker", () => {
   describe("DOM structure", () => {
     it("contains data-testid round-marker", () => {
       const { queryByTestId } = render(
-        <RoundMarker xYCoordinates={{ x: 0, y: 0 }} />
+        <svg>
+          <RoundMarker xYCoordinates={{ x: 0, y: 0 }} />
+        </svg>
       );
       expect(queryByTestId("round-marker")).toBeInTheDocument();
     });
 
-    it("contains CSS transform style", () => {
+    it("contains SVG cx, cy attributes", () => {
       const { getByTestId, rerender } = render(
-        <RoundMarker xYCoordinates={{ x: 0, y: 0 }} />
+        <svg>
+          <RoundMarker xYCoordinates={{ x: 0, y: 0 }} />
+        </svg>
       );
 
-      const el: HTMLElement = getByTestId("round-marker");
+      let el: HTMLElement = getByTestId("round-marker");
 
-      expect(el).toHaveStyle({
-        transform: `translate(0px, 0px)`,
-      });
+      expect(el).toHaveAttribute("cx", String(0 + 60 / 2));
+      expect(el).toHaveAttribute("cy", String(0 + 60 / 2));
 
-      rerender(<RoundMarker xYCoordinates={{ x: 10, y: 20 }} />);
+      rerender(
+        <svg>
+          <RoundMarker xYCoordinates={{ x: 10, y: 20 }} />
+        </svg>
+      );
 
-      expect(el).toHaveStyle({
-        transform: `translate(10px, 20px)`,
-      });
+      el = getByTestId("round-marker");
+
+      expect(el).toHaveAttribute("cx", String(10 + 60 / 2));
+      expect(el).toHaveAttribute("cy", String(20 + 60 / 2));
     });
   });
 });

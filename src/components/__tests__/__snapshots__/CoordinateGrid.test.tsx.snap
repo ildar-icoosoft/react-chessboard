@@ -14,5 +14,9 @@ exports[`CoordinateGrid Snapshot 1`] = `
       "width": "480px",
     }
   }
-/>
+>
+  <svg
+    className="svg"
+  />
+</div>
 `;

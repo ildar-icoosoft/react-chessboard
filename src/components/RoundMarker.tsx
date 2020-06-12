@@ -6,13 +6,20 @@ export interface RoundMarkerProps {
   width?: number;
 }
 
-export const RoundMarker: FC<RoundMarkerProps> = ({ xYCoordinates }) => {
+export const RoundMarker: FC<RoundMarkerProps> = ({
+  xYCoordinates,
+  width = 60,
+}) => {
   return (
-    <div
+    <circle
       data-testid={"round-marker"}
-      style={{
-        transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
-      }}
-    ></div>
+      stroke="#15781B"
+      strokeWidth={width / 16}
+      fill="none"
+      opacity="1"
+      cx={xYCoordinates.x + width / 2}
+      cy={xYCoordinates.y + width / 2}
+      r={width / 2 - width / 32}
+    />
   );
 };

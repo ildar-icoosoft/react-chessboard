@@ -320,17 +320,19 @@ export const CoordinateGrid = forwardRef<
             key={square.coordinates}
           />
         ))}
-        {roundMarkers.map((algebraicCoordinates) => (
-          <RoundMarker
-            key={algebraicCoordinates}
-            width={width / 8}
-            xYCoordinates={getSquareXYCoordinates(
-              algebraicCoordinates,
-              width,
-              orientation
-            )}
-          />
-        ))}
+        <svg className={css.svg}>
+          {roundMarkers.map((algebraicCoordinates) => (
+            <RoundMarker
+              key={algebraicCoordinates}
+              width={width / 8}
+              xYCoordinates={getSquareXYCoordinates(
+                algebraicCoordinates,
+                width,
+                orientation
+              )}
+            />
+          ))}
+        </svg>
       </div>
     );
   }
