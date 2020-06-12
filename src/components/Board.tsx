@@ -27,7 +27,6 @@ export interface BoardRef {
 }
 
 export interface BoardProps {
-  allowMarkers?: boolean;
   position?: Position;
   orientation?: PieceColor;
   squareCssClasses?: SquareCssClasses;
@@ -63,7 +62,6 @@ export interface BoardProps {
 export const Board = forwardRef<BoardRef, BoardProps>(
   (
     {
-      allowMarkers = false,
       position = {},
       orientation = PieceColor.WHITE,
       draggable = false,
@@ -187,7 +185,6 @@ export const Board = forwardRef<BoardRef, BoardProps>(
             }}
           >
             <CoordinateGrid
-              allowMarkers={allowMarkers}
               draggable={draggable}
               allowDrag={allowDrag}
               orientation={orientation}
