@@ -191,6 +191,7 @@ export const CoordinateGrid = forwardRef<
 
     useEffect(() => {
       preview(getEmptyImage());
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const [

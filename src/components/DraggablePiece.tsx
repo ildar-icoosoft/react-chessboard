@@ -57,7 +57,8 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
         setInProp(true);
       }
     }, 0);
-  }, [transitionFrom]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Transition in={inProp} timeout={transitionDuration}>

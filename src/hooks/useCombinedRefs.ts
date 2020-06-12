@@ -23,5 +23,6 @@ export const useCombinedRefs = <T extends any>(
         // it should be fine to set current this way.
         (ref as any).current = element;
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     refs
   );
