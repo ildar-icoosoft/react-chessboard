@@ -4,6 +4,7 @@ import { startPosition } from "../src/constants/constants";
 import { PieceDropEvent } from "../src/interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../src/interfaces/PieceDragStartEvent";
 import { PieceColor } from "../src/enums/PieceColor";
+import { PieceCode } from "../src/enums/PieceCode";
 
 export default {
   title: "Board",
@@ -82,6 +83,49 @@ export const SmallBoard = () => (
 );
 
 SmallBoard.story = {
+  parameters: {
+    jest: ["Board"],
+  },
+};
+
+export const BoardWithHighlightedSquares = () => (
+  <Board
+    position={{
+      e1: PieceCode.WHITE_KING,
+      g4: PieceCode.WHITE_QUEEN,
+      c3: PieceCode.WHITE_KNIGHT,
+      e4: PieceCode.WHITE_PAWN,
+      d7: PieceCode.BLACK_PAWN,
+      g7: PieceCode.BLACK_PAWN,
+      e8: PieceCode.BLACK_KING,
+    }}
+    draggable={true}
+    selectionSquares={["g4"]}
+    destinationSquares={[
+      "f4",
+      "h4",
+      "f5",
+      "e6",
+      "d7",
+      "g5",
+      "g6",
+      "g7",
+      "h5",
+      "g3",
+      "g2",
+      "g1",
+      "h3",
+      "f3",
+      "e2",
+      "d1",
+    ]}
+    lastMoveSquares={["b1", "c3"]}
+    occupationSquares={["g7", "d7"]}
+    currentPremoveSquares={["e4", "e5"]}
+  />
+);
+
+BoardWithHighlightedSquares.story = {
   parameters: {
     jest: ["Board"],
   },
