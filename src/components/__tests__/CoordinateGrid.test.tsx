@@ -371,6 +371,72 @@ describe("CoordinateGrid", () => {
         expect(draggablePiece.props.transitionDuration).toBe(600);
       });
 
+      it("isDragged", () => {
+        const ref = createRef<ReactDndRefType>();
+
+        const { getByTestId } = render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{
+              a8: PieceCode.WHITE_BISHOP,
+            }}
+            draggable={true}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDragHandlerId() as Identifier;
+        const dropSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDropHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        // better to test it with react-test-renderer (draggablePiece.props.isDragged value)
+        // but dnd does not work with react-test-renderer, so I created data-test-dragged-item-coordinates attribute for tests
+        const coordinateGridEl = getByTestId("coordinate-grid");
+
+        expect(coordinateGridEl.dataset.testDraggedItemCoordinates).toBe("");
+
+        const clientOffset: XYCoord = {
+          x: 0,
+          y: 0,
+        };
+        act(() => {
+          // move from a8
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset: clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+        });
+
+        expect(coordinateGridEl.dataset.testDraggedItemCoordinates).toBe("a8");
+
+        act(() => {
+          // move to b7
+          backend.simulateHover([dropSourceId], {
+            clientOffset: {
+              x: 60,
+              y: 60,
+            },
+          });
+        });
+
+        expect(coordinateGridEl.dataset.testDraggedItemCoordinates).toBe("a8");
+
+        act(() => {
+          backend.simulateDrop();
+          backend.simulateEndDrag();
+        });
+
+        expect(coordinateGridEl.dataset.testDraggedItemCoordinates).toBe("");
+      });
+
       describe("transitionPieces", () => {
         it("Moves with transition", () => {
           const testRenderer = TestRenderer.create(
@@ -984,18 +1050,17 @@ describe("CoordinateGrid", () => {
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
 
+        const clientOffset: XYCoord = {
+          x: 30,
+          y: 30,
+        };
+
         act(() => {
           // move from a8
           backend.simulateBeginDrag([dragSourceId], {
-            clientOffset: {
-              x: 30,
-              y: 30,
-            },
+            clientOffset,
             getSourceClientOffset() {
-              return {
-                x: 30,
-                y: 30,
-              };
+              return clientOffset;
             },
           });
         });

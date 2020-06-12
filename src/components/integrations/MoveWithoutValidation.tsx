@@ -24,7 +24,7 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   children,
   initialPosition = {},
 }) => {
-  const [position, setPosition] = useState(initialPosition);
+  const [position, setPosition] = useState<Position>(initialPosition);
   const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
 

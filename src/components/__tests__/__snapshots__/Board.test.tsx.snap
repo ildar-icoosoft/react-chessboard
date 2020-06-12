@@ -1209,6 +1209,7 @@ Array [
   >
     <div
       className="coordinateGrid"
+      data-test-dragged-item-coordinates=""
       data-test-transition="{}"
       data-testid="coordinate-grid"
       onClick={[Function]}

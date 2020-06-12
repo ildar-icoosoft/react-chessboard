@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from "react";
 import { PieceColor } from "../enums/PieceColor";
 import { Position } from "../interfaces/Position";
@@ -139,6 +140,12 @@ export const CoordinateGrid = forwardRef<
       };
     };
 
+    // @todo. Better to get draggedItem via returning monitor.getItem() in useDrag->collection
+    // but then I get many warnings during unit testing: "It looks like you're using the wrong act() around your test interactions"
+    const [draggedItem, setDraggedItem] = useState<PieceDragObject | null>(
+      null
+    );
+
     const [{ dragHandlerId }, dragRef, preview] = useDrag({
       canDrag(monitor) {
         const item: PieceDragObject = calculateDragItem(monitor);
@@ -168,7 +175,12 @@ export const CoordinateGrid = forwardRef<
           });
         }
 
+        setDraggedItem(item);
+
         return item;
+      },
+      end() {
+        setDraggedItem(null);
       },
       collect(monitor) {
         return {
@@ -238,6 +250,9 @@ export const CoordinateGrid = forwardRef<
       <div
         data-testid={"coordinate-grid"}
         data-test-transition={JSON.stringify(transitionPieces)}
+        data-test-dragged-item-coordinates={
+          draggedItem ? (draggedItem.coordinates as string) : ""
+        }
         className={css.coordinateGrid}
         style={{ width: `${width}px`, height: `${width}px` }}
         onClick={handleClick}
