@@ -16,6 +16,7 @@ export interface DraggablePieceProps {
   width?: number;
   transitionFrom?: SquareTransitionFrom;
   transitionDuration?: number;
+  isDragged?: boolean;
 }
 
 const getTransitionStyles = (
@@ -45,6 +46,7 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
   xYCoordinates,
   transitionFrom,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
+  isDragged = false,
 }) => {
   const [inProp, setInProp] = useState<boolean>(false);
 
@@ -62,7 +64,9 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
       {(state) => {
         return (
           <div
-            className={classNames(css.draggablePiece)}
+            className={classNames(css.draggablePiece, {
+              [css.isDragged]: isDragged,
+            })}
             data-testid={`draggable-piece-${pieceCode}`}
             style={{
               transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,

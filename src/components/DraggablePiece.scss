@@ -8,3 +8,6 @@
   will-change: transform;
   pointer-events: none;
 }
+.isDragged {
+  opacity: 0.3;
+}

@@ -270,6 +270,11 @@ export const CoordinateGrid = forwardRef<
             )}
             transitionDuration={transitionDuration}
             transitionFrom={transitionPieces[algebraicCoordinates]}
+            isDragged={
+              draggedItem
+                ? draggedItem.coordinates === algebraicCoordinates
+                : false
+            }
             key={`${algebraicCoordinates}:${pieceCode}`}
           />
         ))}
