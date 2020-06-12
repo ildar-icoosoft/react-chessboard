@@ -17,6 +17,7 @@ import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
 import { PhantomPiece } from "../PhantomPiece";
 import { HighlightedSquare, HighlightedSquareType } from "../HighlightedSquare";
 import { isEqual as _isEqual } from "lodash";
+import { RoundMarker } from "../RoundMarker";
 
 jest.useFakeTimers();
 
@@ -111,6 +112,19 @@ describe("CoordinateGrid", () => {
       );
 
       expect(testInstance.findAllByType(HighlightedSquare).length).toBe(4); // a1, b2, c3, d4
+    });
+
+    it("contains RoundMarker", () => {
+      const testRenderer = TestRenderer.create(<CoordinateGridWithDnd />);
+      const testInstance = testRenderer.root;
+
+      expect(testInstance.findAllByType(RoundMarker).length).toBe(0);
+
+      testRenderer.update(
+        <CoordinateGridWithDnd roundMarkers={["e2", "e4"]} />
+      );
+
+      expect(testInstance.findAllByType(RoundMarker).length).toBe(2);
     });
   });
 

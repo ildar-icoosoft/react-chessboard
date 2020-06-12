@@ -34,6 +34,7 @@ import {
   NormalizedHighlightedSquare,
   useNormalizedHighlightedSquares,
 } from "../hooks/useNomalizedHighlightedSquares";
+import { RoundMarker } from "./RoundMarker";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -57,6 +58,7 @@ export interface CoordinateGridProps {
   destinationSquares?: string[];
   lastMoveSquares?: string[];
   currentPremoveSquares?: string[];
+  roundMarkers?: string[];
 
   onClick?(coordinates: string): void;
   onRightClick?(event: CoordinateGridRightClickEvent): void;
@@ -85,6 +87,7 @@ export const CoordinateGrid = forwardRef<
       onRightClick,
       onDrop,
       onDragStart,
+      roundMarkers = [],
     },
     ref
   ) => {
@@ -316,6 +319,9 @@ export const CoordinateGrid = forwardRef<
             types={square.types}
             key={square.coordinates}
           />
+        ))}
+        {roundMarkers.map((algebraicCoordinates) => (
+          <RoundMarker key={algebraicCoordinates} />
         ))}
       </div>
     );
