@@ -40,6 +40,11 @@ export interface CoordinateGridRef {
   getDragHandlerId(): Identifier | null;
 }
 
+export interface CoordinateGridRightClickEvent {
+  coordinates: string;
+  mouseEvent: MouseEvent;
+}
+
 export interface CoordinateGridProps {
   orientation?: PieceColor;
   position?: Position;
@@ -54,7 +59,7 @@ export interface CoordinateGridProps {
   currentPremoveSquares?: string[];
 
   onClick?(coordinates: string): void;
-  onRightClick?(coordinates: string): void;
+  onRightClick?(event: CoordinateGridRightClickEvent): void;
   onDrop?(event: BoardDropEvent): void;
   onDragStart?(event: PieceDragStartEvent): void;
 }
@@ -103,8 +108,6 @@ export const CoordinateGrid = forwardRef<
     };
 
     const handleContextMenu = (event: MouseEvent): void => {
-      event.preventDefault();
-
       if (onRightClick) {
         const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
 
@@ -117,7 +120,10 @@ export const CoordinateGrid = forwardRef<
           orientation
         );
 
-        onRightClick(coordinates);
+        onRightClick({
+          mouseEvent: event,
+          coordinates,
+        });
       }
     };
 

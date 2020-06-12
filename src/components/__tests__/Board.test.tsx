@@ -677,6 +677,43 @@ describe("Board", () => {
 
         expect(coordinateGrid.props.currentPremoveSquares).toEqual(["a1"]);
       });
+
+      describe("onRightClick", () => {
+        it("Right Click event must be prevented", () => {
+          const testRenderer = TestRenderer.create(<Board />);
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          let mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          coordinateGrid.props.onRightClick({
+            coordinates: "a1",
+            mouseEvent,
+          });
+
+          expect(mouseEvent.defaultPrevented).toBeFalsy();
+
+          testRenderer.update(<Board allowMarkers={true} />);
+
+          mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          coordinateGrid.props.onRightClick({
+            coordinates: "a1",
+            mouseEvent,
+          });
+
+          expect(mouseEvent.defaultPrevented).toBeTruthy();
+        });
+      });
     });
   });
 

@@ -3,7 +3,7 @@ import TestRenderer from "react-test-renderer";
 import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
 import { PieceCode } from "../../enums/PieceCode";
-import { act, createEvent, fireEvent, render } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
 import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
@@ -893,8 +893,8 @@ describe("CoordinateGrid", () => {
 
       expect(onClick).toBeCalledTimes(2);
 
-      expect(onClick).toHaveBeenNthCalledWith(1, "b7");
-      expect(onClick).toHaveBeenNthCalledWith(2, "a1");
+      expect(onClick).nthCalledWith(1, "b7");
+      expect(onClick).nthCalledWith(2, "a1");
 
       expect(onRightClick).toBeCalledTimes(0);
     });
@@ -936,25 +936,16 @@ describe("CoordinateGrid", () => {
 
       expect(onRightClick).toBeCalledTimes(2);
 
-      expect(onRightClick).toHaveBeenNthCalledWith(1, "b7");
-      expect(onRightClick).toHaveBeenNthCalledWith(2, "a1");
-
-      expect(onClick).toBeCalledTimes(0);
-    });
-
-    it("Right Click event must be prevented", () => {
-      const { getByTestId } = render(<CoordinateGridWithDnd />);
-
-      const coordinateGridEl = getByTestId("coordinate-grid");
-
-      const contextMenuEvent = createEvent.contextMenu(coordinateGridEl, {
-        clientX: 479,
-        clientY: 0,
+      expect(onRightClick).nthCalledWith(1, {
+        mouseEvent: expect.anything(),
+        coordinates: "b7",
+      });
+      expect(onRightClick).nthCalledWith(2, {
+        mouseEvent: expect.anything(),
+        coordinates: "a1",
       });
 
-      fireEvent(coordinateGridEl, contextMenuEvent);
-
-      expect(contextMenuEvent.defaultPrevented).toBeTruthy();
+      expect(onClick).toBeCalledTimes(0);
     });
 
     it("Right Click if no callback", () => {

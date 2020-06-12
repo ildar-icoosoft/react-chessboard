@@ -20,13 +20,17 @@ import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { getRankNameFromCoordinates } from "../utils/chess";
 import { BoardDropEvent } from "../interfaces/BoardDropEvent";
 import { Coords } from "./Coords";
-import { CoordinateGrid } from "./CoordinateGrid";
+import {
+  CoordinateGrid,
+  CoordinateGridRightClickEvent,
+} from "./CoordinateGrid";
 
 export interface BoardRef {
   getSquareXYCoordinates(coordinates: string): XYCoordinates;
 }
 
 export interface BoardProps {
+  allowMarkers?: boolean;
   position?: Position;
   orientation?: PieceColor;
   squareCssClasses?: SquareCssClasses;
@@ -62,6 +66,7 @@ export interface BoardProps {
 export const Board = forwardRef<BoardRef, BoardProps>(
   (
     {
+      allowMarkers = false,
       position = {},
       orientation = PieceColor.WHITE,
       draggable = false,
@@ -131,7 +136,13 @@ export const Board = forwardRef<BoardRef, BoardProps>(
       }
     };
 
-    const handleSquareRightClick = (_coordinates: string): void => {};
+    const handleSquareRightClick = (
+      event: CoordinateGridRightClickEvent
+    ): void => {
+      if (allowMarkers) {
+        event.mouseEvent.preventDefault();
+      }
+    };
 
     return (
       <>
