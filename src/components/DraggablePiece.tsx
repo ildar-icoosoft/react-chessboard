@@ -58,7 +58,11 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
       }
     }, 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transitionFrom]);
+  }, []);
+
+  const [firstTransitionFrom] = useState<SquareTransitionFrom | undefined>(
+    transitionFrom
+  );
 
   return (
     <Transition in={inProp} timeout={transitionDuration}>
@@ -71,7 +75,11 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
             data-testid={`draggable-piece-${pieceCode}`}
             style={{
               transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
-              ...getTransitionStyles(transitionFrom, state, transitionDuration),
+              ...getTransitionStyles(
+                firstTransitionFrom,
+                state,
+                transitionDuration
+              ),
             }}
           >
             <Piece pieceCode={pieceCode} />
