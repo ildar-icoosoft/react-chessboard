@@ -131,6 +131,8 @@ export const Board = forwardRef<BoardRef, BoardProps>(
       }
     };
 
+    const handleSquareRightClick = (_coordinates: string): void => {};
+
     return (
       <>
         <DndProvider backend={Backend}>
@@ -194,7 +196,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               lastMoveSquares={lastMoveSquares}
               currentPremoveSquares={currentPremoveSquares}
               onClick={onSquareClick}
-              onRightClick={onSquareRightClick}
+              onRightClick={handleSquareRightClick}
               onDrop={onDrop}
               onDragStart={onDragStart}
               transitionDuration={transitionDuration}

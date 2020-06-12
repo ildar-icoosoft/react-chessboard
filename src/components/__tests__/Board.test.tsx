@@ -741,26 +741,6 @@ describe("Board", () => {
       expect(onSquareRightClick).toBeCalledWith("e2");
     });
 
-    it("onSquareRightClick", () => {
-      const onSquareRightClick = jest.fn();
-
-      const testInstance = TestRenderer.create(
-        <Board onSquareRightClick={onSquareRightClick} />
-      ).root;
-
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
-
-      TestRenderer.act(() => {
-        coordinateGrid.props.onRightClick("e2");
-      });
-
-      expect(onSquareRightClick).toBeCalledTimes(1);
-
-      expect(onSquareRightClick).toBeCalledWith("e2");
-    });
-
     it("onDragStart old", () => {
       const onDragStart = jest.fn();
 
