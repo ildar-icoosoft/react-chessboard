@@ -25,6 +25,7 @@ export const HighlightedSquare: FC<CoordsProps> = ({
 
   const handleDragEnter = useCallback(() => setIsDragOver(true), []);
   const handleDragLeave = useCallback(() => setIsDragOver(false), []);
+  const handleDrop = useCallback(() => setIsDragOver(false), []);
 
   if (!types.length) {
     return null;
@@ -48,6 +49,7 @@ export const HighlightedSquare: FC<CoordsProps> = ({
       }}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
     ></div>
   );
 };
