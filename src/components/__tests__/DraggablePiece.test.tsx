@@ -217,5 +217,46 @@ describe("DraggablePiece", () => {
       expect(el.style.transition).toBe("");
       expect(el.style.zIndex).toBe("");
     });
+
+    it("CSS transition must be disabled if first render does not have transitionFrom prop", () => {
+      const { getByTestId, rerender } = render(
+        <DraggablePiece
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 420, y: 120 }}
+        />
+      );
+
+      const el: HTMLElement = getByTestId(
+        `draggable-piece-${PieceCode.WHITE_KING}`
+      );
+
+      expect(el).toHaveStyle({
+        transform: `translate(420px, 120px)`,
+      });
+
+      rerender(
+        <DraggablePiece
+          pieceCode={PieceCode.WHITE_KING}
+          xYCoordinates={{ x: 420, y: 120 }}
+          transitionFrom={{
+            algebraic: "e7",
+            x: 240,
+            y: 60,
+          }}
+        />
+      );
+
+      expect(el).toHaveStyle({
+        transform: `translate(420px, 120px)`,
+      });
+
+      act(() => {
+        jest.runAllTimers();
+      });
+
+      expect(el).toHaveStyle({
+        transform: `translate(420px, 120px)`,
+      });
+    });
   });
 });
