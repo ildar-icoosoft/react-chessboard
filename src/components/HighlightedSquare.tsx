@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 import css from "./HighlightedSquare.scss";
 import classNames from "classnames";
@@ -21,6 +21,11 @@ export const HighlightedSquare: FC<CoordsProps> = ({
   xYCoordinates,
   types = [],
 }) => {
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleDragEnter = useCallback(() => setIsDragOver(true), []);
+  const handleDragLeave = useCallback(() => setIsDragOver(false), []);
+
   if (!types.length) {
     return null;
   }
@@ -36,10 +41,13 @@ export const HighlightedSquare: FC<CoordsProps> = ({
         [css.currentPremove]: types.includes(
           HighlightedSquareType.CURRENT_PREMOVE
         ),
+        [css.hover]: isDragOver,
       })}
       style={{
         transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
       }}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
     ></div>
   );
 };

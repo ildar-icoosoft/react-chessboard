@@ -21,7 +21,8 @@
   background: radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%);
   pointer-events: auto;
 
-  &:hover {
+  &:hover,
+  &.hover {
     background: rgba(20, 85, 30, 0.3);
   }
 }
