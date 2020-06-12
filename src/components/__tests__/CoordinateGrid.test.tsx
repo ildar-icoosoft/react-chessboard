@@ -874,6 +874,48 @@ describe("CoordinateGrid", () => {
         );
       });
     });
+
+    describe("RoundMarker", () => {
+      it("width", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd roundMarkers={["a2"]} />
+        );
+        const testInstance = testRenderer.root;
+
+        const roundMarker: TestRenderer.ReactTestInstance = testInstance.findByType(
+          RoundMarker
+        );
+        expect(roundMarker.props.width).toBe(60);
+
+        testRenderer.update(
+          <CoordinateGridWithDnd roundMarkers={["a2"]} width={240} />
+        );
+        expect(roundMarker.props.width).toBe(30);
+      });
+
+      it("xYCoordinates", () => {
+        const testRenderer = TestRenderer.create(
+          <CoordinateGridWithDnd roundMarkers={["e2"]} />
+        );
+        const testInstance = testRenderer.root;
+
+        const roundMarker: TestRenderer.ReactTestInstance = testInstance.findByType(
+          RoundMarker
+        );
+        expect(roundMarker.props.xYCoordinates).toEqual({
+          x: 240,
+          y: 360,
+        });
+
+        testRenderer.update(
+          <CoordinateGridWithDnd roundMarkers={["e2"]} width={240} />
+        );
+        expect(roundMarker.props.xYCoordinates).toEqual({
+          x: 120,
+          y: 180,
+        });
+      });
+    });
   });
 
   describe("Events", () => {

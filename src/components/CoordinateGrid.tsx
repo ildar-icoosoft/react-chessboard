@@ -321,7 +321,15 @@ export const CoordinateGrid = forwardRef<
           />
         ))}
         {roundMarkers.map((algebraicCoordinates) => (
-          <RoundMarker key={algebraicCoordinates} />
+          <RoundMarker
+            key={algebraicCoordinates}
+            width={width / 8}
+            xYCoordinates={getSquareXYCoordinates(
+              algebraicCoordinates,
+              width,
+              orientation
+            )}
+          />
         ))}
       </div>
     );
