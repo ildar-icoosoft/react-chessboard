@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { Rank, RankRef } from "./Rank";
 import css from "./Board.scss";
 import {
@@ -24,6 +29,7 @@ import {
   CoordinateGrid,
   CoordinateGridRightClickEvent,
 } from "./CoordinateGrid";
+import { without as _without } from "lodash";
 
 export interface BoardRef {
   getSquareXYCoordinates(coordinates: string): XYCoordinates;
@@ -136,11 +142,19 @@ export const Board = forwardRef<BoardRef, BoardProps>(
       }
     };
 
+    const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
+
     const handleSquareRightClick = (
       event: CoordinateGridRightClickEvent
     ): void => {
       if (allowMarkers) {
         event.mouseEvent.preventDefault();
+
+        if (roundMarkers.includes(event.coordinates)) {
+          setRoundMarkers(_without(roundMarkers, event.coordinates));
+        } else {
+          setRoundMarkers(roundMarkers.concat(event.coordinates));
+        }
       }
     };
 
@@ -211,7 +225,7 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               onDrop={onDrop}
               onDragStart={onDragStart}
               transitionDuration={transitionDuration}
-              roundMarkers={["e2", "e3", "e4"]}
+              roundMarkers={roundMarkers}
             />
 
             {showCoordinates && <Coords orientation={orientation} />}

@@ -692,9 +692,11 @@ describe("Board", () => {
             cancelable: true,
           });
 
-          coordinateGrid.props.onRightClick({
-            coordinates: "a1",
-            mouseEvent,
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
           });
 
           expect(mouseEvent.defaultPrevented).toBeFalsy();
@@ -706,12 +708,93 @@ describe("Board", () => {
             cancelable: true,
           });
 
-          coordinateGrid.props.onRightClick({
-            coordinates: "a1",
-            mouseEvent,
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
           });
 
           expect(mouseEvent.defaultPrevented).toBeTruthy();
+        });
+      });
+
+      describe("roundMarkers", () => {
+        it("toggle roundMarker on right click if allowMarkers is true", () => {
+          const testRenderer = TestRenderer.create(
+            <Board allowMarkers={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          const mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual(["a1"]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a2",
+              mouseEvent,
+            });
+          });
+          expect(coordinateGrid.props.roundMarkers).toEqual(["a1", "a2"]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+          expect(coordinateGrid.props.roundMarkers).toEqual(["a2"]);
+        });
+
+        it("ignore right clicks if allowMarkers is false", () => {
+          const testRenderer = TestRenderer.create(<Board />);
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          const mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
         });
       });
     });

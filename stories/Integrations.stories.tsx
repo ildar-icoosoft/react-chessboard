@@ -19,6 +19,7 @@ export const SimpleMoveStory = () => (
       lastMoveSquares,
     }) => (
       <Board
+        allowMarkers={true}
         position={position}
         draggable={draggable}
         onDragStart={onDragStart}

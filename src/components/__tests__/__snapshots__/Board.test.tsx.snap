@@ -1223,38 +1223,7 @@ Array [
     >
       <svg
         className="svg"
-      >
-        <circle
-          cx={270}
-          cy={390}
-          data-testid="round-marker"
-          fill="none"
-          opacity="1"
-          r={28.125}
-          stroke="#15781B"
-          strokeWidth={3.75}
-        />
-        <circle
-          cx={270}
-          cy={330}
-          data-testid="round-marker"
-          fill="none"
-          opacity="1"
-          r={28.125}
-          stroke="#15781B"
-          strokeWidth={3.75}
-        />
-        <circle
-          cx={270}
-          cy={270}
-          data-testid="round-marker"
-          fill="none"
-          opacity="1"
-          r={28.125}
-          stroke="#15781B"
-          strokeWidth={3.75}
-        />
-      </svg>
+      />
     </div>
     <div
       className="coords ranks white"
