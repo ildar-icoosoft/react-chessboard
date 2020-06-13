@@ -1,0 +1,26 @@
+.resizer {
+  display: block;
+  position: absolute;
+  right: -9px;
+  bottom: -9px;
+  width: 22px;
+  height: 22px;
+  cursor: nwse-resize;
+
+  &:before {
+    width: 5px;
+    transform: translate(7px, 8px) rotate(-45deg);
+    background: #000;
+    content: "";
+    position: absolute;
+    height: 1px;
+  }
+  &:after {
+    background: #000;
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 1px;
+    transform: translate(1px, 6px) rotate(-45deg);
+  }
+}

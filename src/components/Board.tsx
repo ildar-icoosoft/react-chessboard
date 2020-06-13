@@ -18,6 +18,7 @@ import {
   CoordinateGridRightClickEvent,
 } from "./CoordinateGrid";
 import { without as _without } from "lodash";
+import { Resizer } from "./Resizer";
 
 export interface BoardProps {
   allowMarkers?: boolean;
@@ -126,6 +127,7 @@ export const Board: FC<BoardProps> = ({
           />
 
           {showCoordinates && <Coords orientation={orientation} />}
+          <Resizer />
         </div>
         <PieceDragLayer width={width / 8} />
       </DndProvider>
