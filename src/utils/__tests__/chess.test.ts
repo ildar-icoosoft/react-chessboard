@@ -5,7 +5,6 @@ import {
   getFileNameFromCoordinates,
   getNearestSquare,
   getPieceCoordinatesFromPosition,
-  getPieceElement,
   getSquareXYCoordinates,
   getPositionDiff,
   getRankIndex,
@@ -15,7 +14,6 @@ import {
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
-import { isElement } from "react-dom/test-utils";
 import { Position } from "../../interfaces/Position";
 
 describe("Chess utils", () => {
@@ -31,11 +29,6 @@ describe("Chess utils", () => {
   it("getColorFromPieceCode()", () => {
     expect(getColorFromPieceCode(PieceCode.BLACK_QUEEN)).toBe(PieceColor.BLACK);
     expect(getColorFromPieceCode(PieceCode.WHITE_KING)).toBe(PieceColor.WHITE);
-  });
-
-  it("getPieceElement()", () => {
-    expect(isElement(getPieceElement(PieceCode.BLACK_QUEEN))).toBeTruthy();
-    expect(isElement(getPieceElement(PieceCode.WHITE_KING))).toBeTruthy();
   });
 
   it("getFileIndex()", () => {

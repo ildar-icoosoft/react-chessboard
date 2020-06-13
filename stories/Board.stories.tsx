@@ -1,10 +1,10 @@
 import React from "react";
 import { Board } from "../src/components/Board";
 import { startPosition } from "../src/constants/constants";
-import { PieceDropEvent } from "../src/interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../src/interfaces/PieceDragStartEvent";
 import { PieceColor } from "../src/enums/PieceColor";
 import { PieceCode } from "../src/enums/PieceCode";
+import { PieceDropEvent } from "PieceDropEvent.ts";
 
 export default {
   title: "Board",

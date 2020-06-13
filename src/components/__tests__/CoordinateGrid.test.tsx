@@ -10,10 +10,9 @@ import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
 import { DraggablePiece } from "../DraggablePiece";
 import { DragDropManager, Identifier } from "dnd-core";
 import { ITestBackend } from "react-dnd-test-backend";
-import { SquareRef } from "../Square";
 import { XYCoord } from "react-dnd";
 import { DragItemType } from "../../enums/DragItemType";
-import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
+import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PhantomPiece } from "../PhantomPiece";
 import { HighlightedSquare, HighlightedSquareType } from "../HighlightedSquare";
 import { isEqual as _isEqual } from "lodash";
@@ -605,7 +604,7 @@ describe("CoordinateGrid", () => {
           });
 
           it("enabled transition if event.cancelMove() was called", () => {
-            const onDrop = jest.fn((event: BoardDropEvent) => {
+            const onDrop = jest.fn((event: PieceDropEvent) => {
               event.cancelMove();
             });
 
@@ -1092,7 +1091,7 @@ describe("CoordinateGrid", () => {
         const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
         const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-          .getDecoratedComponent<SquareRef>()
+          .getDecoratedComponent<CoordinateGridRef>()
           .getDragHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
@@ -1359,10 +1358,10 @@ describe("CoordinateGrid", () => {
         const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
         const dragSourceId: Identifier = (ref.current as ReactDndRefType)
-          .getDecoratedComponent<SquareRef>()
+          .getDecoratedComponent<CoordinateGridRef>()
           .getDragHandlerId() as Identifier;
         const dropSourceId: Identifier = (ref.current as ReactDndRefType)
-          .getDecoratedComponent<SquareRef>()
+          .getDecoratedComponent<CoordinateGridRef>()
           .getDropHandlerId() as Identifier;
 
         const backend: ITestBackend = manager.getBackend() as ITestBackend;
