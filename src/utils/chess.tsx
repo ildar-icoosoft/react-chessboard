@@ -1,21 +1,6 @@
-import React, { ReactElement } from "react";
 import { FILE_NAMES, RANK_NAMES } from "../constants/constants";
 import { PieceColor } from "../enums/PieceColor";
 import { PieceCode } from "../enums/PieceCode";
-import {
-  BlackBishop,
-  BlackKing,
-  BlackKnight,
-  BlackPawn,
-  BlackQueen,
-  BlackRook,
-  WhiteBishop,
-  WhiteKing,
-  WhiteKnight,
-  WhitePawn,
-  WhiteQueen,
-  WhiteRook,
-} from "../components/svg";
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
 import { without as _without } from "lodash";
@@ -75,34 +60,6 @@ export const getColorFromPieceCode = (pieceCode: PieceCode): PieceColor => {
   };
 
   return pieceColorMap[pieceCode[0]];
-};
-
-const piecesMap: Record<PieceCode, any> = {
-  bB: BlackBishop,
-  bK: BlackKing,
-  bN: BlackKnight,
-  bP: BlackPawn,
-  bQ: BlackQueen,
-  bR: BlackRook,
-  wB: WhiteBishop,
-  wK: WhiteKing,
-  wN: WhiteKnight,
-  wP: WhitePawn,
-  wQ: WhiteQueen,
-  wR: WhiteRook,
-};
-
-/**
- * @param pieceCode (ie: bQe8, wKa1, etc)
- * @param props - SVG component props
- */
-export const getPieceElement = (
-  pieceCode: PieceCode,
-  props?: Record<string, any>
-): ReactElement => {
-  const PieceComponent = piecesMap[pieceCode];
-
-  return <PieceComponent {...props} />;
 };
 
 export const getDistanceBetweenSquares = (

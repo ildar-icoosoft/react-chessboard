@@ -3,7 +3,7 @@ import {
   DenormalizedHighlightedSquare,
   NormalizedHighlightedSquare,
   useNormalizedHighlightedSquares,
-} from "../useNomalizedHighlightedSquares";
+} from "../useNormalizedHighlightedSquares";
 import { HighlightedSquareType } from "../../components/HighlightedSquare";
 
 describe("useNormalizedHighlightedSquares()", () => {

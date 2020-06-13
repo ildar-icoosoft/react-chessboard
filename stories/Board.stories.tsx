@@ -1,10 +1,10 @@
 import React from "react";
 import { Board } from "../src/components/Board";
 import { startPosition } from "../src/constants/constants";
-import { PieceDropEvent } from "../src/interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../src/interfaces/PieceDragStartEvent";
 import { PieceColor } from "../src/enums/PieceColor";
 import { PieceCode } from "../src/enums/PieceCode";
+import { PieceDropEvent } from "../src/interfaces/PieceDropEvent";
 
 export default {
   title: "Board",
@@ -33,28 +33,12 @@ export const BoardWithEventHandlers = () => {
     console.log("onSquareClick", coordinates);
   };
 
-  const onSquareRightClick = (coordinates: string) => {
-    console.log("onSquareRightClick", coordinates);
-  };
-
   const onDragStart = (event: PieceDragStartEvent) => {
     console.log("onDragStart", event);
   };
 
-  const onDragEnterSquare = (coordinates: string) => {
-    console.log("onDragEnterSquare", coordinates);
-  };
-
   const onDrop = (event: PieceDropEvent) => {
     console.log("onDrop", event);
-  };
-
-  const onMouseEnterSquare = (coordinates: string) => {
-    console.log("onMouseOverSquare", coordinates);
-  };
-
-  const onMouseLeaveSquare = (coordinates: string) => {
-    console.log("onMouseOutSquare", coordinates);
   };
 
   return (
@@ -62,12 +46,8 @@ export const BoardWithEventHandlers = () => {
       position={startPosition}
       draggable={true}
       onSquareClick={onSquareClick}
-      onSquareRightClick={onSquareRightClick}
       onDragStart={onDragStart}
-      onDragEnterSquare={onDragEnterSquare}
       onDrop={onDrop}
-      onMouseEnterSquare={onMouseEnterSquare}
-      onMouseLeaveSquare={onMouseLeaveSquare}
     />
   );
 };

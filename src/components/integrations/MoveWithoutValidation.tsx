@@ -1,6 +1,6 @@
 import { FC, ReactElement, useState } from "react";
 import { Position } from "../../interfaces/Position";
-import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
+import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 
 export interface MoveWithoutValidationCallbackProps {
@@ -9,7 +9,7 @@ export interface MoveWithoutValidationCallbackProps {
   selectionSquares: string[];
   lastMoveSquares: string[];
   onDragStart(event: PieceDragStartEvent): void;
-  onDrop(event: BoardDropEvent): void;
+  onDrop(event: PieceDropEvent): void;
   onSquareClick(coordinates: string): void;
 }
 

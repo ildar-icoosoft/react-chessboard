@@ -26,14 +26,14 @@ import { XYCoord } from "react-dnd/lib/interfaces/monitors";
 import { PieceDragObject } from "../interfaces/PieceDragObject";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useTransitionPieces } from "../hooks/useTransitionPieces";
-import { BoardDropEvent } from "../interfaces/BoardDropEvent";
+import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
 import { PhantomPiece } from "./PhantomPiece";
 import { HighlightedSquare, HighlightedSquareType } from "./HighlightedSquare";
 import {
   NormalizedHighlightedSquare,
   useNormalizedHighlightedSquares,
-} from "../hooks/useNomalizedHighlightedSquares";
+} from "../hooks/useNormalizedHighlightedSquares";
 import { RoundMarker } from "./RoundMarker";
 
 export interface CoordinateGridRef {
@@ -62,7 +62,7 @@ export interface CoordinateGridProps {
 
   onClick?(coordinates: string): void;
   onRightClick?(event: CoordinateGridRightClickEvent): void;
-  onDrop?(event: BoardDropEvent): void;
+  onDrop?(event: PieceDropEvent): void;
   onDragStart?(event: PieceDragStartEvent): void;
 }
 
