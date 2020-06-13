@@ -144,6 +144,26 @@ export const Board = forwardRef<BoardRef, BoardProps>(
 
     const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
+    const handleSquareClick = (coordinates: string): void => {
+      if (allowMarkers) {
+        setRoundMarkers([]);
+      }
+
+      if (onSquareClick) {
+        onSquareClick(coordinates);
+      }
+    };
+
+    const handleDragStart = (event: PieceDragStartEvent): void => {
+      if (allowMarkers) {
+        setRoundMarkers([]);
+      }
+
+      if (onDragStart) {
+        onDragStart(event);
+      }
+    };
+
     const handleSquareRightClick = (
       event: CoordinateGridRightClickEvent
     ): void => {
@@ -220,10 +240,10 @@ export const Board = forwardRef<BoardRef, BoardProps>(
               destinationSquares={destinationSquares}
               lastMoveSquares={lastMoveSquares}
               currentPremoveSquares={currentPremoveSquares}
-              onClick={onSquareClick}
+              onClick={handleSquareClick}
               onRightClick={handleSquareRightClick}
               onDrop={onDrop}
-              onDragStart={onDragStart}
+              onDragStart={handleDragStart}
               transitionDuration={transitionDuration}
               roundMarkers={roundMarkers}
             />

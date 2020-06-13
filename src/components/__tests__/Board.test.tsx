@@ -796,6 +796,83 @@ describe("Board", () => {
 
           expect(coordinateGrid.props.roundMarkers).toEqual([]);
         });
+
+        it("left click must clear roundMarkers", () => {
+          const testRenderer = TestRenderer.create(
+            <Board allowMarkers={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          const mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a2",
+              mouseEvent,
+            });
+          });
+          expect(coordinateGrid.props.roundMarkers).toEqual(["a1", "a2"]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("a1");
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+        });
+
+        it("drag start must clear roundMarkers", () => {
+          const testRenderer = TestRenderer.create(
+            <Board allowMarkers={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          const mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a2",
+              mouseEvent,
+            });
+          });
+          expect(coordinateGrid.props.roundMarkers).toEqual(["a1", "a2"]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "a1",
+              pieceCode: PieceCode.WHITE_KNIGHT,
+            });
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+        });
       });
     });
   });
