@@ -1,4 +1,8 @@
 .phantomPiece {
   position: absolute;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  z-index: 1;
 }

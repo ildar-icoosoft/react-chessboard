@@ -1,13 +1,15 @@
 import { FC, ReactElement, useState } from "react";
 import { Position } from "../../interfaces/Position";
-import { BoardDropEvent } from "../../interfaces/BoardDropEvent";
-import { SquareCssClasses } from "../../interfaces/SquareCssClasses";
+import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
+import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 
 export interface MoveWithoutValidationCallbackProps {
   position: Position;
   draggable: boolean;
-  squareCssClasses: SquareCssClasses;
-  onDrop(event: BoardDropEvent): void;
+  selectionSquares: string[];
+  lastMoveSquares: string[];
+  onDragStart(event: PieceDragStartEvent): void;
+  onDrop(event: PieceDropEvent): void;
   onSquareClick(coordinates: string): void;
 }
 
@@ -22,56 +24,61 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   children,
   initialPosition = {},
 }) => {
-  const [position, setPosition] = useState(initialPosition);
-  const [currentMoveSelection, setCurrentMoveSelection] = useState<
-    string | null
-  >(null);
-
-  const squareCssClasses: SquareCssClasses = {};
-  if (currentMoveSelection) {
-    squareCssClasses[currentMoveSelection] = "selectedSquare";
-  }
+  const [position, setPosition] = useState<Position>(initialPosition);
+  const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
+  const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
 
   return children({
     position,
     draggable: true,
-    onDrop(boardDropEvent) {
+    onDragStart(event: PieceDragStartEvent) {
+      setSelectionSquares([event.coordinates]);
+    },
+    onDrop(event) {
+      if (event.sourceCoordinates === event.targetCoordinates) {
+        event.cancelMove();
+      } else {
+        setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+      }
+      setSelectionSquares([]);
+
       setPosition((prevPosition) => {
         const newPosition: Position = {
           ...prevPosition,
         };
-        delete newPosition[boardDropEvent.sourceCoordinates];
+        delete newPosition[event.sourceCoordinates];
 
-        newPosition[boardDropEvent.targetCoordinates] =
-          boardDropEvent.pieceCode;
+        newPosition[event.targetCoordinates] = event.pieceCode;
 
         return newPosition;
       });
     },
     onSquareClick(coordinates: string) {
-      setCurrentMoveSelection((currentSelection) => {
-        if (currentSelection === null && !position[coordinates]) {
-          return currentSelection;
-        }
+      if (!selectionSquares.length && !position[coordinates]) {
+        // ignore first click on empty square
+        return;
+      }
 
-        if (currentSelection) {
-          setPosition((prevPosition) => {
-            const newPosition: Position = {
-              ...prevPosition,
-            };
-            delete newPosition[currentSelection];
+      if (selectionSquares.length) {
+        // second click. change position, set lastMoveSquares and clear selectionSquares
 
-            newPosition[coordinates] = prevPosition[currentSelection];
+        const newPosition: Position = {
+          ...position,
+        };
+        delete newPosition[selectionSquares[0]];
 
-            return newPosition;
-          });
+        newPosition[coordinates] = position[selectionSquares[0]];
 
-          return null;
-        }
+        setPosition(newPosition);
+        setLastMoveSquares([selectionSquares[0], coordinates]);
+        setSelectionSquares([]);
+      } else {
+        // first click. set selectionSquares
 
-        return coordinates;
-      });
+        setSelectionSquares([coordinates]);
+      }
     },
-    squareCssClasses,
+    selectionSquares,
+    lastMoveSquares,
   });
 };

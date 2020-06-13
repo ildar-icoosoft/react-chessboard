@@ -18,7 +18,7 @@ describe("useCombinedRefs()", () => {
     expect(ref1.current).toBe("a");
     expect(ref2.current).toBe("a");
 
-    expect(ref3).toHaveBeenCalledTimes(1);
+    expect(ref3).toBeCalledTimes(1);
     expect(ref3).toBeCalledWith("a");
   });
 });

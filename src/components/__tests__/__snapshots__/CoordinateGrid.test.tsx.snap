@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CoordinateGrid Snapshot 1`] = `
+<div
+  className="coordinateGrid"
+  data-test-dragged-item-coordinates=""
+  data-test-transition="{}"
+  data-testid="coordinate-grid"
+  onClick={[Function]}
+  onContextMenu={[Function]}
+  style={
+    Object {
+      "height": "480px",
+      "width": "480px",
+    }
+  }
+>
+  <svg
+    className="svg"
+  />
+</div>
+`;

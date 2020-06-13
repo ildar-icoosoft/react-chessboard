@@ -1,0 +1,13 @@
+.draggablePiece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  z-index: 2;
+  will-change: transform;
+  pointer-events: none;
+}
+.isDragged {
+  opacity: 0.3;
+}

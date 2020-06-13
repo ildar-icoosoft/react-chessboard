@@ -1,34 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Board Snapshot 1`] = `
-<div
-  className="board"
-  data-testid="board"
-  style={
-    Object {
-      "height": "480px",
-      "width": "480px",
-    }
-  }
->
-  <div
-    className="coordinateGrid"
-    data-test-dragged-item-coordinates=""
-    data-test-transition="{}"
-    data-testid="coordinate-grid"
-    onClick={[Function]}
-    onContextMenu={[Function]}
-    style={
-      Object {
-        "height": "480px",
-        "width": "480px",
-      }
-    }
-  >
-    <svg
-      className="svg"
-    />
-  </div>
+exports[`Square Snapshot 1`] = `
+Array [
   <div
     className="coords ranks white"
     data-testid="coords-ranks"
@@ -73,7 +46,7 @@ exports[`Board Snapshot 1`] = `
     >
       8
     </div>
-  </div>
+  </div>,
   <div
     className="coords files white"
     data-testid="coords-files"
@@ -118,6 +91,6 @@ exports[`Board Snapshot 1`] = `
     >
       h
     </div>
-  </div>
-</div>
+  </div>,
+]
 `;

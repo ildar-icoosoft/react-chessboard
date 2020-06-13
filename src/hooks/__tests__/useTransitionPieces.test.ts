@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-hooks";
 import {
   useTransitionPieces,
-  useTransitionPiecesResult,
+  UseTransitionPiecesResult,
 } from "../useTransitionPieces";
 import { Position } from "../../interfaces/Position";
 import { PieceCode } from "../../enums/PieceCode";
@@ -20,7 +20,7 @@ describe("useTransitionPieces()", () => {
 
     const { result, rerender } = renderHook<
       Position,
-      useTransitionPiecesResult
+      UseTransitionPiecesResult
     >((position) => useTransitionPieces(position, getSquareXYCoordinates), {
       initialProps: position,
     });
@@ -68,7 +68,7 @@ describe("useTransitionPieces()", () => {
 
     const { result, rerender } = renderHook<
       Position,
-      useTransitionPiecesResult
+      UseTransitionPiecesResult
     >((position) => useTransitionPieces(position, getSquareXYCoordinates), {
       initialProps: position,
     });
@@ -100,7 +100,7 @@ describe("useTransitionPieces()", () => {
 
     const { result, rerender } = renderHook<
       Position,
-      useTransitionPiecesResult
+      UseTransitionPiecesResult
     >((position) => useTransitionPieces(position, getSquareXYCoordinates), {
       initialProps: position,
     });
@@ -147,7 +147,7 @@ describe("useTransitionPieces()", () => {
 
     const { result, rerender } = renderHook<
       Position,
-      useTransitionPiecesResult
+      UseTransitionPiecesResult
     >((position) => useTransitionPieces(position, getSquareXYCoordinates), {
       initialProps: position,
     });
@@ -200,7 +200,7 @@ describe("useTransitionPieces()", () => {
 
     const { result, rerender } = renderHook<
       Position,
-      useTransitionPiecesResult
+      UseTransitionPiecesResult
     >((position) => useTransitionPieces(position, getSquareXYCoordinates), {
       initialProps: position,
     });

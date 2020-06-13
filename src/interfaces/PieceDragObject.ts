@@ -4,6 +4,6 @@ import { PieceCode } from "../enums/PieceCode";
 
 export interface PieceDragObject extends DragObjectWithType {
   type: DragItemType.PIECE;
-  pieceCode: PieceCode;
-  coordinates: string;
+  pieceCode?: PieceCode;
+  coordinates?: string;
 }

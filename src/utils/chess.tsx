@@ -1,24 +1,10 @@
-import React, { ReactElement } from "react";
 import { FILE_NAMES, RANK_NAMES } from "../constants/constants";
 import { PieceColor } from "../enums/PieceColor";
 import { PieceCode } from "../enums/PieceCode";
-import {
-  BlackBishop,
-  BlackKing,
-  BlackKnight,
-  BlackPawn,
-  BlackQueen,
-  BlackRook,
-  WhiteBishop,
-  WhiteKing,
-  WhiteKnight,
-  WhitePawn,
-  WhiteQueen,
-  WhiteRook,
-} from "../components/svg";
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
 import { without as _without } from "lodash";
+import { XYCoordinates } from "../interfaces/XYCoordinates";
 
 /**
  * @param a1-h8
@@ -74,34 +60,6 @@ export const getColorFromPieceCode = (pieceCode: PieceCode): PieceColor => {
   };
 
   return pieceColorMap[pieceCode[0]];
-};
-
-const piecesMap: Record<PieceCode, any> = {
-  bB: BlackBishop,
-  bK: BlackKing,
-  bN: BlackKnight,
-  bP: BlackPawn,
-  bQ: BlackQueen,
-  bR: BlackRook,
-  wB: WhiteBishop,
-  wK: WhiteKing,
-  wN: WhiteKnight,
-  wP: WhitePawn,
-  wQ: WhiteQueen,
-  wR: WhiteRook,
-};
-
-/**
- * @param pieceCode (ie: bQe8, wKa1, etc)
- * @param props - SVG component props
- */
-export const getPieceElement = (
-  pieceCode: PieceCode,
-  props?: Record<string, any>
-): ReactElement => {
-  const PieceComponent = piecesMap[pieceCode];
-
-  return <PieceComponent {...props} />;
 };
 
 export const getDistanceBetweenSquares = (
@@ -188,4 +146,46 @@ export const getPositionDiff = (
   }
 
   return result;
+};
+
+export const getSquareXYCoordinates = (
+  algebraicCoordinates: string,
+  boardWidth: number,
+  orientation: PieceColor
+): XYCoordinates => {
+  const fileIndex: number = getFileIndex(algebraicCoordinates);
+  const rankIndex: number = getRankIndex(algebraicCoordinates);
+
+  const squareWidth: number = boardWidth / 8;
+
+  return {
+    x:
+      orientation === PieceColor.WHITE
+        ? fileIndex * squareWidth
+        : (7 - fileIndex) * squareWidth,
+    y:
+      orientation === PieceColor.WHITE
+        ? (7 - rankIndex) * squareWidth
+        : rankIndex * squareWidth,
+  };
+};
+
+export const getSquareAlgebraicCoordinates = (
+  xYCoordinates: XYCoordinates,
+  boardWidth: number,
+  orientation: PieceColor
+): string => {
+  const squareWidth: number = boardWidth / 8;
+
+  let fileIndex: number = Math.floor(xYCoordinates.x / squareWidth);
+  if (orientation === PieceColor.BLACK) {
+    fileIndex = 7 - fileIndex;
+  }
+
+  let rankIndex: number = Math.floor(xYCoordinates.y / squareWidth);
+  if (orientation === PieceColor.WHITE) {
+    rankIndex = 7 - rankIndex;
+  }
+
+  return FILE_NAMES[fileIndex] + RANK_NAMES[rankIndex];
 };

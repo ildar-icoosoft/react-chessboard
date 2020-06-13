@@ -5,38 +5,41 @@ import { act, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
 import { DragDropManager, Identifier } from "dnd-core";
-import { Square, SquareRef } from "../Square";
 import { ITestBackend } from "react-dnd-test-backend";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { PieceDragLayer } from "../PieceDragLayer";
 import { XYCoord } from "react-dnd";
 import { Piece } from "../Piece";
+import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
 
 jest.useFakeTimers();
 
 describe("PieceDragLayer", () => {
-  const SquareWithDnd = wrapInTestContext(Square);
+  const CoordinateGridWithDnd = wrapInTestContext(CoordinateGrid);
   const PieceDragLayerWithDnd = wrapInTestContext(PieceDragLayer);
 
   let dragSourceId: Identifier;
+  let dropSourceId: Identifier;
   let backend: ITestBackend;
 
   beforeEach(() => {
-    const squareRef = createRef<ReactDndRefType>();
+    const ref = createRef<ReactDndRefType>();
     render(
-      <SquareWithDnd
-        ref={squareRef}
-        coordinates={"a2"}
+      <CoordinateGridWithDnd
+        ref={ref}
+        position={{ b7: PieceCode.WHITE_KING }}
         draggable={true}
-        pieceCode={PieceCode.WHITE_QUEEN}
       />
     );
 
-    const manager: DragDropManager = (squareRef.current as ReactDndRefType).getManager() as DragDropManager;
+    const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
 
-    dragSourceId = (squareRef.current as ReactDndRefType)
-      .getDecoratedComponent<SquareRef>()
+    dragSourceId = (ref.current as ReactDndRefType)
+      .getDecoratedComponent<CoordinateGridRef>()
       .getDragHandlerId() as Identifier;
+    dropSourceId = (ref.current as ReactDndRefType)
+      .getDecoratedComponent<CoordinateGridRef>()
+      .getDropHandlerId() as Identifier;
 
     backend = manager.getBackend() as ITestBackend;
   });
@@ -67,19 +70,30 @@ describe("PieceDragLayer", () => {
         <PieceDragLayerWithDnd width={70} />
       ).root;
 
-      expect(() => testInstance.findByType(Piece)).not.toThrow();
+      expect(testInstance.findAllByType(Piece).length).toBe(1);
 
       const piece = testInstance.findByType(Piece);
 
-      expect(piece.props.pieceCode).toBe(PieceCode.WHITE_QUEEN);
+      expect(piece.props.pieceCode).toBe(PieceCode.WHITE_KING);
       expect(piece.props.width).toBe(70);
     });
 
     it("should not render if there is no clientOffset", () => {
       const { container } = render(<PieceDragLayerWithDnd />);
 
+      const clientOffset: XYCoord = {
+        x: 100,
+        y: 100,
+      };
+
       act(() => {
-        backend.simulateBeginDrag([dragSourceId]);
+        backend.simulateBeginDrag([dragSourceId], {
+          clientOffset: clientOffset,
+          getSourceClientOffset() {
+            return clientOffset;
+          },
+        });
+        backend.simulateHover([dropSourceId]);
       });
 
       expect(container).toBeEmpty();

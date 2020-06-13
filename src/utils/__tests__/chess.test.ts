@@ -5,15 +5,15 @@ import {
   getFileNameFromCoordinates,
   getNearestSquare,
   getPieceCoordinatesFromPosition,
-  getPieceElement,
+  getSquareXYCoordinates,
+  getPositionDiff,
   getRankIndex,
   getRankNameFromCoordinates,
-  getPositionDiff,
   isLightSquare,
+  getSquareAlgebraicCoordinates,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
-import { isElement } from "react-dom/test-utils";
 import { Position } from "../../interfaces/Position";
 
 describe("Chess utils", () => {
@@ -29,11 +29,6 @@ describe("Chess utils", () => {
   it("getColorFromPieceCode()", () => {
     expect(getColorFromPieceCode(PieceCode.BLACK_QUEEN)).toBe(PieceColor.BLACK);
     expect(getColorFromPieceCode(PieceCode.WHITE_KING)).toBe(PieceColor.WHITE);
-  });
-
-  it("getPieceElement()", () => {
-    expect(isElement(getPieceElement(PieceCode.BLACK_QUEEN))).toBeTruthy();
-    expect(isElement(getPieceElement(PieceCode.WHITE_KING))).toBeTruthy();
   });
 
   it("getFileIndex()", () => {
@@ -107,5 +102,49 @@ describe("Chess utils", () => {
       b4: "b2",
       f4: "c1",
     });
+  });
+
+  it("getSquareXYCoordinates()", () => {
+    expect(getSquareXYCoordinates("a8", 480, PieceColor.WHITE)).toEqual({
+      x: 0,
+      y: 0,
+    });
+
+    expect(getSquareXYCoordinates("h1", 480, PieceColor.BLACK)).toEqual({
+      x: 0,
+      y: 0,
+    });
+
+    expect(getSquareXYCoordinates("a4", 480, PieceColor.WHITE)).toEqual({
+      x: 0,
+      y: 240,
+    });
+
+    expect(getSquareXYCoordinates("a4", 480, PieceColor.BLACK)).toEqual({
+      x: 420,
+      y: 180,
+    });
+  });
+
+  it("getSquareAlgebraicCoordinates()", () => {
+    expect(
+      getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, PieceColor.WHITE)
+    ).toBe("a8");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, PieceColor.BLACK)
+    ).toBe("h1");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, PieceColor.WHITE)
+    ).toBe("h8");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, PieceColor.BLACK)
+    ).toBe("a1");
+
+    expect(
+      getSquareAlgebraicCoordinates({ x: 150, y: 200 }, 480, PieceColor.WHITE)
+    ).toBe("c5");
   });
 });

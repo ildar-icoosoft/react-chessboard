@@ -1,7 +1,8 @@
 .pieceDragLayer {
   position: fixed;
   pointer-events: none;
-  zindex: 10;
+  z-index: 10;
   left: 0;
   top: 0;
+  will-change: transform;
 }

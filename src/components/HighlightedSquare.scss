@@ -1,0 +1,31 @@
+.highlightedSquare {
+  position: absolute;
+  width: 12.5%;
+  height: 12.5%;
+  pointer-events: none;
+}
+.selected {
+  background-color: rgba(20, 85, 30, 0.5);
+}
+.lastMove {
+  background-color: rgba(155, 199, 0, 0.41);
+}
+.oc.dest {
+  background: radial-gradient(
+    transparent 0%,
+    transparent 80%,
+    rgba(20, 85, 0, 0.3) 80%
+  );
+}
+.dest {
+  background: radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%);
+  pointer-events: auto;
+
+  &:hover,
+  &.hover {
+    background: rgba(20, 85, 30, 0.3);
+  }
+}
+.currentPremove {
+  background-color: rgba(20, 30, 85, 0.5) !important;
+}

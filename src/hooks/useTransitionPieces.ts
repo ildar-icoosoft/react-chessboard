@@ -7,7 +7,7 @@ import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { usePreviousDifferent } from "./usePreviousDifferent";
 import { isEqual as _isEqual } from "lodash";
 
-export type useTransitionPiecesResult = [
+export type UseTransitionPiecesResult = [
   Record<string, SquareTransitionFrom>,
   () => void, // disableTransitionInNextPosition() callback
   () => void // enableTransitionInNextPosition() callback
@@ -16,7 +16,7 @@ export type useTransitionPiecesResult = [
 export const useTransitionPieces = (
   position: Position,
   getSquareXYCoordinates: (coordinates: string) => XYCoordinates
-): useTransitionPiecesResult => {
+): UseTransitionPiecesResult => {
   const disableTransitionFrom = useRef<Position | null>(null);
 
   const prevPosition: Position | undefined = usePreviousDifferent<Position>(
@@ -53,14 +53,10 @@ export const useTransitionPieces = (
       const sourceX = sourceXYCoordinates.x;
       const sourceY = sourceXYCoordinates.y;
 
-      const targetXYCoordinates = getSquareXYCoordinates(targetCoordinates);
-      const targetX = targetXYCoordinates.x;
-      const targetY = targetXYCoordinates.y;
-
       return {
         algebraic: sourceCoordinates,
-        x: sourceX - targetX,
-        y: sourceY - targetY,
+        x: sourceX,
+        y: sourceY,
         phantomPiece: (prevPosition as Position)[targetCoordinates],
       };
     }
