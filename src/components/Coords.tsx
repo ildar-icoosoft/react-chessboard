@@ -8,7 +8,7 @@ export interface CoordsProps {
   orientation?: PieceColor;
 }
 
-const getOrienationCssClass = (orientation: PieceColor) => {
+const getOrientationCssClass = (orientation: PieceColor) => {
   if (orientation === PieceColor.WHITE) {
     return "white";
   }
@@ -23,7 +23,7 @@ export const Coords: FC<CoordsProps> = ({ orientation = PieceColor.WHITE }) => {
         className={classNames(
           css.coords,
           css.ranks,
-          css[getOrienationCssClass(orientation)]
+          css[getOrientationCssClass(orientation)]
         )}
       >
         {RANK_NAMES.map((item) => (
@@ -37,7 +37,7 @@ export const Coords: FC<CoordsProps> = ({ orientation = PieceColor.WHITE }) => {
         className={classNames(
           css.coords,
           css.files,
-          css[getOrienationCssClass(orientation)]
+          css[getOrientationCssClass(orientation)]
         )}
       >
         {FILE_NAMES.map((item) => (

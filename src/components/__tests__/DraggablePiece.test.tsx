@@ -40,8 +40,7 @@ describe("DraggablePiece", () => {
         />
       ).root;
 
-      // @todo. After remove Transition in Piece there will be only 1 Transition
-      expect(testInstance.findAllByType(Transition).length).toBe(2);
+      expect(testInstance.findAllByType(Transition).length).toBe(1);
     });
   });
 

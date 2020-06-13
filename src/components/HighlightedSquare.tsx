@@ -50,6 +50,6 @@ export const HighlightedSquare: FC<CoordsProps> = ({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-    ></div>
+    />
   );
 };

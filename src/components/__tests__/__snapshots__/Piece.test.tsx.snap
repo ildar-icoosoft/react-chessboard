@@ -4,6 +4,5 @@ exports[`Piece Snapshot 1`] = `
 <div
   className="piece wK"
   data-testid="piece-wK"
-  style={Object {}}
 />
 `;
