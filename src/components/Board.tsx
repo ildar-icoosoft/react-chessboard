@@ -6,7 +6,6 @@ import {
 } from "../constants/constants";
 import { PieceColor } from "../enums/PieceColor";
 import { Position } from "../interfaces/Position";
-import { SquareCssClasses } from "../interfaces/SquareCssClasses";
 import { DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
 import { PieceDragLayer } from "./PieceDragLayer";
@@ -24,13 +23,9 @@ export interface BoardProps {
   allowMarkers?: boolean;
   position?: Position;
   orientation?: PieceColor;
-  squareCssClasses?: SquareCssClasses;
-  dragStartCssClass?: string[] | string;
-  dragEnterSquareCssClass?: string[] | string;
   draggable?: boolean;
   transitionDuration?: number;
   width?: number;
-  showNotation?: boolean;
   showCoordinates?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   selectionSquares?: string[];
@@ -41,17 +36,9 @@ export interface BoardProps {
 
   onSquareClick?(coordinates: string): void;
 
-  onSquareRightClick?(coordinates: string): void;
-
   onDragStart?(event: PieceDragStartEvent): void;
 
-  onDragEnterSquare?(coordinates: string): void;
-
   onDrop?(event: PieceDropEvent): void;
-
-  onMouseEnterSquare?(coordinates: string): void;
-
-  onMouseLeaveSquare?(coordinates: string): void;
 }
 
 export const Board: FC<BoardProps> = ({
