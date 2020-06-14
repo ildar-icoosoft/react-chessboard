@@ -23,6 +23,8 @@ export interface MoveWithoutValidationProps {
   ): ReactElement<any, any> | null;
 }
 
+const minWidth: number = 160;
+
 export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   children,
   initialPosition = {},
@@ -84,7 +86,7 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
       }
     },
     onResize(width: number) {
-      setWidth(width);
+      setWidth(width > minWidth ? width : minWidth);
     },
     selectionSquares,
     lastMoveSquares,

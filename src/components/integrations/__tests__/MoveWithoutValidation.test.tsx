@@ -463,19 +463,22 @@ describe("MoveWithoutValidation", () => {
         );
       });
 
-      it("call props.children({onResize}) must change width prop", () => {
+      it("call props.children({onResize}) must change width prop, but not less than 160", () => {
         const childrenCallback = jest.fn();
-        let isFirstCallbackCall: boolean = true;
+        let callbackCounter: number = 0;
 
         TestRenderer.create(
           <MoveWithoutValidation initialPosition={initialPosition}>
             {(props) => {
               childrenCallback(props);
 
-              if (isFirstCallbackCall) {
-                isFirstCallbackCall = false;
+              callbackCounter++;
 
+              if (callbackCounter === 1) {
                 props.onResize(200);
+              }
+              if (callbackCounter === 2) {
+                props.onResize(100);
               }
 
               return null;
@@ -483,7 +486,7 @@ describe("MoveWithoutValidation", () => {
           </MoveWithoutValidation>
         );
 
-        expect(childrenCallback).toBeCalledTimes(2);
+        expect(childrenCallback).toBeCalledTimes(3);
 
         expect(childrenCallback).nthCalledWith(
           1,
@@ -495,6 +498,12 @@ describe("MoveWithoutValidation", () => {
           2,
           expect.objectContaining({
             width: 200,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          3,
+          expect.objectContaining({
+            width: 160,
           })
         );
       });
