@@ -119,5 +119,11 @@ exports[`Board Snapshot 1`] = `
       h
     </div>
   </div>
+  <div
+    className="resizer"
+    onMouseDown={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+  />
 </div>
 `;

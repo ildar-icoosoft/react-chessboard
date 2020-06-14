@@ -28,6 +28,7 @@ export interface BoardProps {
   transitionDuration?: number;
   width?: number;
   showCoordinates?: boolean;
+  showResizer?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   selectionSquares?: string[];
   occupationSquares?: string[];
@@ -40,6 +41,8 @@ export interface BoardProps {
   onDragStart?(event: PieceDragStartEvent): void;
 
   onDrop?(event: PieceDropEvent): void;
+
+  onResize?(width: number): void;
 }
 
 export const Board: FC<BoardProps> = ({
@@ -50,6 +53,7 @@ export const Board: FC<BoardProps> = ({
   width = DEFAULT_BOARD_WIDTH,
   allowDrag,
   showCoordinates = true,
+  showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   selectionSquares,
   occupationSquares,
@@ -59,6 +63,7 @@ export const Board: FC<BoardProps> = ({
   onSquareClick,
   onDragStart,
   onDrop,
+  onResize,
 }) => {
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
@@ -127,7 +132,7 @@ export const Board: FC<BoardProps> = ({
           />
 
           {showCoordinates && <Coords orientation={orientation} />}
-          <Resizer />
+          {showResizer && <Resizer width={width} onResize={onResize} />}
         </div>
         <PieceDragLayer width={width / 8} />
       </DndProvider>
