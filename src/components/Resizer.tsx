@@ -9,29 +9,33 @@ export interface ResizerProps {
 }
 
 export const Resizer: FC<ResizerProps> = ({ onResize, width, minWidth }) => {
-  const diffWithMinWidth = useRef<number>(0);
+  // if mouse position is less than minWidth, then slackWidth contains the difference between minWidth and mouse position
+  const slackWidth = useRef<number>(0);
 
-  const onDrag = (_event: DraggableEvent, data: DraggableData) => {
+  const onDragHandler = (_event: DraggableEvent, data: DraggableData) => {
     if (onResize) {
       const deltaX: number = data.deltaX;
       const deltaY: number = data.deltaY;
 
-      let newWidth: number =
-        width + (deltaX + deltaY) / 2 - diffWithMinWidth.current;
+      let newWidth: number = width + (deltaX + deltaY) / 2 - slackWidth.current;
 
       if (newWidth < minWidth) {
-        diffWithMinWidth.current = minWidth - newWidth;
+        slackWidth.current = minWidth - newWidth;
         newWidth = minWidth;
       } else {
-        diffWithMinWidth.current = 0;
+        slackWidth.current = 0;
       }
 
       onResize(newWidth);
     }
   };
 
+  const onStopHandler = () => {
+    slackWidth.current = 0;
+  };
+
   return (
-    <DraggableCore onDrag={onDrag}>
+    <DraggableCore onDrag={onDragHandler} onStop={onStopHandler}>
       <div className={css.resizer}></div>
     </DraggableCore>
   );
