@@ -132,7 +132,7 @@ export const Board: FC<BoardProps> = ({
           />
 
           {showCoordinates && <Coords orientation={orientation} />}
-          {showResizer && <Resizer width={width} onResize={onResize} />}
+          {showResizer && <Resizer onResize={onResize} />}
         </div>
         <PieceDragLayer width={width / 8} />
       </DndProvider>

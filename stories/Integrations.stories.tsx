@@ -15,8 +15,10 @@ export const SimpleMoveStory = () => (
       onDragStart,
       onDrop,
       onSquareClick,
+      onResize,
       selectionSquares,
       lastMoveSquares,
+      width,
     }) => (
       <Board
         allowMarkers={true}
@@ -25,9 +27,11 @@ export const SimpleMoveStory = () => (
         onDragStart={onDragStart}
         onDrop={onDrop}
         onSquareClick={onSquareClick}
+        onResize={onResize}
         transitionDuration={10000}
         selectionSquares={selectionSquares}
         lastMoveSquares={lastMoveSquares}
+        width={width}
       />
     )}
   </MoveWithoutValidation>

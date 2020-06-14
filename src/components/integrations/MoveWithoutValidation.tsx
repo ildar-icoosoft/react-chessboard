@@ -85,8 +85,14 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
         setSelectionSquares([coordinates]);
       }
     },
-    onResize(width: number) {
-      setWidth(width > minWidth ? width : minWidth);
+    onResize(delta: number) {
+      let newWidth: number = width + delta;
+
+      if (newWidth < minWidth) {
+        newWidth = minWidth;
+      }
+
+      setWidth(newWidth);
     },
     selectionSquares,
     lastMoveSquares,

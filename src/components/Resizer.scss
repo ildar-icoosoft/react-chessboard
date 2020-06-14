@@ -7,6 +7,10 @@
   height: 22px;
   cursor: nwse-resize;
 
+  &:hover {
+    border-radius: 50%;
+    background: rgba(214, 79, 0, 0.5);
+  }
   &:before {
     width: 5px;
     transform: translate(7px, 8px) rotate(-45deg);

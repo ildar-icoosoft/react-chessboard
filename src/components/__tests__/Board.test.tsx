@@ -91,23 +91,6 @@ describe("Board", () => {
       });
     });
 
-    describe("Resizer", () => {
-      it("width", () => {
-        const testRenderer = TestRenderer.create(<Board />);
-        const testInstance = testRenderer.root;
-
-        const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
-          Resizer
-        );
-
-        expect(resizer.props.width).toBe(480);
-
-        testRenderer.update(<Board width={240} />);
-
-        expect(resizer.props.width).toBe(240);
-      });
-    });
-
     describe("CoordinateGrid", () => {
       it("orientation", () => {
         const testRenderer = TestRenderer.create(<Board />);

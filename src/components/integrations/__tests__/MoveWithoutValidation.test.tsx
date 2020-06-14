@@ -475,10 +475,10 @@ describe("MoveWithoutValidation", () => {
               callbackCounter++;
 
               if (callbackCounter === 1) {
-                props.onResize(200);
+                props.onResize(-280);
               }
               if (callbackCounter === 2) {
-                props.onResize(100);
+                props.onResize(-100);
               }
 
               return null;
