@@ -5,11 +5,10 @@ import { DraggableCore, DraggableData, DraggableEvent } from "react-draggable";
 export interface ResizerProps {
   onResize?: (width: number) => void;
   width: number;
+  minWidth: number;
 }
 
-const minWidth: number = 160;
-
-export const Resizer: FC<ResizerProps> = ({ onResize, width }) => {
+export const Resizer: FC<ResizerProps> = ({ onResize, width, minWidth }) => {
   const diffWithMinWidth = useRef<number>(0);
 
   const onDrag = (_event: DraggableEvent, data: DraggableData) => {

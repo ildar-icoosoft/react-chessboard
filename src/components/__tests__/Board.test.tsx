@@ -474,6 +474,20 @@ describe("Board", () => {
 
         expect(resizer.props.width).toBe(240);
       });
+      it("minWidth", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Resizer
+        );
+
+        expect(resizer.props.minWidth).toBe(160);
+
+        testRenderer.update(<Board minWidth={200} />);
+
+        expect(resizer.props.minWidth).toBe(200);
+      });
     });
   });
 
