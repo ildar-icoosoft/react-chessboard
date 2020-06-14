@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 import css from "./Resizer.scss";
-import { DraggableCore, DraggableData } from "react-draggable";
+import { DraggableCore, DraggableData, DraggableEvent } from "react-draggable";
 
 export interface ResizerProps {
   onResize?: (width: number) => void;
 }
 
 export const Resizer: FC<ResizerProps> = ({ onResize }) => {
-  const onDrag = (_event: any, data: DraggableData) => {
+  const onDrag = (_event: DraggableEvent, data: DraggableData) => {
     if (onResize) {
       const deltaX: number = data.deltaX;
       const deltaY: number = data.deltaY;
