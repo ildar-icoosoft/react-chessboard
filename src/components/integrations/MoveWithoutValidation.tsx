@@ -86,13 +86,13 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
       }
     },
     onResize(delta: number) {
-      let newWidth: number = width + delta;
-
-      if (newWidth < minWidth) {
-        newWidth = minWidth;
-      }
-
-      setWidth(newWidth);
+      setWidth((width) => {
+        let newWidth: number = width + delta;
+        if (newWidth < minWidth) {
+          newWidth = minWidth;
+        }
+        return newWidth;
+      });
     },
     selectionSquares,
     lastMoveSquares,
