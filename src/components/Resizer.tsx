@@ -12,7 +12,7 @@ export const Resizer: FC<ResizerProps> = ({ onResize }) => {
       const deltaX: number = data.deltaX;
       const deltaY: number = data.deltaY;
 
-      const newWidth: number = Math.round((deltaX + deltaY) / 2);
+      const newWidth: number = (deltaX + deltaY) / 2;
 
       onResize(newWidth);
     }
