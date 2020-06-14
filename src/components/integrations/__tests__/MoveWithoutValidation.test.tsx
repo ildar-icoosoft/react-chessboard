@@ -424,6 +424,80 @@ describe("MoveWithoutValidation", () => {
           );
         });
       });
+
+      it("props.children({width})", () => {
+        const childrenCallback = jest.fn();
+
+        TestRenderer.create(
+          <MoveWithoutValidation>
+            {(props) => {
+              childrenCallback(props);
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledWith(
+          expect.objectContaining({
+            width: 480,
+          })
+        );
+      });
+
+      it("props.children({onResize}) is a function", () => {
+        const childrenCallback = jest.fn();
+
+        TestRenderer.create(
+          <MoveWithoutValidation>
+            {(props) => {
+              childrenCallback(props);
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledWith(
+          expect.objectContaining({
+            onResize: expect.any(Function),
+          })
+        );
+      });
+
+      it("call props.children({onResize}) must change width prop", () => {
+        const childrenCallback = jest.fn();
+        let isFirstCallbackCall: boolean = true;
+
+        TestRenderer.create(
+          <MoveWithoutValidation initialPosition={initialPosition}>
+            {(props) => {
+              childrenCallback(props);
+
+              if (isFirstCallbackCall) {
+                isFirstCallbackCall = false;
+
+                props.onResize(200);
+              }
+
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledTimes(2);
+
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            width: 480,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            width: 200,
+          })
+        );
+      });
     });
   });
 
