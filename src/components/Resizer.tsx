@@ -9,7 +9,12 @@ export interface ResizerProps {
   maxWidth?: number;
 }
 
-export const Resizer: FC<ResizerProps> = ({ onResize, width, minWidth }) => {
+export const Resizer: FC<ResizerProps> = ({
+  onResize,
+  width,
+  minWidth,
+  maxWidth = Infinity,
+}) => {
   const slackWidth = useRef<number>(0);
 
   const onDragHandler = (_event: DraggableEvent, data: DraggableData) => {
@@ -22,6 +27,7 @@ export const Resizer: FC<ResizerProps> = ({ onResize, width, minWidth }) => {
       let newWidth: number = oldWidth + slackWidth.current;
 
       newWidth = Math.max(minWidth, newWidth);
+      newWidth = Math.min(maxWidth, newWidth);
 
       slackWidth.current += oldWidth - newWidth;
 

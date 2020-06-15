@@ -12,7 +12,12 @@ describe("Resizer", () => {
         <div
           style={{ width: "1000px", height: "1000px", position: "relative" }}
         >
-          <Resizer width={480} minWidth={100} onResize={onResize} />
+          <Resizer
+            width={480}
+            minWidth={100}
+            maxWidth={600}
+            onResize={onResize}
+          />
         </div>
       );
 
@@ -32,14 +37,25 @@ describe("Resizer", () => {
       });
       fireEvent.mouseUp(el);
 
-      expect(onResize).toBeCalledTimes(2);
-      expect(onResize).nthCalledWith(1, 380); // 480 - 100 = 380
-      expect(onResize).nthCalledWith(2, 100); // 480 - 400 = 80, ut minWidth is 100
-      // expect(onResize).nthCalledWith(3, 120); // 80 + 40
+      fireEvent.mouseDown(el);
+      fireEvent.mouseMove(el, {
+        clientX: 100,
+        clientY: 100,
+      });
+      fireEvent.mouseUp(el);
 
-      // fireEvent.mouseUp(el);
-      //
-      // fireEvent.mouseDown(el);
+      fireEvent.mouseDown(el);
+      fireEvent.mouseMove(el, {
+        clientX: 200,
+        clientY: 200,
+      });
+      fireEvent.mouseUp(el);
+
+      expect(onResize).toBeCalledTimes(4);
+      expect(onResize).nthCalledWith(1, 380); // 480 - 100 = 380
+      expect(onResize).nthCalledWith(2, 100); // 480 - 400 = 80, but minWidth is 100
+      expect(onResize).nthCalledWith(3, 580); // 480 + 100 = 580
+      expect(onResize).nthCalledWith(4, 600); // 480 + 200 = 680, but maxWidth is 600
     });
   });
 
