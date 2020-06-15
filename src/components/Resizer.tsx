@@ -34,7 +34,7 @@ export const Resizer: FC<ResizerProps> = ({ onResize, width, minWidth }) => {
 
   return (
     <DraggableCore onDrag={onDragHandler} onStop={onStopHandler}>
-      <div className={css.resizer}></div>
+      <div data-testid={"resizer"} className={css.resizer}></div>
     </DraggableCore>
   );
 };
