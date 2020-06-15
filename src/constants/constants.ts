@@ -42,4 +42,5 @@ export const FILE_NAMES: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
 export const DEFAULT_TRANSITION_DURATION: number = 300;
 export const DEFAULT_BOARD_WIDTH: number = 480;
 export const DEFAULT_BOARD_MIN_WIDTH: number = 160;
+export const DEFAULT_BOARD_MAX_WIDTH: number = Infinity;
 export const DEFAULT_SQUARE_WIDTH: number = 60;

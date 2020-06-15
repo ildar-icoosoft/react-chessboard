@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import css from "./Board.scss";
 import {
+  DEFAULT_BOARD_MAX_WIDTH,
   DEFAULT_BOARD_MIN_WIDTH,
   DEFAULT_BOARD_WIDTH,
   DEFAULT_TRANSITION_DURATION,
@@ -29,6 +30,7 @@ export interface BoardProps {
   transitionDuration?: number;
   width?: number;
   minWidth?: number;
+  maxWidth?: number;
   showCoordinates?: boolean;
   showResizer?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
@@ -54,6 +56,7 @@ export const Board: FC<BoardProps> = ({
   draggable = false,
   width = DEFAULT_BOARD_WIDTH,
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
+  maxWidth = DEFAULT_BOARD_MAX_WIDTH,
   allowDrag,
   showCoordinates = true,
   showResizer = true,
@@ -136,7 +139,12 @@ export const Board: FC<BoardProps> = ({
 
           {showCoordinates && <Coords orientation={orientation} />}
           {showResizer && (
-            <Resizer width={width} minWidth={minWidth} onResize={onResize} />
+            <Resizer
+              width={width}
+              minWidth={minWidth}
+              onResize={onResize}
+              maxWidth={maxWidth}
+            />
           )}
         </div>
         <PieceDragLayer width={width / 8} />

@@ -488,6 +488,20 @@ describe("Board", () => {
 
         expect(resizer.props.minWidth).toBe(200);
       });
+      it("maxWidth", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Resizer
+        );
+
+        expect(resizer.props.maxWidth).toBe(Infinity);
+
+        testRenderer.update(<Board maxWidth={800} />);
+
+        expect(resizer.props.maxWidth).toBe(800);
+      });
     });
   });
 

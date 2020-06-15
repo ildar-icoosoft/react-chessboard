@@ -6,6 +6,7 @@ export interface ResizerProps {
   onResize?: (width: number) => void;
   width: number;
   minWidth: number;
+  maxWidth?: number;
 }
 
 export const Resizer: FC<ResizerProps> = ({ onResize, width, minWidth }) => {
