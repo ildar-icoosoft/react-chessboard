@@ -2,15 +2,18 @@ import { FC, ReactElement, useState } from "react";
 import { Position } from "../../interfaces/Position";
 import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
+import { DEFAULT_BOARD_WIDTH } from "../../constants/constants";
 
 export interface MoveWithoutValidationCallbackProps {
   position: Position;
   draggable: boolean;
+  width: number;
   selectionSquares: string[];
   lastMoveSquares: string[];
   onDragStart(event: PieceDragStartEvent): void;
   onDrop(event: PieceDropEvent): void;
   onSquareClick(coordinates: string): void;
+  onResize(width: number): void;
 }
 
 export interface MoveWithoutValidationProps {
@@ -27,9 +30,11 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
   const [position, setPosition] = useState<Position>(initialPosition);
   const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
+  const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   return children({
     position,
+    width,
     draggable: true,
     onDragStart(event: PieceDragStartEvent) {
       setSelectionSquares([event.coordinates]);
@@ -77,6 +82,9 @@ export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
 
         setSelectionSquares([coordinates]);
       }
+    },
+    onResize(width: number) {
+      setWidth(width);
     },
     selectionSquares,
     lastMoveSquares,

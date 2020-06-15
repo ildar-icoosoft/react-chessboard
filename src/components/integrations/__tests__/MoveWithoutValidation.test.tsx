@@ -424,6 +424,89 @@ describe("MoveWithoutValidation", () => {
           );
         });
       });
+
+      it("props.children({width})", () => {
+        const childrenCallback = jest.fn();
+
+        TestRenderer.create(
+          <MoveWithoutValidation>
+            {(props) => {
+              childrenCallback(props);
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledWith(
+          expect.objectContaining({
+            width: 480,
+          })
+        );
+      });
+
+      it("props.children({onResize}) is a function", () => {
+        const childrenCallback = jest.fn();
+
+        TestRenderer.create(
+          <MoveWithoutValidation>
+            {(props) => {
+              childrenCallback(props);
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledWith(
+          expect.objectContaining({
+            onResize: expect.any(Function),
+          })
+        );
+      });
+
+      it("call props.children({onResize}) must change width prop", () => {
+        const childrenCallback = jest.fn();
+        let callbackCounter: number = 0;
+
+        TestRenderer.create(
+          <MoveWithoutValidation initialPosition={initialPosition}>
+            {(props) => {
+              childrenCallback(props);
+
+              callbackCounter++;
+
+              if (callbackCounter === 1) {
+                props.onResize(200);
+              }
+              if (callbackCounter === 2) {
+                props.onResize(100);
+              }
+
+              return null;
+            }}
+          </MoveWithoutValidation>
+        );
+
+        expect(childrenCallback).toBeCalledTimes(3);
+
+        expect(childrenCallback).nthCalledWith(
+          1,
+          expect.objectContaining({
+            width: 480,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          2,
+          expect.objectContaining({
+            width: 200,
+          })
+        );
+        expect(childrenCallback).nthCalledWith(
+          3,
+          expect.objectContaining({
+            width: 100,
+          })
+        );
+      });
     });
   });
 

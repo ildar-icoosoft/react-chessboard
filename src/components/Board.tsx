@@ -1,6 +1,8 @@
 import React, { FC, useState } from "react";
 import css from "./Board.scss";
 import {
+  DEFAULT_BOARD_MAX_WIDTH,
+  DEFAULT_BOARD_MIN_WIDTH,
   DEFAULT_BOARD_WIDTH,
   DEFAULT_TRANSITION_DURATION,
 } from "../constants/constants";
@@ -18,6 +20,7 @@ import {
   CoordinateGridRightClickEvent,
 } from "./CoordinateGrid";
 import { without as _without } from "lodash";
+import { Resizer } from "./Resizer";
 
 export interface BoardProps {
   allowMarkers?: boolean;
@@ -26,7 +29,10 @@ export interface BoardProps {
   draggable?: boolean;
   transitionDuration?: number;
   width?: number;
+  minWidth?: number;
+  maxWidth?: number;
   showCoordinates?: boolean;
+  showResizer?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   selectionSquares?: string[];
   occupationSquares?: string[];
@@ -39,6 +45,8 @@ export interface BoardProps {
   onDragStart?(event: PieceDragStartEvent): void;
 
   onDrop?(event: PieceDropEvent): void;
+
+  onResize?(width: number): void;
 }
 
 export const Board: FC<BoardProps> = ({
@@ -47,8 +55,11 @@ export const Board: FC<BoardProps> = ({
   orientation = PieceColor.WHITE,
   draggable = false,
   width = DEFAULT_BOARD_WIDTH,
+  minWidth = DEFAULT_BOARD_MIN_WIDTH,
+  maxWidth = DEFAULT_BOARD_MAX_WIDTH,
   allowDrag,
   showCoordinates = true,
+  showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   selectionSquares,
   occupationSquares,
@@ -58,6 +69,7 @@ export const Board: FC<BoardProps> = ({
   onSquareClick,
   onDragStart,
   onDrop,
+  onResize,
 }) => {
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
@@ -126,6 +138,14 @@ export const Board: FC<BoardProps> = ({
           />
 
           {showCoordinates && <Coords orientation={orientation} />}
+          {showResizer && (
+            <Resizer
+              width={width}
+              minWidth={minWidth}
+              onResize={onResize}
+              maxWidth={maxWidth}
+            />
+          )}
         </div>
         <PieceDragLayer width={width / 8} />
       </DndProvider>

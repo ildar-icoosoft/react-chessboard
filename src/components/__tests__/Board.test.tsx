@@ -10,6 +10,7 @@ import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { Coords } from "../Coords";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
+import { Resizer } from "../Resizer";
 jest.useFakeTimers();
 
 describe("Board", () => {
@@ -41,6 +42,17 @@ describe("Board", () => {
       const testInstance = testRenderer.root;
 
       expect(testInstance.findAllByType(CoordinateGrid).length).toBe(1);
+    });
+
+    it("contains 1 Resizer", () => {
+      const testRenderer = TestRenderer.create(<Board />);
+      const testInstance = testRenderer.root;
+
+      expect(testInstance.findAllByType(Resizer).length).toBe(1);
+
+      testRenderer.update(<Board showResizer={false} />);
+
+      expect(testInstance.findAllByType(Resizer).length).toBe(0);
     });
   });
 
@@ -446,6 +458,51 @@ describe("Board", () => {
         });
       });
     });
+
+    describe("Resizer", () => {
+      it("width", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Resizer
+        );
+
+        expect(resizer.props.width).toBe(480);
+
+        testRenderer.update(<Board width={240} />);
+
+        expect(resizer.props.width).toBe(240);
+      });
+      it("minWidth", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Resizer
+        );
+
+        expect(resizer.props.minWidth).toBe(160);
+
+        testRenderer.update(<Board minWidth={200} />);
+
+        expect(resizer.props.minWidth).toBe(200);
+      });
+      it("maxWidth", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
+          Resizer
+        );
+
+        expect(resizer.props.maxWidth).toBe(Infinity);
+
+        testRenderer.update(<Board maxWidth={800} />);
+
+        expect(resizer.props.maxWidth).toBe(800);
+      });
+    });
   });
 
   describe("Events", () => {
@@ -518,6 +575,25 @@ describe("Board", () => {
       expect(onDrop).toBeCalledTimes(1);
 
       expect(onDrop).toBeCalledWith(dropEvent);
+    });
+
+    it("onResize", () => {
+      const onResize = jest.fn();
+
+      const testInstance = TestRenderer.create(<Board onResize={onResize} />)
+        .root;
+
+      const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
+        Resizer
+      );
+
+      TestRenderer.act(() => {
+        resizer.props.onResize(300);
+      });
+
+      expect(onResize).toBeCalledTimes(1);
+
+      expect(onResize).toBeCalledWith(300);
     });
   });
 
