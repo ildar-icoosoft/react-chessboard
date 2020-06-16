@@ -4,7 +4,7 @@ import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { DEFAULT_BOARD_WIDTH } from "../../constants/constants";
 
-export interface MoveWithoutValidationCallbackProps {
+export interface WithMoveValidationCallbackProps {
   position: Position;
   draggable: boolean;
   width: number;
@@ -16,14 +16,14 @@ export interface MoveWithoutValidationCallbackProps {
   onResize(width: number): void;
 }
 
-export interface MoveWithoutValidationProps {
+export interface WithMoveValidationProps {
   initialPosition?: Position;
   children(
-    callbackProps: MoveWithoutValidationCallbackProps
+    callbackProps: WithMoveValidationCallbackProps
   ): ReactElement<any, any> | null;
 }
 
-export const MoveWithoutValidation: FC<MoveWithoutValidationProps> = ({
+export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialPosition = {},
 }) => {
