@@ -1,14 +1,14 @@
 import React from "react";
 import { Board } from "../src";
-import { MoveWithoutValidation } from "../src/components/integrations/MoveWithoutValidation";
 import { startPosition } from "../src/constants/constants";
+import { WithMoveValidation } from "../src/components/integrations/WithMoveValidation";
 
 export default {
   title: "Integrations",
 };
 
-export const SimpleMoveStory = () => (
-  <MoveWithoutValidation initialPosition={startPosition}>
+export const WithMoveValidationStory = () => (
+  <WithMoveValidation initialPosition={startPosition}>
     {({
       position,
       draggable,
@@ -34,11 +34,11 @@ export const SimpleMoveStory = () => (
         width={width}
       />
     )}
-  </MoveWithoutValidation>
+  </WithMoveValidation>
 );
 
-SimpleMoveStory.story = {
+WithMoveValidationStory.story = {
   parameters: {
-    jest: ["MoveWithoutValidation"],
+    jest: ["WithMoveValidation"],
   },
 };

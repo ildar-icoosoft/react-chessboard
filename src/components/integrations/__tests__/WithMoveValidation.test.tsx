@@ -1,6 +1,6 @@
 import TestRenderer from "react-test-renderer";
 import React from "react";
-import { MoveWithoutValidation } from "../MoveWithoutValidation";
+import { WithMoveValidation } from "../WithMoveValidation";
 import { Position } from "../../../interfaces/Position";
 import { PieceCode } from "../../../enums/PieceCode";
 import { render } from "@testing-library/react";
@@ -17,19 +17,19 @@ const positionAfterFirstMove: Position = {
   f2: PieceCode.WHITE_PAWN,
 };
 
-describe("MoveWithoutValidation", () => {
+describe("WithMoveValidation", () => {
   describe("callback props", () => {
     describe("props.children()", () => {
       it("must be called immediately", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledTimes(1);
@@ -39,12 +39,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -58,12 +58,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation initialPosition={initialPosition}>
+          <WithMoveValidation initialPosition={initialPosition}>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -77,12 +77,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -96,12 +96,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -115,12 +115,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -136,7 +136,7 @@ describe("MoveWithoutValidation", () => {
           let isFirstCallbackCall: boolean = true;
 
           TestRenderer.create(
-            <MoveWithoutValidation initialPosition={initialPosition}>
+            <WithMoveValidation initialPosition={initialPosition}>
               {(props) => {
                 childrenCallback(props);
 
@@ -151,7 +151,7 @@ describe("MoveWithoutValidation", () => {
 
                 return null;
               }}
-            </MoveWithoutValidation>
+            </WithMoveValidation>
           );
 
           expect(childrenCallback).toBeCalledTimes(2);
@@ -175,7 +175,7 @@ describe("MoveWithoutValidation", () => {
           let isFirstCallbackCall: boolean = true;
 
           TestRenderer.create(
-            <MoveWithoutValidation initialPosition={initialPosition}>
+            <WithMoveValidation initialPosition={initialPosition}>
               {(props) => {
                 childrenCallback(props);
 
@@ -192,7 +192,7 @@ describe("MoveWithoutValidation", () => {
 
                 return null;
               }}
-            </MoveWithoutValidation>
+            </WithMoveValidation>
           );
 
           expect(childrenCallback).toBeCalledTimes(2);
@@ -218,7 +218,7 @@ describe("MoveWithoutValidation", () => {
           let callbackCounter: number = 0;
 
           TestRenderer.create(
-            <MoveWithoutValidation initialPosition={initialPosition}>
+            <WithMoveValidation initialPosition={initialPosition}>
               {(props) => {
                 childrenCallback(props);
 
@@ -241,7 +241,7 @@ describe("MoveWithoutValidation", () => {
 
                 return null;
               }}
-            </MoveWithoutValidation>
+            </WithMoveValidation>
           );
 
           expect(childrenCallback).toBeCalledTimes(3);
@@ -272,7 +272,7 @@ describe("MoveWithoutValidation", () => {
           let isFirstCallbackCall: boolean = true;
 
           TestRenderer.create(
-            <MoveWithoutValidation initialPosition={initialPosition}>
+            <WithMoveValidation initialPosition={initialPosition}>
               {(props) => {
                 childrenCallback(props);
 
@@ -289,7 +289,7 @@ describe("MoveWithoutValidation", () => {
 
                 return null;
               }}
-            </MoveWithoutValidation>
+            </WithMoveValidation>
           );
 
           expect(childrenCallback).toBeCalledTimes(2);
@@ -317,12 +317,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -338,7 +338,7 @@ describe("MoveWithoutValidation", () => {
           let callbackCounter: number = 0;
 
           TestRenderer.create(
-            <MoveWithoutValidation initialPosition={initialPosition}>
+            <WithMoveValidation initialPosition={initialPosition}>
               {(props) => {
                 childrenCallback(props);
 
@@ -353,7 +353,7 @@ describe("MoveWithoutValidation", () => {
 
                 return null;
               }}
-            </MoveWithoutValidation>
+            </WithMoveValidation>
           );
 
           expect(childrenCallback).toBeCalledTimes(3);
@@ -390,7 +390,7 @@ describe("MoveWithoutValidation", () => {
           let callbackCounter: number = 0;
 
           TestRenderer.create(
-            <MoveWithoutValidation initialPosition={initialPosition}>
+            <WithMoveValidation initialPosition={initialPosition}>
               {(props) => {
                 childrenCallback(props);
 
@@ -403,7 +403,7 @@ describe("MoveWithoutValidation", () => {
 
                 return null;
               }}
-            </MoveWithoutValidation>
+            </WithMoveValidation>
           );
 
           expect(childrenCallback).toBeCalledTimes(2);
@@ -429,12 +429,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -448,12 +448,12 @@ describe("MoveWithoutValidation", () => {
         const childrenCallback = jest.fn();
 
         TestRenderer.create(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {(props) => {
               childrenCallback(props);
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledWith(
@@ -468,7 +468,7 @@ describe("MoveWithoutValidation", () => {
         let callbackCounter: number = 0;
 
         TestRenderer.create(
-          <MoveWithoutValidation initialPosition={initialPosition}>
+          <WithMoveValidation initialPosition={initialPosition}>
             {(props) => {
               childrenCallback(props);
 
@@ -483,7 +483,7 @@ describe("MoveWithoutValidation", () => {
 
               return null;
             }}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(childrenCallback).toBeCalledTimes(3);
@@ -514,9 +514,9 @@ describe("MoveWithoutValidation", () => {
     describe("DOM structure", () => {
       it("must contain children", () => {
         const { container } = render(
-          <MoveWithoutValidation>
+          <WithMoveValidation>
             {() => <div data-testid="some-children"></div>}
-          </MoveWithoutValidation>
+          </WithMoveValidation>
         );
 
         expect(container).toContainHTML(
