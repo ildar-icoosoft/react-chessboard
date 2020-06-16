@@ -18,7 +18,6 @@ import {
 } from "../utils/chess";
 import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import { DragItemType } from "../enums/DragItemType";
-import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { Identifier } from "dnd-core";
 import { DraggablePiece } from "./DraggablePiece";
 import { PieceCode } from "../enums/PieceCode";
@@ -35,6 +34,7 @@ import {
   useNormalizedHighlightedSquares,
 } from "../hooks/useNormalizedHighlightedSquares";
 import { RoundMarker } from "./RoundMarker";
+import { useCombinedRefs } from "ii-react-libraries";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;

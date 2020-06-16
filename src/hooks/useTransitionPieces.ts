@@ -4,8 +4,8 @@ import { useMemo, useRef } from "react";
 import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
 import { mapValues as _mapValues } from "lodash";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
-import { usePreviousDifferent } from "./usePreviousDifferent";
 import { isEqual as _isEqual } from "lodash";
+import { usePreviousDifferent } from "ii-react-libraries";
 
 export type UseTransitionPiecesResult = [
   Record<string, SquareTransitionFrom>,
