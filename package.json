@@ -78,6 +78,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "ii-react-libraries": "^1.0.0",
     "lodash": "^4.17.15",
     "ramda": "^0.27.0",
     "react-dnd": "^10.0.2",
