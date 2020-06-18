@@ -77,6 +77,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "chessops": "^0.4.1",
     "classnames": "^2.2.6",
     "ii-react-libraries": "^1.0.0",
     "lodash": "^4.17.15",

@@ -3,12 +3,16 @@ import { Position } from "../../interfaces/Position";
 import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { DEFAULT_BOARD_WIDTH } from "../../constants/constants";
+import { Chess } from "chessops/chess";
+import { chessgroundDests } from "chessops/compat";
+// import { parseFen as chessopsParseFen } from 'chessops/fen';
 
 export interface WithMoveValidationCallbackProps {
   position: Position;
   draggable: boolean;
   width: number;
   selectionSquares: string[];
+  destinationSquares: string[];
   lastMoveSquares: string[];
   onDragStart(event: PieceDragStartEvent): void;
   onDrop(event: PieceDropEvent): void;
@@ -27,10 +31,18 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialPosition = {},
 }) => {
+  const [game /*setGame*/] = useState<Chess | null>(null);
+
   const [position, setPosition] = useState<Position>(initialPosition);
   const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
+  const [destinationSquares, setDestinationSquares] = useState<string[]>([]);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
   const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
+
+  // useEffect(() => {
+  //   const setup = chessopsParseFen(initialBoardFen).unwrap();
+  //   setGame(Chess.fromSetup(setup).unwrap());
+  // }, []);
 
   return children({
     position,
@@ -38,6 +50,11 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     draggable: true,
     onDragStart(event: PieceDragStartEvent) {
       setSelectionSquares([event.coordinates]);
+
+      if (game) {
+        const dests = chessgroundDests(game as Chess);
+        setDestinationSquares(dests[event.coordinates]);
+      }
     },
     onDrop(event) {
       if (event.sourceCoordinates === event.targetCoordinates) {
@@ -87,6 +104,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       setWidth(width);
     },
     selectionSquares,
+    destinationSquares,
     lastMoveSquares,
   });
 };

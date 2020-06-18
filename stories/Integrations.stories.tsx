@@ -1,6 +1,6 @@
 import React from "react";
 import { Board } from "../src";
-import { startPosition } from "../src/constants/constants";
+import { initialBoardPosition } from "../src/constants/constants";
 import { WithMoveValidation } from "../src/components/integrations/WithMoveValidation";
 
 export default {
@@ -8,7 +8,7 @@ export default {
 };
 
 export const WithMoveValidationStory = () => (
-  <WithMoveValidation initialPosition={startPosition}>
+  <WithMoveValidation initialPosition={initialBoardPosition}>
     {({
       position,
       draggable,

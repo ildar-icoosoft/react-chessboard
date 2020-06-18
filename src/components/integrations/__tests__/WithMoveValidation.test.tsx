@@ -17,6 +17,8 @@ const positionAfterFirstMove: Position = {
   f2: PieceCode.WHITE_PAWN,
 };
 
+jest.useFakeTimers();
+
 describe("WithMoveValidation", () => {
   describe("callback props", () => {
     describe("props.children()", () => {
@@ -131,7 +133,7 @@ describe("WithMoveValidation", () => {
       });
 
       describe("Move by drag and drop", () => {
-        it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
+        /*   it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
 
@@ -143,10 +145,14 @@ describe("WithMoveValidation", () => {
                 if (isFirstCallbackCall) {
                   isFirstCallbackCall = false;
 
-                  props.onDragStart({
-                    coordinates: "e2",
-                    pieceCode: PieceCode.WHITE_PAWN,
-                  });
+                  setTimeout(() => {
+                    props.onDragStart({
+                      coordinates: "e2",
+                      pieceCode: PieceCode.WHITE_PAWN,
+                    });
+                  }, 100);
+
+
                 }
 
                 return null;
@@ -154,7 +160,7 @@ describe("WithMoveValidation", () => {
             </WithMoveValidation>
           );
 
-          /* expect(childrenCallback).toBeCalledTimes(2);
+          expect(childrenCallback).toBeCalledTimes(2);
 
           expect(childrenCallback).nthCalledWith(
             1,
@@ -169,8 +175,8 @@ describe("WithMoveValidation", () => {
               selectionSquares: ["e2"],
               destinationSquares: ["e3", "e4"],
             })
-          );*/
-        });
+          );
+        });*/
 
         it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
           const childrenCallback = jest.fn();
