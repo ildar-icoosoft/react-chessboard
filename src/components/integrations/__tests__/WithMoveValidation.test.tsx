@@ -358,7 +358,6 @@ describe("WithMoveValidation", () => {
             })
           );
 
-
           TestRenderer.act(() => {
             props.onSquareClick("e4");
           });
@@ -375,37 +374,34 @@ describe("WithMoveValidation", () => {
         });
 
         it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares", () => {
-          const childrenCallback = jest.fn();
-          let callbackCounter: number = 0;
+          const { getProps } = renderWithMoveValidation();
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
-
-                callbackCounter++;
-
-                if (callbackCounter === 1) {
-                  props.onSquareClick("e4");
-                  props.onSquareClick("e2");
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(2);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
+          let props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: [],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],
@@ -415,18 +411,10 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({width})", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledWith(
+        const props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 480,
           })
@@ -434,18 +422,10 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onResize}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledWith(
+        const props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             onResize: expect.any(Function),
           })
@@ -453,44 +433,32 @@ describe("WithMoveValidation", () => {
       });
 
       it("call props.children({onResize}) must change width prop", () => {
-        const childrenCallback = jest.fn();
-        let callbackCounter: number = 0;
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation initialPosition={initialPosition}>
-            {(props) => {
-              childrenCallback(props);
-
-              callbackCounter++;
-
-              if (callbackCounter === 1) {
-                props.onResize(200);
-              }
-              if (callbackCounter === 2) {
-                props.onResize(100);
-              }
-
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledTimes(3);
-
-        expect(childrenCallback).nthCalledWith(
-          1,
+        let props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 480,
           })
         );
-        expect(childrenCallback).nthCalledWith(
-          2,
+
+        TestRenderer.act(() => {
+          props.onResize(200);
+        });
+
+        props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 200,
           })
         );
-        expect(childrenCallback).nthCalledWith(
-          3,
+
+        TestRenderer.act(() => {
+          props.onResize(100);
+        });
+
+        props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 100,
           })
