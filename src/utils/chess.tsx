@@ -3,7 +3,7 @@ import { PieceColor } from "../enums/PieceColor";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
-import { without as _without } from "lodash";
+import { without as _without, isString as _isString } from "lodash";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 
 /**
@@ -188,4 +188,84 @@ export const getSquareAlgebraicCoordinates = (
   }
 
   return FILE_NAMES[fileIndex] + RANK_NAMES[rankIndex];
+};
+
+export const fenToObj = (fen: string): Position | null => {
+  if (!validFen(fen)) return null;
+  // cut off any move, castling, etc info from the end
+  // we're only interested in position information
+  fen = fen.replace(/ .+$/, "");
+
+  let rows = fen.split("/");
+  let position: Position = {};
+
+  let currentRow = 8;
+  for (let i = 0; i < 8; i++) {
+    let row = rows[i].split("");
+    let colIdx = 0;
+
+    // loop through each character in the FEN section
+    for (let j = 0; j < row.length; j++) {
+      // number / empty squares
+      if (row[j].search(/[1-8]/) !== -1) {
+        let numEmptySquares = parseInt(row[j], 10);
+        colIdx = colIdx + numEmptySquares;
+      } else {
+        // piece
+        let square = FILE_NAMES[colIdx] + currentRow;
+        position[square] = fenToPieceCode(row[j]);
+        colIdx = colIdx + 1;
+      }
+    }
+
+    currentRow = currentRow - 1;
+  }
+
+  return position;
+};
+
+// convert FEN piece code to bP, wK, etc
+const fenToPieceCode = (piece: string): PieceCode => {
+  // black piece
+  if (piece.toLowerCase() === piece) {
+    return ("b" + piece.toUpperCase()) as PieceCode;
+  }
+
+  // white piece
+  return ("w" + piece.toUpperCase()) as PieceCode;
+};
+
+const expandFenEmptySquares = (fen: string): string => {
+  return fen
+    .replace(/8/g, "11111111")
+    .replace(/7/g, "1111111")
+    .replace(/6/g, "111111")
+    .replace(/5/g, "11111")
+    .replace(/4/g, "1111")
+    .replace(/3/g, "111")
+    .replace(/2/g, "11");
+};
+
+export const validFen = (fen: string) => {
+  if (!_isString(fen)) return false;
+
+  // cut off any move, castling, etc info from the end
+  // we're only interested in position information
+  fen = fen.replace(/ .+$/, "");
+
+  // expand the empty square numbers to just 1s
+  fen = expandFenEmptySquares(fen);
+
+  // FEN should be 8 sections separated by slashes
+  let chunks = fen.split("/");
+  if (chunks.length !== 8) return false;
+
+  // check each section
+  for (let i = 0; i < 8; i++) {
+    if (chunks[i].length !== 8 || chunks[i].search(/[^kqrnbpKQRNBP1]/) !== -1) {
+      return false;
+    }
+  }
+
+  return true;
 };

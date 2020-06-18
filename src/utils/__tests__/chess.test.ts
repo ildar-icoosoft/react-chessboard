@@ -11,6 +11,8 @@ import {
   getRankNameFromCoordinates,
   isLightSquare,
   getSquareAlgebraicCoordinates,
+  fenToObj,
+  validFen,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -146,5 +148,23 @@ describe("Chess utils", () => {
     expect(
       getSquareAlgebraicCoordinates({ x: 150, y: 200 }, 480, PieceColor.WHITE)
     ).toBe("c5");
+  });
+
+  it("fenToObj()", () => {
+    const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
+    expect(fenToObj(fen)).toEqual({ e4: "wK", e6: "bK", e5: "wP" });
+
+    const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
+    expect(fenToObj(invalidFen)).toBeNull();
+  });
+
+  test("validFen()", () => {
+    const fen = "8/8/4k3/4P3/4K3/8/8/8 w - -";
+    const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
+    const invalidFen2 = "-5/8/4k3/4P3/4K3/8/8/8 w - -";
+
+    expect(validFen(fen)).toBe(true);
+    expect(validFen(invalidFen)).toBe(false);
+    expect(validFen(invalidFen2)).toBe(false);
   });
 });
