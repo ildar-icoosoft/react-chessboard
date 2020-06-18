@@ -131,7 +131,7 @@ describe("WithMoveValidation", () => {
       });
 
       describe("Move by drag and drop", () => {
-        it("call props.children({onDragStart}) affects selectionSquares", () => {
+        it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
           const childrenCallback = jest.fn();
           let isFirstCallbackCall: boolean = true;
 
@@ -160,12 +160,14 @@ describe("WithMoveValidation", () => {
             1,
             expect.objectContaining({
               selectionSquares: [],
+              destinationSquares: [],
             })
           );
           expect(childrenCallback).nthCalledWith(
             2,
             expect.objectContaining({
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
             })
           );
         });
