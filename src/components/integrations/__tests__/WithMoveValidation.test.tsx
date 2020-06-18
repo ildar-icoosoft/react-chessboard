@@ -332,40 +332,25 @@ describe("WithMoveValidation", () => {
 
       describe("Move by click", () => {
         it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, lastMoveSquares", () => {
-          const childrenCallback = jest.fn();
-          let callbackCounter: number = 0;
+          const { getProps } = renderWithMoveValidation();
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
+          let props = getProps();
 
-                callbackCounter++;
-
-                if (callbackCounter === 1) {
-                  props.onSquareClick("e2");
-                }
-                if (callbackCounter === 2) {
-                  props.onSquareClick("e4");
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(3);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: [],
               lastMoveSquares: [],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],
@@ -373,8 +358,14 @@ describe("WithMoveValidation", () => {
             })
           );
 
-          expect(childrenCallback).nthCalledWith(
-            3,
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+
+          expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
               selectionSquares: [],
