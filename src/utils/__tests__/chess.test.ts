@@ -185,8 +185,9 @@ describe("Chess utils", () => {
         f9: "wP",
       } as Position)
     ).toBe(false);
-    // @ts-ignore
+
     expect(
+      // @ts-ignore
       isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP", e1: "bM" })
     ).toBe(false);
   });
