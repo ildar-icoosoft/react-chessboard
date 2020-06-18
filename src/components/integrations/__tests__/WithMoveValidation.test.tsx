@@ -156,50 +156,37 @@ describe("WithMoveValidation", () => {
       });
 
       describe("Move by drag and drop", () => {
-        /*   it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
-          const childrenCallback = jest.fn();
-          let isFirstCallbackCall: boolean = true;
+        it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
+          const { getProps } = renderWithMoveValidation();
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
-
-                if (isFirstCallbackCall) {
-                  isFirstCallbackCall = false;
-
-                  setTimeout(() => {
-                    props.onDragStart({
-                      coordinates: "e2",
-                      pieceCode: PieceCode.WHITE_PAWN,
-                    });
-                  }, 100);
-
-
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(2);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
+          let props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: [],
               destinationSquares: [],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: ["e2"],
               destinationSquares: ["e3", "e4"],
             })
           );
-        });*/
+        });
 
         it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
           const { getProps } = renderWithMoveValidation();
@@ -242,6 +229,11 @@ describe("WithMoveValidation", () => {
               selectionSquares: [],
             })
           );
+
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
 
           TestRenderer.act(() => {
             props.onDragStart({

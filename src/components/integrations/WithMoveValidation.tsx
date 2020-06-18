@@ -54,10 +54,8 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     onDragStart(event: PieceDragStartEvent) {
       setSelectionSquares([event.coordinates]);
 
-      if (game) {
-        const dests = chessgroundDests(game as Chess);
-        setDestinationSquares(dests[event.coordinates]);
-      }
+      const dests = chessgroundDests(game as Chess);
+      setDestinationSquares(dests[event.coordinates]);
     },
     onDrop(event) {
       if (event.sourceCoordinates === event.targetCoordinates) {
