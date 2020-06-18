@@ -14,7 +14,6 @@ import {
   convertFenToPositionObject,
   isValidFen,
   isValidPositionObject,
-  getPositionObject,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -152,42 +151,12 @@ describe("Chess utils", () => {
     ).toBe("c5");
   });
 
-  it("getPositionObject()", () => {
-    const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
-    expect(getPositionObject(fen)).toEqual({
-      e4: "wK",
-      e6: "bK",
-      e5: "wP",
-    });
-
-    const positionObject: Position = {
-      a4: PieceCode.WHITE_PAWN,
-      b4: PieceCode.WHITE_PAWN,
-    };
-    expect(getPositionObject(positionObject)).toBe(positionObject);
-
-    // @ts-ignore
-    expect(() => getPositionObject(null)).toThrow();
-
-    const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
-    expect(() => getPositionObject(invalidFen)).toThrow();
-
-    const invalidPositionObject: any = {
-      e4: "wK",
-      e6: "bK",
-      e5: "wP",
-      e1: "bM",
-    };
-    // @ts-ignore
-    expect(() => getPositionObject(invalidPositionObject)).toThrow();
-  });
-
   it("convertFenToPositionObject()", () => {
     const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
     expect(convertFenToPositionObject(fen)).toEqual({
-      e4: "wK",
-      e6: "bK",
-      e5: "wP",
+      e4: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
     });
 
     const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
@@ -206,15 +175,19 @@ describe("Chess utils", () => {
 
   it("isValidPositionObject()", () => {
     expect(
-      isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP" } as Position)
+      isValidPositionObject({
+        e4: PieceCode.WHITE_KING,
+        e6: PieceCode.BLACK_KING,
+        e5: PieceCode.WHITE_PAWN,
+      })
     ).toBe(true);
     expect(
       isValidPositionObject({
-        e4: "wK",
-        e6: "bK",
-        e5: "wP",
-        f9: "wP",
-      } as Position)
+        e4: PieceCode.WHITE_KING,
+        e6: PieceCode.BLACK_KING,
+        e5: PieceCode.WHITE_PAWN,
+        f9: PieceCode.WHITE_PAWN,
+      })
     ).toBe(false);
 
     expect(

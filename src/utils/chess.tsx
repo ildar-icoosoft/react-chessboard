@@ -194,18 +194,6 @@ export const getSquareAlgebraicCoordinates = (
   return FILE_NAMES[fileIndex] + RANK_NAMES[rankIndex];
 };
 
-export const getPositionObject = (position: Position | string): Position => {
-  if (isValidFen(position)) {
-    return convertFenToPositionObject(position as string);
-  }
-  if (isValidPositionObject(position)) {
-    return position as Position;
-  }
-  throw Error(
-    "getPositionObject() argument is neither a FEN nor a Position Object"
-  );
-};
-
 export const convertFenToPositionObject = (fen: string): Position => {
   if (!isValidFen(fen)) {
     throw Error(

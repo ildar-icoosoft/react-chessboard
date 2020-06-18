@@ -11,6 +11,7 @@ import { Coords } from "../Coords";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
+import { Position } from "../../interfaces/Position";
 jest.useFakeTimers();
 
 describe("Board", () => {
@@ -127,19 +128,51 @@ describe("Board", () => {
           });
         });
 
-        // it("fen to position object", () => {
-        //   const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
-        //
-        //   const testRenderer = TestRenderer.create(<Board position={fen} />);
-        //   const testInstance = testRenderer.root;
-        //
-        //   const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        //     CoordinateGrid
-        //   );
-        //
-        //   expect(coordinateGrid.props.position).toEqual({
-        //     e4: PieceCode.WHITE_KING, e6: PieceCode.BLACK_KING, e5: PieceCode.WHITE_PAWN });
-        // });
+        it("fen to position object", () => {
+          const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
+
+          const testRenderer = TestRenderer.create(<Board position={fen} />);
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.position).toEqual({
+            e4: PieceCode.WHITE_KING,
+            e6: PieceCode.BLACK_KING,
+            e5: PieceCode.WHITE_PAWN,
+          });
+        });
+
+        it("if position is neither a valid FEN nor a valid Position Object", () => {
+          const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
+
+          const testRenderer = TestRenderer.create(
+            <Board position={invalidFen} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.position).toEqual({});
+
+          // @ts-ignore
+          testRenderer.update(<Board position={null} />);
+          expect(coordinateGrid.props.position).toEqual({});
+
+          const invalidPositionObject: Position = {
+            e4: PieceCode.WHITE_KING,
+            e6: PieceCode.BLACK_KING,
+            e5: PieceCode.WHITE_PAWN,
+            f9: PieceCode.WHITE_PAWN,
+          };
+
+          testRenderer.update(<Board position={invalidPositionObject} />);
+          expect(coordinateGrid.props.position).toEqual({});
+        });
       });
 
       it("width", () => {
