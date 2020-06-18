@@ -194,8 +194,25 @@ export const getSquareAlgebraicCoordinates = (
   return FILE_NAMES[fileIndex] + RANK_NAMES[rankIndex];
 };
 
-export const convertFenToPositionObject = (fen: string): Position | null => {
-  if (!isValidFen(fen)) return null;
+export const getPositionObject = (position: Position | string): Position => {
+  if (isValidFen(position)) {
+    return convertFenToPositionObject(position as string);
+  }
+  if (isValidPositionObject(position)) {
+    return position as Position;
+  }
+  throw Error(
+    "getPositionObject() argument is neither a FEN nor a Position Object"
+  );
+};
+
+export const convertFenToPositionObject = (fen: string): Position => {
+  if (!isValidFen(fen)) {
+    throw Error(
+      "convertFenToPositionObject() argument is not a valid FEN string"
+    );
+  }
+
   // cut off any move, castling, etc info from the end
   // we're only interested in position information
   fen = fen.replace(/ .+$/, "");
@@ -217,7 +234,7 @@ export const convertFenToPositionObject = (fen: string): Position | null => {
       } else {
         // piece
         let square = FILE_NAMES[colIdx] + currentRow;
-        position[square] = fenToPieceCode(row[j]);
+        position[square] = convertFenToPieceCode(row[j]);
         colIdx = colIdx + 1;
       }
     }
@@ -229,7 +246,7 @@ export const convertFenToPositionObject = (fen: string): Position | null => {
 };
 
 // convert FEN piece code to bP, wK, etc
-const fenToPieceCode = (piece: string): PieceCode => {
+const convertFenToPieceCode = (piece: string): PieceCode => {
   // black piece
   if (piece.toLowerCase() === piece) {
     return ("b" + piece.toUpperCase()) as PieceCode;
@@ -250,7 +267,7 @@ const expandFenEmptySquares = (fen: string): string => {
     .replace(/2/g, "11");
 };
 
-export const isValidFen = (fen: string) => {
+export const isValidFen = (fen: any) => {
   if (!_isString(fen)) return false;
 
   // cut off any move, castling, etc info from the end
@@ -274,15 +291,15 @@ export const isValidFen = (fen: string) => {
   return true;
 };
 
-const isValidSquare = (square: string): boolean => {
+const isValidSquare = (square: any): boolean => {
   return _isString(square) && square.search(/^[a-h][1-8]$/) !== -1;
 };
 
-const isValidPieceCode = (code: string): boolean => {
+const isValidPieceCode = (code: any): boolean => {
   return _isString(code) && code.search(/^[bw][KQRNBP]$/) !== -1;
 };
 
-export const isValidPositionObject = (position: Position): boolean => {
+export const isValidPositionObject = (position: any): boolean => {
   if (!_isObject(position)) {
     return false;
   }
@@ -290,7 +307,10 @@ export const isValidPositionObject = (position: Position): boolean => {
   for (const i in position) {
     if (!position.hasOwnProperty(i)) continue;
 
-    if (!isValidSquare(i) || !isValidPieceCode(position[i])) {
+    if (
+      !isValidSquare(i) ||
+      !isValidPieceCode((position as Record<string, any>)[i])
+    ) {
       return false;
     }
   }

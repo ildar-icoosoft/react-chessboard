@@ -137,8 +137,9 @@ describe("Board", () => {
         //     CoordinateGrid
         //   );
         //
-        //   expect(coordinateGrid.props.position).toEqual({ e4: "wK", e6: "bK", e5: "wP" });
-        // })
+        //   expect(coordinateGrid.props.position).toEqual({
+        //     e4: PieceCode.WHITE_KING, e6: PieceCode.BLACK_KING, e5: PieceCode.WHITE_PAWN });
+        // });
       });
 
       it("width", () => {
