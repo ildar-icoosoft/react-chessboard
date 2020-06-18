@@ -3,7 +3,11 @@ import { PieceColor } from "../enums/PieceColor";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
-import { without as _without, isString as _isString } from "lodash";
+import {
+  without as _without,
+  isString as _isString,
+  isObject as _isObject,
+} from "lodash";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 
 /**
@@ -190,8 +194,8 @@ export const getSquareAlgebraicCoordinates = (
   return FILE_NAMES[fileIndex] + RANK_NAMES[rankIndex];
 };
 
-export const fenToObj = (fen: string): Position | null => {
-  if (!validFen(fen)) return null;
+export const convertFenToPositionObject = (fen: string): Position | null => {
+  if (!isValidFen(fen)) return null;
   // cut off any move, castling, etc info from the end
   // we're only interested in position information
   fen = fen.replace(/ .+$/, "");
@@ -246,7 +250,7 @@ const expandFenEmptySquares = (fen: string): string => {
     .replace(/2/g, "11");
 };
 
-export const validFen = (fen: string) => {
+export const isValidFen = (fen: string) => {
   if (!_isString(fen)) return false;
 
   // cut off any move, castling, etc info from the end
@@ -267,5 +271,28 @@ export const validFen = (fen: string) => {
     }
   }
 
+  return true;
+};
+
+const isValidSquare = (square: string): boolean => {
+  return _isString(square) && square.search(/^[a-h][1-8]$/) !== -1;
+};
+
+const isValidPieceCode = (code: string): boolean => {
+  return _isString(code) && code.search(/^[bw][KQRNBP]$/) !== -1;
+};
+
+export const isValidPositionObject = (position: Position): boolean => {
+  if (!_isObject(position)) {
+    return false;
+  }
+
+  for (const i in position) {
+    if (!position.hasOwnProperty(i)) continue;
+
+    if (!isValidSquare(i) || !isValidPieceCode(position[i])) {
+      return false;
+    }
+  }
   return true;
 };

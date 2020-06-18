@@ -11,8 +11,9 @@ import {
   getRankNameFromCoordinates,
   isLightSquare,
   getSquareAlgebraicCoordinates,
-  fenToObj,
-  validFen,
+  convertFenToPositionObject,
+  isValidFen,
+  isValidPositionObject,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -150,21 +151,43 @@ describe("Chess utils", () => {
     ).toBe("c5");
   });
 
-  it("fenToObj()", () => {
+  it("convertFenToPositionObject()", () => {
     const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
-    expect(fenToObj(fen)).toEqual({ e4: "wK", e6: "bK", e5: "wP" });
+    expect(convertFenToPositionObject(fen)).toEqual({
+      e4: "wK",
+      e6: "bK",
+      e5: "wP",
+    });
 
     const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
-    expect(fenToObj(invalidFen)).toBeNull();
+    expect(convertFenToPositionObject(invalidFen)).toBeNull();
   });
 
-  test("validFen()", () => {
+  it("isValidFen()", () => {
     const fen = "8/8/4k3/4P3/4K3/8/8/8 w - -";
     const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
     const invalidFen2 = "-5/8/4k3/4P3/4K3/8/8/8 w - -";
 
-    expect(validFen(fen)).toBe(true);
-    expect(validFen(invalidFen)).toBe(false);
-    expect(validFen(invalidFen2)).toBe(false);
+    expect(isValidFen(fen)).toBe(true);
+    expect(isValidFen(invalidFen)).toBe(false);
+    expect(isValidFen(invalidFen2)).toBe(false);
+  });
+
+  it("isValidPositionObject()", () => {
+    expect(
+      isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP" } as Position)
+    ).toBe(true);
+    expect(
+      isValidPositionObject({
+        e4: "wK",
+        e6: "bK",
+        e5: "wP",
+        f9: "wP",
+      } as Position)
+    ).toBe(false);
+    // @ts-ignore
+    expect(
+      isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP", e1: "bM" })
+    ).toBe(false);
   });
 });
