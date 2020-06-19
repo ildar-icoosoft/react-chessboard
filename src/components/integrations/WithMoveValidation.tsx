@@ -9,9 +9,15 @@ import {
 import { Chess } from "chessops/chess";
 import { chessgroundDests } from "chessops/compat";
 import { parseFen as chessopsParseFen } from "chessops/fen";
-import { convertFenToPositionObject } from "../../utils/chess";
+import {
+  convertFenToPositionObject,
+  getColorFromPieceCode,
+} from "../../utils/chess";
+import { PieceCode } from "../../enums/PieceCode";
+import { PieceColor } from "../../enums/PieceColor";
 
 export interface WithMoveValidationCallbackProps {
+  allowDrag: (pieceCode: PieceCode, coordinates: string) => boolean;
   position: Position;
   draggable: boolean;
   width: number;
@@ -56,6 +62,17 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   }, []);
 
   return children({
+    allowDrag(pieceCode) {
+      const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
+
+      if (
+        (pieceColor === PieceColor.WHITE && (game as Chess).turn === "white") ||
+        (pieceColor === PieceColor.BLACK && (game as Chess).turn === "black")
+      ) {
+        return true;
+      }
+      return false;
+    },
     position,
     width,
     draggable: true,

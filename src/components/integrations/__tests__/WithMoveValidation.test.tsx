@@ -70,6 +70,22 @@ describe("WithMoveValidation", () => {
         expect(childrenCallback).toBeCalled();
       });
 
+      it("props.children({allowDrag}) returns true if it's turn to move", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            allowDrag: expect.any(Function),
+          })
+        );
+
+        expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
+
+        expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
+      });
+
       it("props.children({position}) if has not initialPosition prop", () => {
         const { getProps } = renderWithMoveValidation();
 
