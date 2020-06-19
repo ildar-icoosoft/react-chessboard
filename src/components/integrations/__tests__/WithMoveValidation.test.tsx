@@ -9,6 +9,8 @@ import { PieceCode } from "../../../enums/PieceCode";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
+export const initialFen: string = "8/8/8/8/8/8/4PP2/8";
+
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
@@ -20,11 +22,11 @@ const positionAfterFirstMove: Position = {
   f2: PieceCode.WHITE_PAWN,
 };
 
-const renderWithMoveValidation = (position?: Position) => {
+const renderWithMoveValidation = (fen?: string) => {
   let callbackProps: WithMoveValidationCallbackProps;
 
   TestRenderer.create(
-    <WithMoveValidation initialPosition={position}>
+    <WithMoveValidation initialFen={fen}>
       {(props) => {
         callbackProps = props;
 
@@ -58,7 +60,7 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({position}) if has initialPosition prop", () => {
-        const { getProps } = renderWithMoveValidation(initialPosition);
+        const { getProps } = renderWithMoveValidation(initialFen);
 
         const props = getProps();
 
@@ -107,7 +109,7 @@ describe("WithMoveValidation", () => {
 
       describe("Move by drag and drop", () => {
         it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
-          const { getProps } = renderWithMoveValidation(initialPosition);
+          const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
           expect(props).toEqual(
@@ -139,7 +141,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
-          const { getProps } = renderWithMoveValidation(initialPosition);
+          const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
 
@@ -170,7 +172,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares", () => {
-          const { getProps } = renderWithMoveValidation(initialPosition);
+          const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
 
@@ -219,7 +221,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("call props.children({onDrop}) e2-e2 affects position, lastMoveSquares and cancelMove() must be called", () => {
-          const { getProps } = renderWithMoveValidation(initialPosition);
+          const { getProps } = renderWithMoveValidation(initialFen);
           const cancelMove = jest.fn();
 
           let props = getProps();
@@ -267,7 +269,7 @@ describe("WithMoveValidation", () => {
 
       describe("Move by click", () => {
         it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, lastMoveSquares", () => {
-          const { getProps } = renderWithMoveValidation(initialPosition);
+          const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
 
@@ -309,7 +311,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares", () => {
-          const { getProps } = renderWithMoveValidation(initialPosition);
+          const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
           expect(props).toEqual(

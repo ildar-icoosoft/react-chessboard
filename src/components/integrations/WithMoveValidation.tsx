@@ -4,11 +4,13 @@ import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import {
   DEFAULT_BOARD_WIDTH,
-  initialBoardFen,
+  EMPTY_BOARD_FEN,
+  INITIAL_BOARD_FEN,
 } from "../../constants/constants";
 import { Chess } from "chessops/chess";
 import { chessgroundDests } from "chessops/compat";
 import { parseFen as chessopsParseFen } from "chessops/fen";
+import { convertFenToPositionObject } from "../../utils/chess";
 
 export interface WithMoveValidationCallbackProps {
   position: Position;
@@ -24,7 +26,7 @@ export interface WithMoveValidationCallbackProps {
 }
 
 export interface WithMoveValidationProps {
-  initialPosition?: Position;
+  initialFen?: string;
   children(
     callbackProps: WithMoveValidationCallbackProps
   ): ReactElement<any, any> | null;
@@ -32,18 +34,20 @@ export interface WithMoveValidationProps {
 
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
-  initialPosition = {},
+  initialFen = EMPTY_BOARD_FEN,
 }) => {
   const [game, setGame] = useState<Chess | null>(null);
 
-  const [position, setPosition] = useState<Position>(initialPosition);
+  const [position, setPosition] = useState<Position>(
+    convertFenToPositionObject(initialFen)
+  );
   const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
   const [destinationSquares, setDestinationSquares] = useState<string[]>([]);
   const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
   const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   useEffect(() => {
-    const setup = chessopsParseFen(initialBoardFen).unwrap();
+    const setup = chessopsParseFen(INITIAL_BOARD_FEN).unwrap();
     setGame(Chess.fromSetup(setup).unwrap());
   }, []);
 

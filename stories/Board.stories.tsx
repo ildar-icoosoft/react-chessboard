@@ -1,6 +1,6 @@
 import React from "react";
 import { Board } from "../src/components/Board";
-import { initialBoardPosition } from "../src/constants/constants";
+import { INITIAL_BOARD_POSITION } from "../src/constants/constants";
 import { PieceDragStartEvent } from "../src/interfaces/PieceDragStartEvent";
 import { PieceColor } from "../src/enums/PieceColor";
 import { PieceCode } from "../src/enums/PieceCode";
@@ -10,7 +10,7 @@ export default {
   title: "Board",
 };
 
-export const SimpleBoard = () => <Board position={initialBoardPosition} />;
+export const SimpleBoard = () => <Board position={INITIAL_BOARD_POSITION} />;
 
 SimpleBoard.story = {
   parameters: {
@@ -19,7 +19,7 @@ SimpleBoard.story = {
 };
 
 export const FlippedBoard = () => (
-  <Board position={initialBoardPosition} orientation={PieceColor.BLACK} />
+  <Board position={INITIAL_BOARD_POSITION} orientation={PieceColor.BLACK} />
 );
 
 FlippedBoard.story = {
@@ -43,7 +43,7 @@ export const BoardWithEventHandlers = () => {
 
   return (
     <Board
-      position={initialBoardPosition}
+      position={INITIAL_BOARD_POSITION}
       draggable={true}
       onSquareClick={onSquareClick}
       onDragStart={onDragStart}
@@ -59,7 +59,7 @@ BoardWithEventHandlers.story = {
 };
 
 export const SmallBoard = () => (
-  <Board position={initialBoardPosition} draggable={true} width={240} />
+  <Board position={INITIAL_BOARD_POSITION} draggable={true} width={240} />
 );
 
 SmallBoard.story = {

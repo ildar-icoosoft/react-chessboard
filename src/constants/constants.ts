@@ -1,7 +1,7 @@
 import { PieceCode } from "../enums/PieceCode";
 import { Position } from "../interfaces/Position";
 
-export const initialBoardPosition: Position = {
+export const INITIAL_BOARD_POSITION: Position = {
   a2: PieceCode.WHITE_PAWN,
   b2: PieceCode.WHITE_PAWN,
   c2: PieceCode.WHITE_PAWN,
@@ -35,9 +35,9 @@ export const initialBoardPosition: Position = {
   d8: PieceCode.BLACK_QUEEN,
   e8: PieceCode.BLACK_KING,
 };
-export const initialBoardFen: string =
+export const INITIAL_BOARD_FEN: string =
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-export const emptyBoardFen: string = "8/8/8/8/8/8/8/8";
+export const EMPTY_BOARD_FEN: string = "8/8/8/8/8/8/8/8";
 
 export const RANK_NAMES: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"];
 export const FILE_NAMES: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
