@@ -179,7 +179,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares", () => {
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares, destinationSquares", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -187,6 +187,7 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: [],
+              destinationSquares: [],
             })
           );
 
@@ -207,6 +208,7 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
             })
           );
 
@@ -224,6 +226,7 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: [],
+              destinationSquares: [],
             })
           );
         });
@@ -276,7 +279,7 @@ describe("WithMoveValidation", () => {
       });
 
       describe("Move by click", () => {
-        it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, lastMoveSquares", () => {
+        it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, destinationSquares, lastMoveSquares", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -285,6 +288,7 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: [],
+              destinationSquares: [],
               lastMoveSquares: [],
             })
           );
@@ -299,6 +303,7 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
               lastMoveSquares: [],
             })
           );
@@ -313,12 +318,13 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               position: positionAfterFirstMove,
               selectionSquares: [],
+              destinationSquares: [],
               lastMoveSquares: ["e2", "e4"],
             })
           );
         });
 
-        it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares", () => {
+        it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares, destinationSquares", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -326,6 +332,7 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: [],
+              destinationSquares: [],
             })
           );
 
@@ -338,6 +345,7 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: [],
+              destinationSquares: [],
             })
           );
 
@@ -350,6 +358,7 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
             })
           );
         });

@@ -72,6 +72,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
       }
       setSelectionSquares([]);
+      setDestinationSquares([]);
 
       setPosition((prevPosition) => {
         const newPosition: Position = {
@@ -103,10 +104,14 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         setPosition(newPosition);
         setLastMoveSquares([selectionSquares[0], coordinates]);
         setSelectionSquares([]);
+        setDestinationSquares([]);
       } else {
-        // first click. set selectionSquares
+        // first click. set selectionSquares, destinationSquares
 
         setSelectionSquares([coordinates]);
+
+        const dests = chessgroundDests(game as Chess);
+        setDestinationSquares(dests[coordinates]);
       }
     },
     onResize(width: number) {
