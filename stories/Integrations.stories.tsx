@@ -8,7 +8,7 @@ export default {
 };
 
 export const WithMoveValidationStory = () => (
-  <WithMoveValidation initialPosition={INITIAL_BOARD_FEN}>
+  <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
     {({
       position,
       draggable,

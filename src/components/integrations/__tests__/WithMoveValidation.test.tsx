@@ -8,18 +8,26 @@ import { Position } from "../../../interfaces/Position";
 import { PieceCode } from "../../../enums/PieceCode";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import {
+  INITIAL_BOARD_FEN,
+  INITIAL_BOARD_POSITION,
+} from "../../../constants/constants";
 
-export const initialFen: string = "8/8/8/8/8/8/4PP2/8";
+export const initialFen: string = "4k3/8/8/8/8/8/4PP2/4K3";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  e8: PieceCode.BLACK_KING,
 };
 
 // 1. e2-e4
 const positionAfterFirstMove: Position = {
   e4: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  e8: PieceCode.BLACK_KING,
 };
 
 const renderWithMoveValidation = (fen?: string) => {
@@ -54,7 +62,7 @@ describe("WithMoveValidation", () => {
 
         expect(props).toEqual(
           expect.objectContaining({
-            position: {},
+            position: INITIAL_BOARD_POSITION,
           })
         );
       });
@@ -408,7 +416,7 @@ describe("WithMoveValidation", () => {
     describe("DOM structure", () => {
       it("must contain children", () => {
         const { container } = render(
-          <WithMoveValidation>
+          <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
             {() => <div data-testid="some-children"></div>}
           </WithMoveValidation>
         );

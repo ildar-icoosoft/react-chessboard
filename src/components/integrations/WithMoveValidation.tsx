@@ -4,7 +4,6 @@ import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import {
   DEFAULT_BOARD_WIDTH,
-  EMPTY_BOARD_FEN,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
 import { Chess } from "chessops/chess";
@@ -39,7 +38,7 @@ export interface WithMoveValidationProps {
 
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
-  initialFen = EMPTY_BOARD_FEN,
+  initialFen = INITIAL_BOARD_FEN,
 }) => {
   const [game, setGame] = useState<Chess | null>(null);
 
@@ -52,7 +51,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   useEffect(() => {
-    const setup = chessopsParseFen(INITIAL_BOARD_FEN).unwrap();
+    const setup = chessopsParseFen(initialFen).unwrap();
     setGame(Chess.fromSetup(setup).unwrap());
   }, []);
 
