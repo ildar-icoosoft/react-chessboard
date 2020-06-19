@@ -19,14 +19,19 @@ export interface WithMoveValidationCallbackProps {
   selectionSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
+
   onDragStart(event: PieceDragStartEvent): void;
+
   onDrop(event: PieceDropEvent): void;
+
   onSquareClick(coordinates: string): void;
+
   onResize(width: number): void;
 }
 
 export interface WithMoveValidationProps {
   initialFen?: string;
+
   children(
     callbackProps: WithMoveValidationCallbackProps
   ): ReactElement<any, any> | null;
