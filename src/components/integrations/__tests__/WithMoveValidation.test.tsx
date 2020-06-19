@@ -20,11 +20,11 @@ const positionAfterFirstMove: Position = {
   f2: PieceCode.WHITE_PAWN,
 };
 
-const renderWithMoveValidation = () => {
+const renderWithMoveValidation = (position?: Position) => {
   let callbackProps: WithMoveValidationCallbackProps;
 
   TestRenderer.create(
-    <WithMoveValidation initialPosition={initialPosition}>
+    <WithMoveValidation initialPosition={position}>
       {(props) => {
         callbackProps = props;
 
@@ -45,34 +45,12 @@ jest.useFakeTimers();
 describe("WithMoveValidation", () => {
   describe("callback props", () => {
     describe("props.children()", () => {
-      it("must be called immediately", () => {
-        const childrenCallback = jest.fn();
-
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledTimes(1);
-      });
-
       it("props.children({position}) if has not initialPosition prop", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             position: {},
           })
@@ -80,18 +58,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({position}) if has initialPosition prop", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation(initialPosition);
 
-        TestRenderer.create(
-          <WithMoveValidation initialPosition={initialPosition}>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             position: initialPosition,
           })
@@ -99,18 +70,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({draggable})", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             draggable: true,
           })
@@ -118,18 +82,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onDragStart}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             onDragStart: expect.any(Function),
           })
@@ -137,18 +94,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onDrop}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             onDrop: expect.any(Function),
           })
@@ -157,7 +107,7 @@ describe("WithMoveValidation", () => {
 
       describe("Move by drag and drop", () => {
         it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
-          const { getProps } = renderWithMoveValidation();
+          const { getProps } = renderWithMoveValidation(initialPosition);
 
           let props = getProps();
           expect(props).toEqual(
@@ -189,7 +139,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
-          const { getProps } = renderWithMoveValidation();
+          const { getProps } = renderWithMoveValidation(initialPosition);
 
           let props = getProps();
 
@@ -220,7 +170,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares", () => {
-          const { getProps } = renderWithMoveValidation();
+          const { getProps } = renderWithMoveValidation(initialPosition);
 
           let props = getProps();
 
@@ -269,7 +219,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("call props.children({onDrop}) e2-e2 affects position, lastMoveSquares and cancelMove() must be called", () => {
-          const { getProps } = renderWithMoveValidation();
+          const { getProps } = renderWithMoveValidation(initialPosition);
           const cancelMove = jest.fn();
 
           let props = getProps();
@@ -304,18 +254,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onSquareClick}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             onSquareClick: expect.any(Function),
           })
@@ -324,7 +267,7 @@ describe("WithMoveValidation", () => {
 
       describe("Move by click", () => {
         it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, lastMoveSquares", () => {
-          const { getProps } = renderWithMoveValidation();
+          const { getProps } = renderWithMoveValidation(initialPosition);
 
           let props = getProps();
 
@@ -366,7 +309,7 @@ describe("WithMoveValidation", () => {
         });
 
         it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares", () => {
-          const { getProps } = renderWithMoveValidation();
+          const { getProps } = renderWithMoveValidation(initialPosition);
 
           let props = getProps();
           expect(props).toEqual(
