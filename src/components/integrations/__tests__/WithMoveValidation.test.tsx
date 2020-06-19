@@ -393,6 +393,85 @@ describe("WithMoveValidation", () => {
             })
           );
         });
+
+        it("move validation", () => {
+          const { getProps } = renderWithMoveValidation();
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // valid move
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+          props = getProps();
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              lastMoveSquares: ["e2", "e4"],
+            })
+          );
+
+          // invalid move (because turn to move black)
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+          TestRenderer.act(() => {
+            props.onSquareClick("e5");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              lastMoveSquares: ["e2", "e4"],
+            })
+          );
+
+          // invalid move
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
+          props = getProps();
+          TestRenderer.act(() => {
+            props.onSquareClick("d6");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              lastMoveSquares: ["e2", "e4"],
+            })
+          );
+
+          // valid move
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
+          props = getProps();
+          TestRenderer.act(() => {
+            props.onSquareClick("e5");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              lastMoveSquares: ["e7", "e5"],
+            })
+          );
+        });
       });
 
       it("props.children({width})", () => {

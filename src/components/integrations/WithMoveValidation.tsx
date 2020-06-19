@@ -15,6 +15,8 @@ import {
 } from "../../utils/chess";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
+import { parseSquare } from "chessops/util";
+import { makeSanAndPlay } from "chessops/san";
 
 export interface WithMoveValidationCallbackProps {
   allowDrag: (pieceCode: PieceCode, coordinates: string) => boolean;
@@ -42,6 +44,18 @@ export interface WithMoveValidationProps {
   ): ReactElement<any, any> | null;
 }
 
+const isTurnToMove = (pieceCode: PieceCode, game: Chess): boolean => {
+  const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
+
+  if (
+    (pieceColor === PieceColor.WHITE && game.turn === "white") ||
+    (pieceColor === PieceColor.BLACK && game.turn === "black")
+  ) {
+    return true;
+  }
+  return false;
+};
+
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialFen = INITIAL_BOARD_FEN,
@@ -63,15 +77,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
   return children({
     allowDrag(pieceCode) {
-      const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
-
-      if (
-        (pieceColor === PieceColor.WHITE && (game as Chess).turn === "white") ||
-        (pieceColor === PieceColor.BLACK && (game as Chess).turn === "black")
-      ) {
-        return true;
-      }
-      return false;
+      return isTurnToMove(pieceCode, game as Chess);
     },
     position,
     width,
@@ -103,13 +109,18 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       });
     },
     onSquareClick(coordinates: string) {
-      if (!selectionSquares.length && !position[coordinates]) {
-        // ignore first click on empty square
-        return;
-      }
-
       if (selectionSquares.length) {
         // second click. change position, set lastMoveSquares and clear selectionSquares
+
+        const move = (game as Chess).normalizeMove({
+          from: parseSquare(selectionSquares[0])!,
+          to: parseSquare(coordinates)!,
+        });
+
+        if (!game!.isLegal(move)) {
+          return;
+        }
+        makeSanAndPlay(game!, move);
 
         const newPosition: Position = {
           ...position,
@@ -120,11 +131,19 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
         setPosition(newPosition);
         setLastMoveSquares([selectionSquares[0], coordinates]);
+
         setSelectionSquares([]);
         setDestinationSquares([]);
       } else {
-        // first click. set selectionSquares, destinationSquares
+        if (
+          !position[coordinates] ||
+          !isTurnToMove(position[coordinates], game as Chess)
+        ) {
+          // ignore first click on empty square or if it is not turn to move
+          return;
+        }
 
+        // first click. set selectionSquares, destinationSquares
         setSelectionSquares([coordinates]);
 
         const dests = chessgroundDests(game as Chess);
