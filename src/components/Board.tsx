@@ -49,6 +49,8 @@ export interface BoardProps {
 
   onDragStart?(event: PieceDragStartEvent): void;
 
+  onDragEnd?(): void;
+
   onDrop?(event: PieceDropEvent): void;
 
   onResize?(width: number): void;
@@ -73,6 +75,7 @@ export const Board: FC<BoardProps> = ({
   currentPremoveSquares,
   onSquareClick,
   onDragStart,
+  onDragEnd,
   onDrop,
   onResize,
 }) => {
@@ -146,6 +149,7 @@ export const Board: FC<BoardProps> = ({
             onRightClick={handleSquareRightClick}
             onDrop={onDrop}
             onDragStart={handleDragStart}
+            onDragEnd={onDragEnd}
             transitionDuration={transitionDuration}
             roundMarkers={roundMarkers}
           />

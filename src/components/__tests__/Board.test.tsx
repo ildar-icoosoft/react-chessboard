@@ -602,6 +602,24 @@ describe("Board", () => {
       expect(onDragStart).toBeCalledWith(dragStartEvent);
     });
 
+    it("onDragEnd", () => {
+      const onDragEnd = jest.fn();
+
+      const testInstance = TestRenderer.create(<Board onDragEnd={onDragEnd} />)
+        .root;
+
+      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+        CoordinateGrid
+      );
+
+      TestRenderer.act(() => {
+        coordinateGrid.props.onDragEnd();
+      });
+
+      expect(onDragEnd).toBeCalledTimes(1);
+      expect(onDragEnd).toBeCalledWith();
+    });
+
     it("onDrop", () => {
       const onDrop = jest.fn();
       const cancelMove = jest.fn();
