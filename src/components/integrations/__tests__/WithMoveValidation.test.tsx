@@ -55,6 +55,21 @@ jest.useFakeTimers();
 describe("WithMoveValidation", () => {
   describe("callback props", () => {
     describe("props.children()", () => {
+      it("must be called immediately", () => {
+        const childrenCallback = jest.fn();
+
+        TestRenderer.create(
+          <WithMoveValidation>
+            {(props) => {
+              childrenCallback(props);
+              return null;
+            }}
+          </WithMoveValidation>
+        );
+
+        expect(childrenCallback).toBeCalled();
+      });
+
       it("props.children({position}) if has not initialPosition prop", () => {
         const { getProps } = renderWithMoveValidation();
 

@@ -1122,6 +1122,47 @@ describe("CoordinateGrid", () => {
         });
       });
 
+      it("onDragEnd event", () => {
+        const onDragEnd = jest.fn();
+
+        const ref = createRef<ReactDndRefType>();
+        render(
+          <CoordinateGridWithDnd
+            ref={ref}
+            position={{ a8: PieceCode.WHITE_KING }}
+            draggable={true}
+            onDragEnd={onDragEnd}
+          />
+        );
+
+        const manager: DragDropManager = (ref.current as ReactDndRefType).getManager() as DragDropManager;
+
+        const dragSourceId: Identifier = (ref.current as ReactDndRefType)
+          .getDecoratedComponent<CoordinateGridRef>()
+          .getDragHandlerId() as Identifier;
+
+        const backend: ITestBackend = manager.getBackend() as ITestBackend;
+
+        const clientOffset: XYCoord = {
+          x: 30,
+          y: 30,
+        };
+
+        act(() => {
+          // move from a8
+          backend.simulateBeginDrag([dragSourceId], {
+            clientOffset,
+            getSourceClientOffset() {
+              return clientOffset;
+            },
+          });
+          backend.simulateEndDrag();
+        });
+
+        expect(onDragEnd).toBeCalledTimes(1);
+        expect(onDragEnd).toBeCalledWith();
+      });
+
       it("allows drag", () => {
         // Can drag if contains piece and draggable is true and allowDrag is not set or allowDrag returns true
 
