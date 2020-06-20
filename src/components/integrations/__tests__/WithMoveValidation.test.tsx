@@ -528,7 +528,7 @@ describe("WithMoveValidation", () => {
       it("must contain children", () => {
         const { container } = render(
           <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
-            {() => <div data-testid="some-children"></div>}
+            {() => <div data-testid="some-children" />}
           </WithMoveValidation>
         );
 
