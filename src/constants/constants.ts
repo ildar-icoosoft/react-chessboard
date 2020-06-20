@@ -36,7 +36,7 @@ export const INITIAL_BOARD_POSITION: Position = {
   e8: PieceCode.BLACK_KING,
 };
 export const INITIAL_BOARD_FEN: string =
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 export const EMPTY_BOARD_FEN: string = "8/8/8/8/8/8/8/8";
 
 export const RANK_NAMES: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"];
