@@ -1,5 +1,5 @@
 import React from "react";
-import { Board } from "../src/components/Board";
+import { Board } from "../src";
 import { INITIAL_BOARD_POSITION } from "../src/constants/constants";
 import { PieceDragStartEvent } from "../src/interfaces/PieceDragStartEvent";
 import { PieceColor } from "../src/enums/PieceColor";

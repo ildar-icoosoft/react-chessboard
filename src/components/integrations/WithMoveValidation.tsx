@@ -6,17 +6,13 @@ import {
   DEFAULT_BOARD_WIDTH,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
-import { Chess } from "chessops/chess";
-import { chessgroundDests } from "chessops/compat";
-import { parseFen as chessopsParseFen } from "chessops/fen";
 import {
   convertFenToPositionObject,
   getColorFromPieceCode,
 } from "../../utils/chess";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
-import { parseSquare } from "chessops/util";
-import { makeSanAndPlay } from "chessops/san";
+import { Chess, ChessInstance, Move, Square } from "chess.js";
 
 export interface WithMoveValidationCallbackProps {
   allowDrag: (pieceCode: PieceCode, coordinates: string) => boolean;
@@ -44,23 +40,20 @@ export interface WithMoveValidationProps {
   ): ReactElement<any, any> | null;
 }
 
-const isTurnToMove = (pieceCode: PieceCode, game: Chess): boolean => {
+const isTurnToMove = (pieceCode: PieceCode, game: ChessInstance): boolean => {
   const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
 
-  if (
-    (pieceColor === PieceColor.WHITE && game.turn === "white") ||
-    (pieceColor === PieceColor.BLACK && game.turn === "black")
-  ) {
-    return true;
-  }
-  return false;
+  return (
+    (pieceColor === PieceColor.WHITE && game.turn() === "w") ||
+    (pieceColor === PieceColor.BLACK && game.turn() === "b")
+  );
 };
 
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialFen = INITIAL_BOARD_FEN,
 }) => {
-  const [game, setGame] = useState<Chess | null>(null);
+  const [game, setGame] = useState<ChessInstance | null>(null);
 
   const [position, setPosition] = useState<Position>(
     convertFenToPositionObject(initialFen)
@@ -71,13 +64,12 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   useEffect(() => {
-    const setup = chessopsParseFen(initialFen).unwrap();
-    setGame(Chess.fromSetup(setup).unwrap());
+    setGame(new Chess(initialFen));
   }, []);
 
   return children({
     allowDrag(pieceCode) {
-      return isTurnToMove(pieceCode, game as Chess);
+      return isTurnToMove(pieceCode, game!);
     },
     position,
     width,
@@ -85,8 +77,10 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     onDragStart(event: PieceDragStartEvent) {
       setSelectionSquares([event.coordinates]);
 
-      const dests = chessgroundDests(game as Chess);
-      setDestinationSquares(dests[event.coordinates]);
+      const dests = game!
+        .moves({ square: event.coordinates, verbose: true })
+        .map((item) => item.to);
+      setDestinationSquares(dests);
     },
     onDrop(event) {
       if (event.sourceCoordinates === event.targetCoordinates) {
@@ -112,15 +106,14 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       if (selectionSquares.length) {
         // second click. change position, set lastMoveSquares and clear selectionSquares
 
-        const move = (game as Chess).normalizeMove({
-          from: parseSquare(selectionSquares[0])!,
-          to: parseSquare(coordinates)!,
+        const move: Move | null = game!.move({
+          from: selectionSquares[0] as Square,
+          to: coordinates as Square,
         });
-
-        if (!game!.isLegal(move)) {
+        if (!move) {
+          // invalid move
           return;
         }
-        makeSanAndPlay(game!, move);
 
         const newPosition: Position = {
           ...position,
@@ -137,7 +130,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       } else {
         if (
           !position[coordinates] ||
-          !isTurnToMove(position[coordinates], game as Chess)
+          !isTurnToMove(position[coordinates], game!)
         ) {
           // ignore first click on empty square or if it is not turn to move
           return;
@@ -146,8 +139,10 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         // first click. set selectionSquares, destinationSquares
         setSelectionSquares([coordinates]);
 
-        const dests = chessgroundDests(game as Chess);
-        setDestinationSquares(dests[coordinates]);
+        const dests = game!
+          .moves({ square: coordinates, verbose: true })
+          .map((item) => item.to);
+        setDestinationSquares(dests);
       }
     },
     onResize(width: number) {
