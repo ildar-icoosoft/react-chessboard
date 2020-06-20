@@ -100,11 +100,21 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       setDestinationSquares(dests);
     },
     onDrop(event) {
-      if (event.sourceCoordinates === event.targetCoordinates) {
+      const move: Move | null = game!.move({
+        from: event.sourceCoordinates as Square,
+        to: event.targetCoordinates as Square,
+      });
+      if (!move) {
+        // invalid move
         event.cancelMove();
-      } else {
-        setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+
+        setSelectionSquares([]);
+        setDestinationSquares([]);
+        return;
       }
+
+      setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+
       setSelectionSquares([]);
       setDestinationSquares([]);
 

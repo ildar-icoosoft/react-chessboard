@@ -193,6 +193,10 @@ describe("WithMoveValidation", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
 
           expect(props).toEqual(
             expect.objectContaining({
@@ -257,11 +261,12 @@ describe("WithMoveValidation", () => {
             expect.objectContaining({
               selectionSquares: [],
               destinationSquares: [],
+              lastMoveSquares: ["e2", "e4"],
             })
           );
         });
 
-        it("call props.children({onDragStart}) and  props.children({onDrop}) e2-e2", () => {
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e2", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
           const cancelMove = jest.fn();
 
@@ -290,6 +295,53 @@ describe("WithMoveValidation", () => {
             props.onDrop({
               sourceCoordinates: "e2",
               targetCoordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+              cancelMove,
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+              lastMoveSquares: [],
+            })
+          );
+
+          expect(cancelMove).toBeCalledTimes(1);
+        });
+
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e5 (invalid move)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+          const cancelMove = jest.fn();
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onDrop({
+              sourceCoordinates: "e2",
+              targetCoordinates: "e5",
               pieceCode: PieceCode.WHITE_PAWN,
               cancelMove,
             });
