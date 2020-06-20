@@ -572,7 +572,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("props.children({onSquareClick}) e2-e4, e7-e5", () => {
+        it("props.children({onSquareClick}) e2-e4, e7-e5 (check if turn to move is changed)", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
