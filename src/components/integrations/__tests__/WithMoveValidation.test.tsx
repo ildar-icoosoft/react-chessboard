@@ -13,13 +13,14 @@ import {
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
 
-export const initialFen: string = "4k3/8/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
+export const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
   e1: PieceCode.WHITE_KING,
   e8: PieceCode.BLACK_KING,
+  e7: PieceCode.BLACK_PAWN,
 };
 
 // 1. e2-e4
@@ -28,6 +29,15 @@ const positionAfterFirstMove: Position = {
   f2: PieceCode.WHITE_PAWN,
   e1: PieceCode.WHITE_KING,
   e8: PieceCode.BLACK_KING,
+  e7: PieceCode.BLACK_PAWN,
+};
+
+const positionAfterSecondMove: Position = {
+  e4: PieceCode.WHITE_PAWN,
+  f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  e8: PieceCode.BLACK_KING,
+  e5: PieceCode.BLACK_PAWN,
 };
 
 const renderWithMoveValidation = (fen?: string) => {
@@ -521,8 +531,8 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        /*it("move validation", () => {
-          const { getProps } = renderWithMoveValidation();
+        it("props.children({onSquareClick}) e7-e5 (invalid move because white's move)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
           TestRenderer.act(() => {
@@ -530,32 +540,25 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          // valid move
-          TestRenderer.act(() => {
-            props.onSquareClick("e2");
-          });
-          props = getProps();
-          TestRenderer.act(() => {
-            props.onSquareClick("e4");
-          });
-
-          props = getProps();
           expect(props).toEqual(
             expect.objectContaining({
-              lastMoveSquares: ["e2", "e4"],
-            })
-          );
-
-          // invalid move (because turn to move black)
-          TestRenderer.act(() => {
-            props.onSquareClick("e4");
-          });
-          props = getProps();
-          expect(props).toEqual(
-            expect.objectContaining({
+              position: initialPosition,
               selectionSquares: [],
             })
           );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+
           TestRenderer.act(() => {
             props.onSquareClick("e5");
           });
@@ -563,31 +566,65 @@ describe("WithMoveValidation", () => {
           props = getProps();
           expect(props).toEqual(
             expect.objectContaining({
-              lastMoveSquares: ["e2", "e4"],
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e2-e4, e7-e5", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
             })
           );
 
-          // invalid move
           TestRenderer.act(() => {
-            props.onSquareClick("e7");
-          });
-          props = getProps();
-          TestRenderer.act(() => {
-            props.onSquareClick("d6");
+            props.onSquareClick("e2");
           });
 
           props = getProps();
           expect(props).toEqual(
             expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: positionAfterFirstMove,
+              selectionSquares: [],
               lastMoveSquares: ["e2", "e4"],
             })
           );
 
-          // valid move
           TestRenderer.act(() => {
             props.onSquareClick("e7");
           });
+
           props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: positionAfterFirstMove,
+              selectionSquares: ["e7"],
+            })
+          );
+
           TestRenderer.act(() => {
             props.onSquareClick("e5");
           });
@@ -595,10 +632,12 @@ describe("WithMoveValidation", () => {
           props = getProps();
           expect(props).toEqual(
             expect.objectContaining({
+              position: positionAfterSecondMove,
+              selectionSquares: [],
               lastMoveSquares: ["e7", "e5"],
             })
           );
-        });*/
+        });
       });
 
       it("props.children({width})", () => {
