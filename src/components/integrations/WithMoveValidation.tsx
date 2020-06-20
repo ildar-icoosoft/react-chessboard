@@ -12,7 +12,7 @@ import {
 } from "../../utils/chess";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
-import Chess2, { ChessInstance, Move, Square } from "chess.js";
+import { Chess, ChessInstance, Move, Square } from "chess.js";
 
 export interface WithMoveValidationCallbackProps {
   allowDrag: (pieceCode: PieceCode, coordinates: string) => boolean;
@@ -64,7 +64,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   useEffect(() => {
-    setGame(new Chess2(initialFen));
+    setGame(new Chess(initialFen));
   }, []);
 
   return children({

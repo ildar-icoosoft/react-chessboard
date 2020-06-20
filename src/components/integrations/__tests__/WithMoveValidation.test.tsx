@@ -13,7 +13,7 @@ import {
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
 
-export const initialFen: string = "4k3/8/8/8/8/8/4PP2/4K3";
+export const initialFen: string = "4k3/8/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
@@ -201,7 +201,6 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
@@ -235,7 +234,6 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: ["e2"],
@@ -253,7 +251,6 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: [],
@@ -267,7 +264,6 @@ describe("WithMoveValidation", () => {
           const cancelMove = jest.fn();
 
           let props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
@@ -285,7 +281,6 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
@@ -314,7 +309,6 @@ describe("WithMoveValidation", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
@@ -329,7 +323,6 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
@@ -344,7 +337,6 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
-
           expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
