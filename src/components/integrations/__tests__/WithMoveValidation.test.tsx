@@ -147,7 +147,7 @@ describe("WithMoveValidation", () => {
       });
 
       describe("Move by drag and drop", () => {
-        it("call props.children({onDragStart}) affects selectionSquares, destinationSquares", () => {
+        it("call props.children({onDragStart})", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -179,7 +179,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
+        it("call props.children({onDrop}) e2-e4", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -209,7 +209,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares, destinationSquares", () => {
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -259,7 +259,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("call props.children({onDrop}) e2-e2 affects position, lastMoveSquares and cancelMove() must be called", () => {
+        it("call props.children({onDrop}) e2-e2", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
           const cancelMove = jest.fn();
 
@@ -304,8 +304,8 @@ describe("WithMoveValidation", () => {
         );
       });
 
-      describe("Move by click", () => {
-        it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, destinationSquares, lastMoveSquares", () => {
+      describe("Click-click move", () => {
+        it("props.children({onSquareClick}) e2-e4", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -347,7 +347,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares, destinationSquares", () => {
+        it("props.children({onSquareClick}) e4-e2 (e4 is empty square)", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
