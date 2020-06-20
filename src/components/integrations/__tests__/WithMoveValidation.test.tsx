@@ -437,6 +437,11 @@ describe("WithMoveValidation", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
@@ -468,6 +473,50 @@ describe("WithMoveValidation", () => {
               position: initialPosition,
               selectionSquares: ["e2"],
               destinationSquares: ["e3", "e4"],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e2-e7 (source - valid, target - invalid)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
             })
           );
         });

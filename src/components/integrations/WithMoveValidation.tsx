@@ -49,6 +49,23 @@ const isTurnToMove = (pieceCode: PieceCode, game: ChessInstance): boolean => {
   );
 };
 
+const canSelectSquare = (
+  coordinates: string,
+  position: Position,
+  game: ChessInstance
+): boolean => {
+  return position[coordinates] && isTurnToMove(position[coordinates], game);
+};
+
+const getDestinationSquares = (
+  game: ChessInstance,
+  coordinates: string
+): string[] => {
+  return game
+    .moves({ square: coordinates, verbose: true })
+    .map((item) => item.to);
+};
+
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialFen = INITIAL_BOARD_FEN,
@@ -106,25 +123,17 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       if (selectionSquares.length) {
         // second click
 
+        // double click on the same square
         if (selectionSquares[0] === coordinates) {
           setSelectionSquares([]);
           setDestinationSquares([]);
           return;
         }
 
-        if (
-          position[coordinates] &&
-          isTurnToMove(position[coordinates], game!)
-        ) {
-          // first click on another piece
-
+        // click on another piece with the same color
+        if (canSelectSquare(coordinates, position, game!)) {
           setSelectionSquares([coordinates]);
-
-          const dests = game!
-            .moves({ square: coordinates, verbose: true })
-            .map((item) => item.to);
-          setDestinationSquares(dests);
-
+          setDestinationSquares(getDestinationSquares(game!, coordinates));
           return;
         }
 
@@ -134,6 +143,8 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         });
         if (!move) {
           // invalid move
+          setSelectionSquares([]);
+          setDestinationSquares([]);
           return;
         }
 
@@ -150,21 +161,12 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         setSelectionSquares([]);
         setDestinationSquares([]);
       } else {
-        if (
-          !position[coordinates] ||
-          !isTurnToMove(position[coordinates], game!)
-        ) {
-          // ignore first click on empty square or if it is not turn to move
-          return;
-        }
-
         // first click
-        setSelectionSquares([coordinates]);
 
-        const dests = game!
-          .moves({ square: coordinates, verbose: true })
-          .map((item) => item.to);
-        setDestinationSquares(dests);
+        if (canSelectSquare(coordinates, position, game!)) {
+          setSelectionSquares([coordinates]);
+          setDestinationSquares(getDestinationSquares(game!, coordinates));
+        }
       }
     },
     onResize(width: number) {
