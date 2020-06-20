@@ -93,11 +93,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     draggable: true,
     onDragStart(event: PieceDragStartEvent) {
       setSelectionSquares([event.coordinates]);
-
-      const dests = game!
-        .moves({ square: event.coordinates, verbose: true })
-        .map((item) => item.to);
-      setDestinationSquares(dests);
+      setDestinationSquares(getDestinationSquares(game!, event.coordinates));
     },
     onDrop(event) {
       const move: Move | null = game!.move({
