@@ -104,7 +104,29 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     },
     onSquareClick(coordinates: string) {
       if (selectionSquares.length) {
-        // second click. change position, set lastMoveSquares and clear selectionSquares
+        // second click
+
+        if (selectionSquares[0] === coordinates) {
+          setSelectionSquares([]);
+          setDestinationSquares([]);
+          return;
+        }
+
+        if (
+          position[coordinates] &&
+          isTurnToMove(position[coordinates], game!)
+        ) {
+          // first click on another piece
+
+          setSelectionSquares([coordinates]);
+
+          const dests = game!
+            .moves({ square: coordinates, verbose: true })
+            .map((item) => item.to);
+          setDestinationSquares(dests);
+
+          return;
+        }
 
         const move: Move | null = game!.move({
           from: selectionSquares[0] as Square,
@@ -136,7 +158,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
           return;
         }
 
-        // first click. set selectionSquares, destinationSquares
+        // first click
         setSelectionSquares([coordinates]);
 
         const dests = game!
