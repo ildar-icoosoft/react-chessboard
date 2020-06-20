@@ -156,7 +156,7 @@ describe("WithMoveValidation", () => {
         );
       });
 
-      describe("Move by drag and drop", () => {
+      describe("Drag and Drop Move", () => {
         it("call props.children({onDragStart})", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
@@ -223,14 +223,6 @@ describe("WithMoveValidation", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              selectionSquares: [],
-              destinationSquares: [],
-            })
-          );
-
           TestRenderer.act(() => {
             jest.runAllTimers();
             props = getProps();
@@ -269,15 +261,28 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("call props.children({onDrop}) e2-e2", () => {
+        it("call props.children({onDragStart}) and  props.children({onDrop}) e2-e2", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
           const cancelMove = jest.fn();
 
           let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          props = getProps();
           expect(props).toEqual(
             expect.objectContaining({
-              position: initialPosition,
-              lastMoveSquares: [],
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
             })
           );
 
@@ -294,6 +299,8 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
               lastMoveSquares: [],
             })
           );
