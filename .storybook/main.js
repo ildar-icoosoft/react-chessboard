@@ -11,6 +11,13 @@ module.exports = {
   webpackFinal: async (config) => {
     config.module.rules.push(
       {
+        // https://stackoverflow.com/questions/29302742/is-there-a-way-to-disable-amdplugin
+        test: /chess.js/,
+        parser: {
+          amd: false,
+        },
+      },
+      {
         test: /\.(ts|tsx)$/,
         use: [
           {
