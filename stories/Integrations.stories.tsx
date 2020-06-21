@@ -19,6 +19,7 @@ export const WithMoveValidationStory = () => (
       onResize,
       selectionSquares,
       destinationSquares,
+      occupationSquares,
       lastMoveSquares,
       width,
     }) => (
@@ -34,6 +35,7 @@ export const WithMoveValidationStory = () => (
         transitionDuration={10000}
         selectionSquares={selectionSquares}
         destinationSquares={destinationSquares}
+        occupationSquares={occupationSquares}
         lastMoveSquares={lastMoveSquares}
         width={width}
       />

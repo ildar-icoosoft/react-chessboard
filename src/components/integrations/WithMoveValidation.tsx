@@ -24,6 +24,7 @@ export interface WithMoveValidationCallbackProps {
   selectionSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
+  occupationSquares: string[];
 
   onDragStart(event: PieceDragStartEvent): void;
 
@@ -59,8 +60,7 @@ const canSelectSquare = (
   return (
     position[coordinates] &&
     isTurnToMove(position[coordinates], game) &&
-    !game.in_checkmate() &&
-    !game.in_draw()
+    !game.game_over()
   );
 };
 
@@ -86,6 +86,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     game,
     position,
     selectionSquares,
+    occupationSquares,
     destinationSquares,
     lastMoveSquares,
     width,
@@ -100,11 +101,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
   return children({
     allowDrag(pieceCode) {
-      return (
-        isTurnToMove(pieceCode, game!) &&
-        !game!.in_checkmate() &&
-        !game!.in_draw()
-      );
+      return isTurnToMove(pieceCode, game!) && !game!.game_over();
     },
     position,
     width,
@@ -209,5 +206,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     selectionSquares,
     destinationSquares,
     lastMoveSquares,
+    occupationSquares,
   });
 };

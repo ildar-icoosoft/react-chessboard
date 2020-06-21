@@ -18,6 +18,7 @@ export interface WithMoveValidationState {
   game: ChessInstance | null;
   position: Position;
   selectionSquares: string[];
+  occupationSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
   width: number;
@@ -37,6 +38,7 @@ export const getWithMoveValidationInitialState = (
     width,
     position: convertFenToPositionObject(initialFen),
     selectionSquares: [],
+    occupationSquares: [],
     destinationSquares: [],
     lastMoveSquares: [],
   };
@@ -67,6 +69,7 @@ const move = (
     position: newPosition,
     selectionSquares: [],
     destinationSquares: [],
+    occupationSquares: [],
     lastMoveSquares: [payload.from, payload.to],
   };
 };
@@ -79,6 +82,9 @@ const selectSquare = (
     ...state,
     selectionSquares: [payload.selectionSquare],
     destinationSquares: payload.destinationSquares,
+    occupationSquares: payload.destinationSquares.filter(
+      (item) => state.position[item]
+    ),
   };
 };
 
@@ -89,6 +95,7 @@ const clearSelection = (
     ...state,
     selectionSquares: [],
     destinationSquares: [],
+    occupationSquares: [],
   };
 };
 
