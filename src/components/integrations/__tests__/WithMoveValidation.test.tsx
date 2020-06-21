@@ -17,6 +17,8 @@ const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
 
 const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";
 const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
+const staleMateFen: string = "4k3/8/3RKR2/8/8/8/8/8 b - - 0 1";
+const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 50 50";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
@@ -620,10 +622,58 @@ describe("WithMoveValidation", () => {
       });
 
       describe("ignore square clicks and drag if draw", () => {
-        it("insufficientMaterialFen", () => {
+        it("insufficientMaterial", () => {
           const { getProps } = renderWithMoveValidation(
             insufficientMaterialFen
           );
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("e8");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+        });
+
+        it("staleMate", () => {
+          const { getProps } = renderWithMoveValidation(staleMateFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("e8");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+        });
+
+        it("drawBy50MoveRule", () => {
+          const { getProps } = renderWithMoveValidation(drawBy50MoveRuleFen);
 
           let props = getProps();
           TestRenderer.act(() => {
