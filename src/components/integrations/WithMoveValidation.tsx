@@ -56,7 +56,12 @@ const canSelectSquare = (
   position: Position,
   game: ChessInstance
 ): boolean => {
-  return position[coordinates] && isTurnToMove(position[coordinates], game);
+  return (
+    position[coordinates] &&
+    isTurnToMove(position[coordinates], game) &&
+    !game.in_checkmate() &&
+    !game.in_draw()
+  );
 };
 
 const getDestinationSquares = (
@@ -95,7 +100,11 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
   return children({
     allowDrag(pieceCode) {
-      return isTurnToMove(pieceCode, game!);
+      return (
+        isTurnToMove(pieceCode, game!) &&
+        !game!.in_checkmate() &&
+        !game!.in_draw()
+      );
     },
     position,
     width,

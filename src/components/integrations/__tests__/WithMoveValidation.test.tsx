@@ -13,7 +13,12 @@ import {
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
 
-export const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
+const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
+
+const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";
+const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
+const staleMateFen: string = "4k3/8/3RKR2/8/8/8/8/8 b - - 0 1";
+const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/4P3/8 b - - 100 100";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
@@ -360,13 +365,6 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
-
           // e2 contains white pawn. We must set selection to e2
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -402,15 +400,6 @@ describe("WithMoveValidation", () => {
             jest.runAllTimers();
             props = getProps();
           });
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              destinationSquares: [],
-              lastMoveSquares: [],
-            })
-          );
 
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -450,14 +439,6 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              destinationSquares: [],
-            })
-          );
-
           TestRenderer.act(() => {
             props.onSquareClick("e4");
           });
@@ -493,14 +474,6 @@ describe("WithMoveValidation", () => {
             jest.runAllTimers();
             props = getProps();
           });
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              destinationSquares: [],
-            })
-          );
 
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -538,13 +511,6 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
-
           TestRenderer.act(() => {
             props.onSquareClick("e7");
           });
@@ -578,13 +544,6 @@ describe("WithMoveValidation", () => {
             jest.runAllTimers();
             props = getProps();
           });
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
 
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -635,6 +594,143 @@ describe("WithMoveValidation", () => {
               lastMoveSquares: ["e7", "e5"],
             })
           );
+        });
+      });
+
+      it("ignore square clicks and drag if checkmate", () => {
+        const { getProps } = renderWithMoveValidation(checkmateFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        // must ignore this click because of checkmate
+        TestRenderer.act(() => {
+          props.onSquareClick("e8");
+        });
+
+        props = getProps();
+        expect(props).toEqual(
+          expect.objectContaining({
+            selectionSquares: [],
+          })
+        );
+
+        expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+      });
+
+      describe("ignore square clicks and drag if draw", () => {
+        it("insufficientMaterial", () => {
+          const { getProps } = renderWithMoveValidation(
+            insufficientMaterialFen
+          );
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("e8");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+        });
+
+        it("staleMate", () => {
+          const { getProps } = renderWithMoveValidation(staleMateFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("e8");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+        });
+
+        it("drawBy50MoveRule", () => {
+          const { getProps } = renderWithMoveValidation(drawBy50MoveRuleFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("e8");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+        });
+
+        it("drawByThreefoldRepetition", () => {
+          const { getProps } = renderWithMoveValidation(INITIAL_BOARD_FEN);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // prettier-ignore
+          [
+            "g1", "f3", "b8", "c6",
+            "f3", "g1", "c6", "b8", // twofold repetition
+            "g1", "f3", "b8", "c6",
+            "f3", "g1", "c6", "b8", // threefold repetition
+          ].forEach((item) => {
+            TestRenderer.act(() => {
+              props.onSquareClick(item);
+            });
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("g1");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.WHITE_KNIGHT, "g1")).toBeFalsy();
         });
       });
 
