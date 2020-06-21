@@ -37,8 +37,12 @@ export const HighlightedSquare: FC<CoordsProps> = ({
       data-testid={"highlighted-square"}
       className={classNames(css.highlightedSquare, {
         [css.selected]: types.includes(HighlightedSquareType.SELECTION),
-        [css.dest]: types.includes(HighlightedSquareType.DESTINATION),
-        [css.oc]: types.includes(HighlightedSquareType.OCCUPATION),
+        [css.dest]:
+          types.includes(HighlightedSquareType.DESTINATION) &&
+          !types.includes(HighlightedSquareType.CHECK),
+        [css.oc]:
+          types.includes(HighlightedSquareType.OCCUPATION) &&
+          !types.includes(HighlightedSquareType.CHECK),
         [css.lastMove]: types.includes(HighlightedSquareType.LAST_MOVE),
         [css.check]: types.includes(HighlightedSquareType.CHECK),
         [css.currentPremove]: types.includes(
