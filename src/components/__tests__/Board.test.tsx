@@ -312,6 +312,21 @@ describe("Board", () => {
         expect(coordinateGrid.props.currentPremoveSquares).toEqual(["a1"]);
       });
 
+      it("checkSquares", () => {
+        const testRenderer = TestRenderer.create(<Board />);
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.checkSquares).toBeUndefined();
+
+        testRenderer.update(<Board checkSquares={["a1"]} />);
+
+        expect(coordinateGrid.props.checkSquares).toEqual(["a1"]);
+      });
+
       describe("onRightClick", () => {
         it("Right Click event must be prevented", () => {
           const testRenderer = TestRenderer.create(<Board />);

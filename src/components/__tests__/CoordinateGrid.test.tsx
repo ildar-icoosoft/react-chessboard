@@ -97,10 +97,11 @@ describe("CoordinateGrid", () => {
           destinationSquares={["a1", "b2"]}
           lastMoveSquares={["c3", "d4"]}
           currentPremoveSquares={["e5"]}
+          checkSquares={["f5"]}
         />
       );
 
-      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(7); // a1, b1, a2, b2, c3, d4, e5
+      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(8); // a1, b1, a2, b2, c3, d4, e5, f5
 
       testRenderer.update(
         <CoordinateGridWithDnd
@@ -794,6 +795,7 @@ describe("CoordinateGrid", () => {
             destinationSquares={["a1", "b2"]}
             lastMoveSquares={["c3", "b1"]}
             currentPremoveSquares={["a1"]}
+            checkSquares={["b1"]}
           />
         );
 
@@ -827,6 +829,7 @@ describe("CoordinateGrid", () => {
           expect.arrayContaining([
             HighlightedSquareType.SELECTION,
             HighlightedSquareType.LAST_MOVE,
+            HighlightedSquareType.CHECK,
           ])
         );
 

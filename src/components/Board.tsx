@@ -44,6 +44,7 @@ export interface BoardProps {
   destinationSquares?: string[];
   lastMoveSquares?: string[];
   currentPremoveSquares?: string[];
+  checkSquares?: string[];
 
   onSquareClick?(coordinates: string): void;
 
@@ -73,6 +74,7 @@ export const Board: FC<BoardProps> = ({
   destinationSquares,
   lastMoveSquares,
   currentPremoveSquares,
+  checkSquares,
   onSquareClick,
   onDragStart,
   onDragEnd,
@@ -145,6 +147,7 @@ export const Board: FC<BoardProps> = ({
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
             currentPremoveSquares={currentPremoveSquares}
+            checkSquares={checkSquares}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}
             onDrop={onDrop}

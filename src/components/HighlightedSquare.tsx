@@ -9,6 +9,7 @@ export enum HighlightedSquareType {
   OCCUPATION = "selected",
   LAST_MOVE = "lastMove",
   CURRENT_PREMOVE = "currentPremove",
+  CHECK = "check",
 }
 
 export interface CoordsProps {
@@ -39,6 +40,7 @@ export const HighlightedSquare: FC<CoordsProps> = ({
         [css.dest]: types.includes(HighlightedSquareType.DESTINATION),
         [css.oc]: types.includes(HighlightedSquareType.OCCUPATION),
         [css.lastMove]: types.includes(HighlightedSquareType.LAST_MOVE),
+        [css.check]: types.includes(HighlightedSquareType.CHECK),
         [css.currentPremove]: types.includes(
           HighlightedSquareType.CURRENT_PREMOVE
         ),
