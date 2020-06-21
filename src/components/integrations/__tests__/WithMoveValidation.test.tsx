@@ -13,7 +13,9 @@ import {
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
 
-export const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
+const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
+
+const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
@@ -360,13 +362,6 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
-
           // e2 contains white pawn. We must set selection to e2
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -402,15 +397,6 @@ describe("WithMoveValidation", () => {
             jest.runAllTimers();
             props = getProps();
           });
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              destinationSquares: [],
-              lastMoveSquares: [],
-            })
-          );
 
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -450,14 +436,6 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              destinationSquares: [],
-            })
-          );
-
           TestRenderer.act(() => {
             props.onSquareClick("e4");
           });
@@ -493,14 +471,6 @@ describe("WithMoveValidation", () => {
             jest.runAllTimers();
             props = getProps();
           });
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              destinationSquares: [],
-            })
-          );
 
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -538,13 +508,6 @@ describe("WithMoveValidation", () => {
             props = getProps();
           });
 
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
-
           TestRenderer.act(() => {
             props.onSquareClick("e7");
           });
@@ -578,13 +541,6 @@ describe("WithMoveValidation", () => {
             jest.runAllTimers();
             props = getProps();
           });
-
-          expect(props).toEqual(
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-            })
-          );
 
           TestRenderer.act(() => {
             props.onSquareClick("e2");
@@ -636,6 +592,30 @@ describe("WithMoveValidation", () => {
             })
           );
         });
+      });
+
+      it("ignore square clicks and drag if checkmate", () => {
+        const { getProps } = renderWithMoveValidation(checkmateFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        // must ignore this click because of checkmate
+        TestRenderer.act(() => {
+          props.onSquareClick("e8");
+        });
+
+        props = getProps();
+        expect(props).toEqual(
+          expect.objectContaining({
+            selectionSquares: [],
+          })
+        );
+
+        expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
       });
 
       it("props.children({width})", () => {
