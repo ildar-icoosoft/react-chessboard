@@ -57,6 +57,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-test-renderer": "^16.9.2",
     "@types/react-transition-group": "^4.4.0",
+    "@types/redux-actions": "^2.6.1",
     "babel-loader": "^8.1.0",
     "husky": "^4.2.5",
     "jest-css-modules": "^2.1.0",
@@ -86,6 +87,7 @@
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-draggable": "^4.4.3",
-    "react-transition-group": "^4.4.1"
+    "react-transition-group": "^4.4.1",
+    "redux-actions": "^2.6.5"
   }
 }
