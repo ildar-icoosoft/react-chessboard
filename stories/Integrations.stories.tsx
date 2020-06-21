@@ -20,6 +20,7 @@ export const WithMoveValidationStory = () => (
       selectionSquares,
       destinationSquares,
       occupationSquares,
+      checkSquares,
       lastMoveSquares,
       width,
     }) => (
@@ -36,6 +37,7 @@ export const WithMoveValidationStory = () => (
         selectionSquares={selectionSquares}
         destinationSquares={destinationSquares}
         occupationSquares={occupationSquares}
+        checkSquares={checkSquares}
         lastMoveSquares={lastMoveSquares}
         width={width}
       />

@@ -13,7 +13,7 @@ import {
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
 
-const initialFen: string = "4k3/4p3/8/8/8/3p4/4PP2/4K3 w KQkq - 0 1";
+const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
 const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";
 const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
@@ -24,7 +24,7 @@ const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
   e1: PieceCode.WHITE_KING,
-  e8: PieceCode.BLACK_KING,
+  f5: PieceCode.BLACK_KING,
   e7: PieceCode.BLACK_PAWN,
   d3: PieceCode.BLACK_PAWN,
 };
@@ -34,7 +34,7 @@ const positionAfterFirstMove: Position = {
   e4: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
   e1: PieceCode.WHITE_KING,
-  e8: PieceCode.BLACK_KING,
+  f5: PieceCode.BLACK_KING,
   e7: PieceCode.BLACK_PAWN,
   d3: PieceCode.BLACK_PAWN,
 };
@@ -155,8 +155,45 @@ describe("WithMoveValidation", () => {
         );
       });
 
+      it("props.children({selectionSquares, destinationSquares, occupationSquares, checkSquares, lastMoveSquares}) default values", () => {
+        const { getProps } = renderWithMoveValidation(initialFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            position: initialPosition,
+            selectionSquares: [],
+            destinationSquares: [],
+            occupationSquares: [],
+            checkSquares: [],
+            lastMoveSquares: [],
+          })
+        );
+      });
+
+      it("props.children({checkSquares}) if position contains check", () => {
+        const { getProps } = renderWithMoveValidation(checkmateFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            checkSquares: ["e8"],
+          })
+        );
+      });
+
       describe("Drag and Drop Move", () => {
-        describe("drag start", () => {
+        it("drag start", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -426,6 +463,7 @@ describe("WithMoveValidation", () => {
                 occupationSquares: [],
                 destinationSquares: [],
                 lastMoveSquares: ["e2", "e4"],
+                checkSquares: ["f5"],
               })
             );
 

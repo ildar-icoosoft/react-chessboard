@@ -22,6 +22,7 @@ export interface WithMoveValidationCallbackProps {
   draggable: boolean;
   width: number;
   selectionSquares: string[];
+  checkSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
   occupationSquares: string[];
@@ -89,6 +90,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     occupationSquares,
     destinationSquares,
     lastMoveSquares,
+    checkSquares,
     width,
   } = state;
 
@@ -207,5 +209,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     destinationSquares,
     lastMoveSquares,
     occupationSquares,
+    checkSquares,
   });
 };
