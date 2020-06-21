@@ -77,7 +77,7 @@ export const BoardWithHighlightedSquares = () => (
       e4: PieceCode.WHITE_PAWN,
       d7: PieceCode.BLACK_PAWN,
       g7: PieceCode.BLACK_PAWN,
-      e8: PieceCode.BLACK_KING,
+      h5: PieceCode.BLACK_KING,
     }}
     draggable={true}
     selectionSquares={["g4"]}
@@ -100,8 +100,9 @@ export const BoardWithHighlightedSquares = () => (
       "d1",
     ]}
     lastMoveSquares={["b1", "c3"]}
-    occupationSquares={["g7", "d7"]}
+    occupationSquares={["g7", "d7", "h5"]}
     currentPremoveSquares={["e4", "e5"]}
+    checkSquares={["h5"]}
   />
 );
 
