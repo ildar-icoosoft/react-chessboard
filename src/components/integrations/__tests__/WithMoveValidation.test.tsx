@@ -695,6 +695,43 @@ describe("WithMoveValidation", () => {
 
           expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
+
+        it("drawByThreefoldRepetition", () => {
+          const { getProps } = renderWithMoveValidation(INITIAL_BOARD_FEN);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          // prettier-ignore
+          [
+            "g1", "f3", "b8", "c6",
+            "f3", "g1", "c6", "b8", // twofold repetition
+            "g1", "f3", "b8", "c6",
+            "f3", "g1", "c6", "b8", // threefold repetition
+          ].forEach((item) => {
+            TestRenderer.act(() => {
+              props.onSquareClick(item);
+            });
+            props = getProps();
+          });
+
+          // must ignore this click because of draw
+          TestRenderer.act(() => {
+            props.onSquareClick("g1");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
+          expect(props.allowDrag(PieceCode.WHITE_KNIGHT, "g1")).toBeFalsy();
+        });
       });
 
       it("props.children({width})", () => {
