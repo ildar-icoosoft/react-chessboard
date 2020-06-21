@@ -1,4 +1,4 @@
-import { FC, ReactElement, useEffect, useReducer, useState } from "react";
+import { FC, ReactElement, useEffect, useReducer } from "react";
 import { Position } from "../../interfaces/Position";
 import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
@@ -74,7 +74,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 }) => {
   const [state, dispatch] = useReducer(
     withMoveValidationReducer,
-    getWithMoveValidationInitialState(initialFen)
+    getWithMoveValidationInitialState(initialFen, DEFAULT_BOARD_WIDTH)
   );
 
   const {
@@ -83,9 +83,8 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     selectionSquares,
     destinationSquares,
     lastMoveSquares,
+    width,
   } = state;
-
-  const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   useEffect(() => {
     dispatch({
@@ -193,7 +192,10 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       }
     },
     onResize(width: number) {
-      setWidth(width);
+      dispatch({
+        type: WithMoveValidationAction.RESIZE,
+        payload: width,
+      });
     },
     selectionSquares,
     destinationSquares,
