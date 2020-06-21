@@ -6,17 +6,14 @@ import {
   DEFAULT_BOARD_WIDTH,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
-import {
-  convertFenToPositionObject,
-  getColorFromPieceCode,
-} from "../../utils/chess";
+import { getColorFromPieceCode } from "../../utils/chess";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
 import { Chess, ChessInstance, Move, Square } from "chess.js";
 import {
   withMoveValidationReducer,
-  withMoveValidationInitialState,
   WithMoveValidationAction,
+  getWithMoveValidationInitialState,
 } from "./WithMoveValidation.reducer";
 
 export interface WithMoveValidationCallbackProps {
@@ -75,20 +72,19 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialFen = INITIAL_BOARD_FEN,
 }) => {
-  const [position, setPosition] = useState<Position>(
-    convertFenToPositionObject(initialFen)
-  );
-
   const [state, dispatch] = useReducer(
     withMoveValidationReducer,
-    withMoveValidationInitialState
+    getWithMoveValidationInitialState(initialFen)
   );
 
-  const { game } = state;
+  const {
+    game,
+    position,
+    selectionSquares,
+    destinationSquares,
+    lastMoveSquares,
+  } = state;
 
-  const [selectionSquares, setSelectionSquares] = useState<string[]>([]);
-  const [destinationSquares, setDestinationSquares] = useState<string[]>([]);
-  const [lastMoveSquares, setLastMoveSquares] = useState<string[]>([]);
   const [width, setWidth] = useState<number>(DEFAULT_BOARD_WIDTH);
 
   useEffect(() => {
@@ -106,8 +102,13 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     width,
     draggable: true,
     onDragStart(event: PieceDragStartEvent) {
-      setSelectionSquares([event.coordinates]);
-      setDestinationSquares(getDestinationSquares(game!, event.coordinates));
+      dispatch({
+        type: WithMoveValidationAction.SELECT_SQUARE,
+        payload: {
+          selectionSquare: event.coordinates,
+          destinationSquares: getDestinationSquares(game!, event.coordinates),
+        },
+      });
     },
     onDrop(event) {
       const move: Move | null = game!.move({
@@ -118,25 +119,19 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         // invalid move
         event.cancelMove();
 
-        setSelectionSquares([]);
-        setDestinationSquares([]);
+        dispatch({
+          type: WithMoveValidationAction.CLEAR_SELECTION,
+          payload: null,
+        });
         return;
       }
 
-      setLastMoveSquares([event.sourceCoordinates, event.targetCoordinates]);
-
-      setSelectionSquares([]);
-      setDestinationSquares([]);
-
-      setPosition((prevPosition) => {
-        const newPosition: Position = {
-          ...prevPosition,
-        };
-        delete newPosition[event.sourceCoordinates];
-
-        newPosition[event.targetCoordinates] = event.pieceCode;
-
-        return newPosition;
+      dispatch({
+        type: WithMoveValidationAction.MOVE,
+        payload: {
+          from: event.sourceCoordinates,
+          to: event.targetCoordinates,
+        },
       });
     },
     onSquareClick(coordinates: string) {
@@ -145,15 +140,22 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
         // double click on the same square
         if (selectionSquares[0] === coordinates) {
-          setSelectionSquares([]);
-          setDestinationSquares([]);
+          dispatch({
+            type: WithMoveValidationAction.CLEAR_SELECTION,
+            payload: null,
+          });
           return;
         }
 
         // click on another piece with the same color
         if (canSelectSquare(coordinates, position, game!)) {
-          setSelectionSquares([coordinates]);
-          setDestinationSquares(getDestinationSquares(game!, coordinates));
+          dispatch({
+            type: WithMoveValidationAction.SELECT_SQUARE,
+            payload: {
+              selectionSquare: coordinates,
+              destinationSquares: getDestinationSquares(game!, coordinates),
+            },
+          });
           return;
         }
 
@@ -163,29 +165,30 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         });
         if (!move) {
           // invalid move
-          setSelectionSquares([]);
-          setDestinationSquares([]);
+          dispatch({
+            type: WithMoveValidationAction.CLEAR_SELECTION,
+            payload: null,
+          });
           return;
         }
 
-        const newPosition: Position = {
-          ...position,
-        };
-        delete newPosition[selectionSquares[0]];
-
-        newPosition[coordinates] = position[selectionSquares[0]];
-
-        setPosition(newPosition);
-        setLastMoveSquares([selectionSquares[0], coordinates]);
-
-        setSelectionSquares([]);
-        setDestinationSquares([]);
+        dispatch({
+          type: WithMoveValidationAction.MOVE,
+          payload: {
+            from: selectionSquares[0],
+            to: coordinates,
+          },
+        });
       } else {
         // first click
-
         if (canSelectSquare(coordinates, position, game!)) {
-          setSelectionSquares([coordinates]);
-          setDestinationSquares(getDestinationSquares(game!, coordinates));
+          dispatch({
+            type: WithMoveValidationAction.SELECT_SQUARE,
+            payload: {
+              selectionSquare: coordinates,
+              destinationSquares: getDestinationSquares(game!, coordinates),
+            },
+          });
         }
       }
     },
