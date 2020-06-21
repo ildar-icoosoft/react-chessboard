@@ -18,7 +18,7 @@ const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
 const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";
 const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
 const staleMateFen: string = "4k3/8/3RKR2/8/8/8/8/8 b - - 0 1";
-const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 50 50";
+const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/4P3/8 b - - 100 100";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
