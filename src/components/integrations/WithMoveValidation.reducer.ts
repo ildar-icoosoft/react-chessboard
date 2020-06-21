@@ -18,8 +18,10 @@ export interface WithMoveValidationState {
   game: ChessInstance | null;
   position: Position;
   selectionSquares: string[];
+  occupationSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
+  checkSquares: string[];
   width: number;
 }
 
@@ -37,9 +39,30 @@ export const getWithMoveValidationInitialState = (
     width,
     position: convertFenToPositionObject(initialFen),
     selectionSquares: [],
+    occupationSquares: [],
     destinationSquares: [],
     lastMoveSquares: [],
+    checkSquares: [],
   };
+};
+
+const getCheckSquares = (game: ChessInstance, position: Position): string[] => {
+  const checkSquares: string[] = [];
+
+  if (game.in_check()) {
+    const turnToMove: "b" | "w" = game.turn();
+
+    const kingPieceCode =
+      turnToMove === "b" ? PieceCode.BLACK_KING : PieceCode.WHITE_KING;
+
+    for (const coordinates in position) {
+      if (position[coordinates] === kingPieceCode) {
+        checkSquares.push(coordinates);
+      }
+    }
+  }
+
+  return checkSquares;
 };
 
 const setGame = (
@@ -48,6 +71,7 @@ const setGame = (
 ): WithMoveValidationState => {
   return {
     ...state,
+    checkSquares: getCheckSquares(payload, state.position),
     game: payload,
   };
 };
@@ -67,6 +91,8 @@ const move = (
     position: newPosition,
     selectionSquares: [],
     destinationSquares: [],
+    occupationSquares: [],
+    checkSquares: getCheckSquares(state.game!, newPosition),
     lastMoveSquares: [payload.from, payload.to],
   };
 };
@@ -79,6 +105,9 @@ const selectSquare = (
     ...state,
     selectionSquares: [payload.selectionSquare],
     destinationSquares: payload.destinationSquares,
+    occupationSquares: payload.destinationSquares.filter(
+      (item) => state.position[item]
+    ),
   };
 };
 
@@ -89,6 +118,7 @@ const clearSelection = (
     ...state,
     selectionSquares: [],
     destinationSquares: [],
+    occupationSquares: [],
   };
 };
 
