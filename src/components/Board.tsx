@@ -21,10 +21,15 @@ import {
 } from "./CoordinateGrid";
 import { without as _without } from "lodash";
 import { Resizer } from "./Resizer";
+import {
+  convertFenToPositionObject,
+  isValidFen,
+  isValidPositionObject,
+} from "../utils/chess";
 
 export interface BoardProps {
   allowMarkers?: boolean;
-  position?: Position;
+  position?: Position | string;
   orientation?: PieceColor;
   draggable?: boolean;
   transitionDuration?: number;
@@ -43,6 +48,8 @@ export interface BoardProps {
   onSquareClick?(coordinates: string): void;
 
   onDragStart?(event: PieceDragStartEvent): void;
+
+  onDragEnd?(): void;
 
   onDrop?(event: PieceDropEvent): void;
 
@@ -68,9 +75,18 @@ export const Board: FC<BoardProps> = ({
   currentPremoveSquares,
   onSquareClick,
   onDragStart,
+  onDragEnd,
   onDrop,
   onResize,
 }) => {
+  let positionObject: Position = {};
+  if (isValidFen(position)) {
+    positionObject = convertFenToPositionObject(position as string);
+  }
+  if (isValidPositionObject(position)) {
+    positionObject = position as Position;
+  }
+
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
   const handleSquareClick = (coordinates: string): void => {
@@ -122,7 +138,7 @@ export const Board: FC<BoardProps> = ({
             draggable={draggable}
             allowDrag={allowDrag}
             orientation={orientation}
-            position={position}
+            position={positionObject}
             width={width}
             selectionSquares={selectionSquares}
             occupationSquares={occupationSquares}
@@ -133,6 +149,7 @@ export const Board: FC<BoardProps> = ({
             onRightClick={handleSquareRightClick}
             onDrop={onDrop}
             onDragStart={handleDragStart}
+            onDragEnd={onDragEnd}
             transitionDuration={transitionDuration}
             roundMarkers={roundMarkers}
           />

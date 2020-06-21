@@ -11,6 +11,7 @@ import { Coords } from "../Coords";
 import { CoordinateGrid } from "../CoordinateGrid";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
+import { Position } from "../../interfaces/Position";
 jest.useFakeTimers();
 
 describe("Board", () => {
@@ -107,20 +108,70 @@ describe("Board", () => {
         expect(coordinateGrid.props.orientation).toBe(PieceColor.BLACK);
       });
 
-      it("position", () => {
-        const testRenderer = TestRenderer.create(<Board />);
-        const testInstance = testRenderer.root;
+      describe("position", () => {
+        it("position object", () => {
+          const testRenderer = TestRenderer.create(<Board />);
+          const testInstance = testRenderer.root;
 
-        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-          CoordinateGrid
-        );
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
 
-        expect(coordinateGrid.props.position).toEqual({});
+          expect(coordinateGrid.props.position).toEqual({});
 
-        testRenderer.update(<Board position={{ e2: PieceCode.WHITE_PAWN }} />);
+          testRenderer.update(
+            <Board position={{ e2: PieceCode.WHITE_PAWN }} />
+          );
 
-        expect(coordinateGrid.props.position).toEqual({
-          e2: PieceCode.WHITE_PAWN,
+          expect(coordinateGrid.props.position).toEqual({
+            e2: PieceCode.WHITE_PAWN,
+          });
+        });
+
+        it("fen to position object", () => {
+          const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
+
+          const testRenderer = TestRenderer.create(<Board position={fen} />);
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.position).toEqual({
+            e4: PieceCode.WHITE_KING,
+            e6: PieceCode.BLACK_KING,
+            e5: PieceCode.WHITE_PAWN,
+          });
+        });
+
+        it("if position is neither a valid FEN nor a valid Position Object", () => {
+          const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
+
+          const testRenderer = TestRenderer.create(
+            <Board position={invalidFen} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.position).toEqual({});
+
+          // @ts-ignore
+          testRenderer.update(<Board position={null} />);
+          expect(coordinateGrid.props.position).toEqual({});
+
+          const invalidPositionObject: Position = {
+            e4: PieceCode.WHITE_KING,
+            e6: PieceCode.BLACK_KING,
+            e5: PieceCode.WHITE_PAWN,
+            f9: PieceCode.WHITE_PAWN,
+          };
+
+          testRenderer.update(<Board position={invalidPositionObject} />);
+          expect(coordinateGrid.props.position).toEqual({});
         });
       });
 
@@ -549,6 +600,24 @@ describe("Board", () => {
       expect(onDragStart).toBeCalledTimes(1);
 
       expect(onDragStart).toBeCalledWith(dragStartEvent);
+    });
+
+    it("onDragEnd", () => {
+      const onDragEnd = jest.fn();
+
+      const testInstance = TestRenderer.create(<Board onDragEnd={onDragEnd} />)
+        .root;
+
+      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+        CoordinateGrid
+      );
+
+      TestRenderer.act(() => {
+        coordinateGrid.props.onDragEnd();
+      });
+
+      expect(onDragEnd).toBeCalledTimes(1);
+      expect(onDragEnd).toBeCalledWith();
     });
 
     it("onDrop", () => {

@@ -1,15 +1,16 @@
 import React from "react";
 import { Board } from "../src";
-import { startPosition } from "../src/constants/constants";
 import { WithMoveValidation } from "../src/components/integrations/WithMoveValidation";
+import { INITIAL_BOARD_FEN } from "../src/constants/constants";
 
 export default {
   title: "Integrations",
 };
 
 export const WithMoveValidationStory = () => (
-  <WithMoveValidation initialPosition={startPosition}>
+  <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
     {({
+      allowDrag,
       position,
       draggable,
       onDragStart,
@@ -17,10 +18,12 @@ export const WithMoveValidationStory = () => (
       onSquareClick,
       onResize,
       selectionSquares,
+      destinationSquares,
       lastMoveSquares,
       width,
     }) => (
       <Board
+        allowDrag={allowDrag}
         allowMarkers={true}
         position={position}
         draggable={draggable}
@@ -30,6 +33,7 @@ export const WithMoveValidationStory = () => (
         onResize={onResize}
         transitionDuration={10000}
         selectionSquares={selectionSquares}
+        destinationSquares={destinationSquares}
         lastMoveSquares={lastMoveSquares}
         width={width}
       />

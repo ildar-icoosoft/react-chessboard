@@ -11,6 +11,9 @@ import {
   getRankNameFromCoordinates,
   isLightSquare,
   getSquareAlgebraicCoordinates,
+  convertFenToPositionObject,
+  isValidFen,
+  isValidPositionObject,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -146,5 +149,50 @@ describe("Chess utils", () => {
     expect(
       getSquareAlgebraicCoordinates({ x: 150, y: 200 }, 480, PieceColor.WHITE)
     ).toBe("c5");
+  });
+
+  it("convertFenToPositionObject()", () => {
+    const fen: string = "8/8/4k3/4P3/4K3/8/8/8 w - -";
+    expect(convertFenToPositionObject(fen)).toEqual({
+      e4: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    });
+
+    const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
+    expect(() => convertFenToPositionObject(invalidFen)).toThrow();
+  });
+
+  it("isValidFen()", () => {
+    const fen = "8/8/4k3/4P3/4K3/8/8/8 w - -";
+    const invalidFen = "8/8/7/4k3/4P3/4K3/8/8/8 w - -";
+    const invalidFen2 = "-5/8/4k3/4P3/4K3/8/8/8 w - -";
+
+    expect(isValidFen(fen)).toBe(true);
+    expect(isValidFen(invalidFen)).toBe(false);
+    expect(isValidFen(invalidFen2)).toBe(false);
+  });
+
+  it("isValidPositionObject()", () => {
+    expect(
+      isValidPositionObject({
+        e4: PieceCode.WHITE_KING,
+        e6: PieceCode.BLACK_KING,
+        e5: PieceCode.WHITE_PAWN,
+      })
+    ).toBe(true);
+    expect(
+      isValidPositionObject({
+        e4: PieceCode.WHITE_KING,
+        e6: PieceCode.BLACK_KING,
+        e5: PieceCode.WHITE_PAWN,
+        f9: PieceCode.WHITE_PAWN,
+      })
+    ).toBe(false);
+
+    expect(
+      // @ts-ignore
+      isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP", e1: "bM" })
+    ).toBe(false);
   });
 });

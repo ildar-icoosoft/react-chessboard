@@ -1,21 +1,66 @@
 import TestRenderer from "react-test-renderer";
 import React from "react";
-import { WithMoveValidation } from "../WithMoveValidation";
+import {
+  WithMoveValidation,
+  WithMoveValidationCallbackProps,
+} from "../WithMoveValidation";
 import { Position } from "../../../interfaces/Position";
 import { PieceCode } from "../../../enums/PieceCode";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+import {
+  INITIAL_BOARD_FEN,
+  INITIAL_BOARD_POSITION,
+} from "../../../constants/constants";
+
+export const initialFen: string = "4k3/4p3/8/8/8/8/4PP2/4K3 w KQkq - 0 1";
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  e8: PieceCode.BLACK_KING,
+  e7: PieceCode.BLACK_PAWN,
 };
 
 // 1. e2-e4
 const positionAfterFirstMove: Position = {
   e4: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  e8: PieceCode.BLACK_KING,
+  e7: PieceCode.BLACK_PAWN,
 };
+
+const positionAfterSecondMove: Position = {
+  e4: PieceCode.WHITE_PAWN,
+  f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  e8: PieceCode.BLACK_KING,
+  e5: PieceCode.BLACK_PAWN,
+};
+
+const renderWithMoveValidation = (fen?: string) => {
+  let callbackProps: WithMoveValidationCallbackProps;
+
+  TestRenderer.create(
+    <WithMoveValidation initialFen={fen}>
+      {(props) => {
+        callbackProps = props;
+
+        return null;
+      }}
+    </WithMoveValidation>
+  );
+
+  return {
+    getProps() {
+      return callbackProps;
+    },
+  };
+};
+
+jest.useFakeTimers();
 
 describe("WithMoveValidation", () => {
   describe("callback props", () => {
@@ -32,41 +77,43 @@ describe("WithMoveValidation", () => {
           </WithMoveValidation>
         );
 
-        expect(childrenCallback).toBeCalledTimes(1);
+        expect(childrenCallback).toBeCalled();
+      });
+
+      it("props.children({allowDrag}) returns true if it's turn to move", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            allowDrag: expect.any(Function),
+          })
+        );
+
+        expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
+
+        expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
       });
 
       it("props.children({position}) if has not initialPosition prop", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
-            position: {},
+            position: INITIAL_BOARD_POSITION,
           })
         );
       });
 
       it("props.children({position}) if has initialPosition prop", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation(initialFen);
 
-        TestRenderer.create(
-          <WithMoveValidation initialPosition={initialPosition}>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             position: initialPosition,
           })
@@ -74,18 +121,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({draggable})", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             draggable: true,
           })
@@ -93,18 +133,11 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onDragStart}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             onDragStart: expect.any(Function),
           })
@@ -112,100 +145,77 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onDrop}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             onDrop: expect.any(Function),
           })
         );
       });
 
-      describe("Move by drag and drop", () => {
-        it("call props.children({onDragStart}) affects selectionSquares", () => {
-          const childrenCallback = jest.fn();
-          let isFirstCallbackCall: boolean = true;
+      describe("Drag and Drop Move", () => {
+        it("call props.children({onDragStart})", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
-
-                if (isFirstCallbackCall) {
-                  isFirstCallbackCall = false;
-
-                  props.onDragStart({
-                    coordinates: "e2",
-                    pieceCode: PieceCode.WHITE_PAWN,
-                  });
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(2);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
+          let props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: [],
+              destinationSquares: [],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
             })
           );
         });
 
-        it("call props.children({onDrop}) e2-e4 affects position and lastMoveSquares", () => {
-          const childrenCallback = jest.fn();
-          let isFirstCallbackCall: boolean = true;
+        it("call props.children({onDrop}) e2-e4", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
 
-                if (isFirstCallbackCall) {
-                  isFirstCallbackCall = false;
-
-                  props.onDrop({
-                    sourceCoordinates: "e2",
-                    targetCoordinates: "e4",
-                    pieceCode: PieceCode.WHITE_PAWN,
-                    cancelMove() {},
-                  });
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(2);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
               lastMoveSquares: [],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          TestRenderer.act(() => {
+            props.onDrop({
+              sourceCoordinates: "e2",
+              targetCoordinates: "e4",
+              pieceCode: PieceCode.WHITE_PAWN,
+              cancelMove() {},
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
               lastMoveSquares: ["e2", "e4"],
@@ -213,98 +223,136 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4 affects selectionSquares", () => {
-          const childrenCallback = jest.fn();
-          let callbackCounter: number = 0;
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e4", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
 
-                callbackCounter++;
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
 
-                if (callbackCounter === 1) {
-                  props.onDragStart({
-                    coordinates: "e2",
-                    pieceCode: PieceCode.WHITE_PAWN,
-                  });
-                }
-                if (callbackCounter === 2) {
-                  props.onDrop({
-                    sourceCoordinates: "e2",
-                    targetCoordinates: "e4",
-                    pieceCode: PieceCode.WHITE_PAWN,
-                    cancelMove() {},
-                  });
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(3);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
-            expect.objectContaining({
-              selectionSquares: [],
-            })
-          );
-          expect(childrenCallback).nthCalledWith(
-            2,
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            3,
+
+          TestRenderer.act(() => {
+            props.onDrop({
+              sourceCoordinates: "e2",
+              targetCoordinates: "e4",
+              pieceCode: PieceCode.WHITE_PAWN,
+              cancelMove() {},
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               selectionSquares: [],
+              destinationSquares: [],
+              lastMoveSquares: ["e2", "e4"],
             })
           );
         });
 
-        it("call props.children({onDrop}) e2-e2 affects position, lastMoveSquares and cancelMove() must be called", () => {
-          const childrenCallback = jest.fn();
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e2", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
           const cancelMove = jest.fn();
-          let isFirstCallbackCall: boolean = true;
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
 
-                if (isFirstCallbackCall) {
-                  isFirstCallbackCall = false;
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
 
-                  props.onDrop({
-                    sourceCoordinates: "e2",
-                    targetCoordinates: "e2",
-                    pieceCode: PieceCode.WHITE_PAWN,
-                    cancelMove,
-                  });
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
           );
 
-          expect(childrenCallback).toBeCalledTimes(2);
+          TestRenderer.act(() => {
+            props.onDrop({
+              sourceCoordinates: "e2",
+              targetCoordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+              cancelMove,
+            });
+          });
 
-          expect(childrenCallback).nthCalledWith(
-            1,
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
               lastMoveSquares: [],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          expect(cancelMove).toBeCalledTimes(1);
+        });
+
+        it("call props.children({onDragStart}) and props.children({onDrop}) e2-e5 (invalid move)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+          const cancelMove = jest.fn();
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onDrop({
+              sourceCoordinates: "e2",
+              targetCoordinates: "e5",
+              pieceCode: PieceCode.WHITE_PAWN,
+              cancelMove,
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
               lastMoveSquares: [],
             })
           );
@@ -314,130 +362,348 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onSquareClick}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
+        const props = getProps();
 
-        expect(childrenCallback).toBeCalledWith(
+        expect(props).toEqual(
           expect.objectContaining({
             onSquareClick: expect.any(Function),
           })
         );
       });
 
-      describe("Move by click", () => {
-        it("props.children({onSquareClick}) e2-e4 affects position, selectionSquares, lastMoveSquares", () => {
-          const childrenCallback = jest.fn();
-          let callbackCounter: number = 0;
+      describe("Click-click move", () => {
+        it("props.children({onSquareClick}) e2-e2", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
 
-                callbackCounter++;
+          // e2 contains white pawn. We must set selection to e2
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
 
-                if (callbackCounter === 1) {
-                  props.onSquareClick("e2");
-                }
-                if (callbackCounter === 2) {
-                  props.onSquareClick("e4");
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(3);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
-            expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
-              lastMoveSquares: [],
-            })
-          );
-          expect(childrenCallback).nthCalledWith(
-            2,
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
               selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
+          );
+
+          // e2 again. We must clear selection
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e2-f2", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+
+          // e2 contains white pawn. We must set selection to e2
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+            })
+          );
+
+          // f2 contains white pawn. So we must change selection to f2
+          TestRenderer.act(() => {
+            props.onSquareClick("f2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["f2"],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e2-e4", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
               lastMoveSquares: [],
             })
           );
 
-          expect(childrenCallback).nthCalledWith(
-            3,
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+              lastMoveSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: positionAfterFirstMove,
+              selectionSquares: [],
+              destinationSquares: [],
+              lastMoveSquares: ["e2", "e4"],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e4-e2 (e4 is empty square)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e2-e7 (source - valid, target - invalid)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+              destinationSquares: ["e3", "e4"],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+              destinationSquares: [],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e7-e5 (invalid move because white's move)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e5");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+        });
+
+        it("props.children({onSquareClick}) e2-e4, e7-e5 (check if turn to move is changed)", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: [],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e2");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
+              selectionSquares: ["e2"],
+            })
+          );
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e4");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
               selectionSquares: [],
               lastMoveSquares: ["e2", "e4"],
             })
           );
-        });
 
-        it("props.children({onSquareClick}) e4-e2 (e4 is empty square) affects position, selectionSquares", () => {
-          const childrenCallback = jest.fn();
-          let callbackCounter: number = 0;
+          TestRenderer.act(() => {
+            props.onSquareClick("e7");
+          });
 
-          TestRenderer.create(
-            <WithMoveValidation initialPosition={initialPosition}>
-              {(props) => {
-                childrenCallback(props);
-
-                callbackCounter++;
-
-                if (callbackCounter === 1) {
-                  props.onSquareClick("e4");
-                  props.onSquareClick("e2");
-                }
-
-                return null;
-              }}
-            </WithMoveValidation>
-          );
-
-          expect(childrenCallback).toBeCalledTimes(2);
-
-          expect(childrenCallback).nthCalledWith(
-            1,
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: [],
+              position: positionAfterFirstMove,
+              selectionSquares: ["e7"],
             })
           );
-          expect(childrenCallback).nthCalledWith(
-            2,
+
+          TestRenderer.act(() => {
+            props.onSquareClick("e5");
+          });
+
+          props = getProps();
+          expect(props).toEqual(
             expect.objectContaining({
-              position: initialPosition,
-              selectionSquares: ["e2"],
+              position: positionAfterSecondMove,
+              selectionSquares: [],
+              lastMoveSquares: ["e7", "e5"],
             })
           );
         });
       });
 
       it("props.children({width})", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledWith(
+        const props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 480,
           })
@@ -445,18 +711,10 @@ describe("WithMoveValidation", () => {
       });
 
       it("props.children({onResize}) is a function", () => {
-        const childrenCallback = jest.fn();
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation>
-            {(props) => {
-              childrenCallback(props);
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledWith(
+        const props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             onResize: expect.any(Function),
           })
@@ -464,44 +722,32 @@ describe("WithMoveValidation", () => {
       });
 
       it("call props.children({onResize}) must change width prop", () => {
-        const childrenCallback = jest.fn();
-        let callbackCounter: number = 0;
+        const { getProps } = renderWithMoveValidation();
 
-        TestRenderer.create(
-          <WithMoveValidation initialPosition={initialPosition}>
-            {(props) => {
-              childrenCallback(props);
-
-              callbackCounter++;
-
-              if (callbackCounter === 1) {
-                props.onResize(200);
-              }
-              if (callbackCounter === 2) {
-                props.onResize(100);
-              }
-
-              return null;
-            }}
-          </WithMoveValidation>
-        );
-
-        expect(childrenCallback).toBeCalledTimes(3);
-
-        expect(childrenCallback).nthCalledWith(
-          1,
+        let props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 480,
           })
         );
-        expect(childrenCallback).nthCalledWith(
-          2,
+
+        TestRenderer.act(() => {
+          props.onResize(200);
+        });
+
+        props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 200,
           })
         );
-        expect(childrenCallback).nthCalledWith(
-          3,
+
+        TestRenderer.act(() => {
+          props.onResize(100);
+        });
+
+        props = getProps();
+        expect(props).toEqual(
           expect.objectContaining({
             width: 100,
           })
@@ -514,8 +760,8 @@ describe("WithMoveValidation", () => {
     describe("DOM structure", () => {
       it("must contain children", () => {
         const { container } = render(
-          <WithMoveValidation>
-            {() => <div data-testid="some-children"></div>}
+          <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
+            {() => <div data-testid="some-children" />}
           </WithMoveValidation>
         );
 

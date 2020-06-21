@@ -30,7 +30,7 @@ Check out our [WIKI](https://github.com/ildar-icoosoft/react-chessboard/wiki/API
 ### Example
 
 ```jsx
-import { Board, PieceCode } from "@ildar-icoosoft/react-chessboard";
+import { Board, PieceCode } from "ii-react-chessboard";
 
 ReactDOM.render(
   <Board position={{ e2: PieceCode.WHITE_PAWN, e7: PieceCode.BLACK_PAWN }} />,

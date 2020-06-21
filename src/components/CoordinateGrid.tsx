@@ -64,6 +64,7 @@ export interface CoordinateGridProps {
   onRightClick?(event: CoordinateGridRightClickEvent): void;
   onDrop?(event: PieceDropEvent): void;
   onDragStart?(event: PieceDragStartEvent): void;
+  onDragEnd?(): void;
 }
 
 export const CoordinateGrid = forwardRef<
@@ -87,6 +88,7 @@ export const CoordinateGrid = forwardRef<
       onRightClick,
       onDrop,
       onDragStart,
+      onDragEnd,
       roundMarkers = [],
     },
     ref
@@ -190,6 +192,10 @@ export const CoordinateGrid = forwardRef<
       },
       end() {
         setDraggedItem(null);
+
+        if (onDragEnd) {
+          onDragEnd();
+        }
       },
       collect(monitor) {
         return {
