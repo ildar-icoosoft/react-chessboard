@@ -59,7 +59,8 @@ const canSelectSquare = (
   return (
     position[coordinates] &&
     isTurnToMove(position[coordinates], game) &&
-    !game.in_checkmate()
+    !game.in_checkmate() &&
+    !game.in_draw()
   );
 };
 
@@ -99,7 +100,11 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
   return children({
     allowDrag(pieceCode) {
-      return isTurnToMove(pieceCode, game!) && !game!.in_checkmate();
+      return (
+        isTurnToMove(pieceCode, game!) &&
+        !game!.in_checkmate() &&
+        !game!.in_draw()
+      );
     },
     position,
     width,
