@@ -3,12 +3,10 @@ import { ChessInstance } from "chess.js";
 import { Position } from "../../interfaces/Position";
 import { Move } from "../../interfaces/Move";
 import { PieceCode } from "../../enums/PieceCode";
-import { omit as _omit } from "lodash";
 import { convertFenToPositionObject } from "../../utils/chess";
 
 export enum WithMoveValidationAction {
   SET_GAME = "SET_GAME",
-  MOVE = "MOVE",
   SELECT_SQUARE = "SELECT_SQUARE",
   CLEAR_SELECTION = "CLEAR_SELECTION",
   RESIZE = "RESIZE",
@@ -32,7 +30,7 @@ export interface SelectedSquareData {
 }
 
 export interface ChangePositionData {
-  move: Move;
+  lastMove: Move;
   position: Position;
 }
 
@@ -82,27 +80,6 @@ const setGame = (
   };
 };
 
-const move = (
-  state: WithMoveValidationState,
-  { payload }: Action<Move>
-): WithMoveValidationState => {
-  const pieceCode: PieceCode = state.position[payload.from];
-
-  const newPosition: Position = _omit(state.position, [payload.from]);
-
-  newPosition[payload.to] = payload.promotion ? payload.promotion : pieceCode;
-
-  return {
-    ...state,
-    position: newPosition,
-    selectionSquares: [],
-    destinationSquares: [],
-    occupationSquares: [],
-    checkSquares: getCheckSquares(state.game!, newPosition),
-    lastMoveSquares: [payload.from, payload.to],
-  };
-};
-
 const changePosition = (
   state: WithMoveValidationState,
   { payload }: Action<ChangePositionData>
@@ -114,7 +91,7 @@ const changePosition = (
     destinationSquares: [],
     occupationSquares: [],
     checkSquares: getCheckSquares(state.game!, payload.position),
-    lastMoveSquares: [payload.move.from, payload.move.to],
+    lastMoveSquares: [payload.lastMove.from, payload.lastMove.to],
   };
 };
 
@@ -161,7 +138,6 @@ const reducersMap: Record<
   ) => WithMoveValidationState
 > = {
   [WithMoveValidationAction.SET_GAME]: setGame,
-  [WithMoveValidationAction.MOVE]: move,
   [WithMoveValidationAction.SELECT_SQUARE]: selectSquare,
   [WithMoveValidationAction.CLEAR_SELECTION]: clearSelection,
   [WithMoveValidationAction.RESIZE]: resize,

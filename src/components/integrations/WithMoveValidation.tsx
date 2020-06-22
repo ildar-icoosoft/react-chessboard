@@ -139,7 +139,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       dispatch({
         type: WithMoveValidationAction.CHANGE_POSITION,
         payload: {
-          move: {
+          lastMove: {
             from: event.sourceCoordinates,
             to: event.targetCoordinates,
           },
@@ -188,7 +188,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         dispatch({
           type: WithMoveValidationAction.CHANGE_POSITION,
           payload: {
-            move: {
+            lastMove: {
               from: selectionSquares[0],
               to: coordinates,
             },
