@@ -6,7 +6,10 @@ import {
   DEFAULT_BOARD_WIDTH,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
-import { getColorFromPieceCode } from "../../utils/chess";
+import {
+  convertFenToPositionObject,
+  getColorFromPieceCode,
+} from "../../utils/chess";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
 import { Chess, ChessInstance, Move, Square } from "chess.js";
@@ -134,10 +137,13 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       }
 
       dispatch({
-        type: WithMoveValidationAction.MOVE,
+        type: WithMoveValidationAction.CHANGE_POSITION,
         payload: {
-          from: event.sourceCoordinates,
-          to: event.targetCoordinates,
+          move: {
+            from: event.sourceCoordinates,
+            to: event.targetCoordinates,
+          },
+          position: convertFenToPositionObject(game!.fen()),
         },
       });
     },
@@ -180,10 +186,13 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         }
 
         dispatch({
-          type: WithMoveValidationAction.MOVE,
+          type: WithMoveValidationAction.CHANGE_POSITION,
           payload: {
-            from: selectionSquares[0],
-            to: coordinates,
+            move: {
+              from: selectionSquares[0],
+              to: coordinates,
+            },
+            position: convertFenToPositionObject(game!.fen()),
           },
         });
       } else {

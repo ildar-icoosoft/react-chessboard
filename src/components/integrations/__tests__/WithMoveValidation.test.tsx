@@ -20,6 +20,14 @@ const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
 const staleMateFen: string = "4k3/8/3RKR2/8/8/8/8/8 b - - 0 1";
 const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/4P3/8 b - - 100 100";
 
+const beforeEnPassantCaptureFen: string =
+  "4k3/8/8/8/4Pp2/8/8/4K3 b KQkq e3 0 1";
+const afterEnPassantCapturePosition: Position = {
+  e8: PieceCode.BLACK_KING,
+  e1: PieceCode.WHITE_KING,
+  e3: PieceCode.BLACK_PAWN,
+};
+
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
   f2: PieceCode.WHITE_PAWN,
@@ -349,6 +357,35 @@ describe("WithMoveValidation", () => {
             expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
             expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
           });
+
+          it("An en passant capture", () => {
+            const { getProps } = renderWithMoveValidation(
+              beforeEnPassantCaptureFen
+            );
+
+            let props = getProps();
+            TestRenderer.act(() => {
+              jest.runAllTimers();
+              props = getProps();
+            });
+
+            TestRenderer.act(() => {
+              props.onDrop({
+                sourceCoordinates: "f4",
+                targetCoordinates: "e3",
+                pieceCode: PieceCode.BLACK_PAWN,
+                cancelMove() {},
+              });
+            });
+
+            props = getProps();
+            expect(props).toEqual(
+              expect.objectContaining({
+                position: afterEnPassantCapturePosition,
+                lastMoveSquares: ["f4", "e3"],
+              })
+            );
+          });
         });
       });
 
@@ -560,6 +597,38 @@ describe("WithMoveValidation", () => {
                 selectionSquares: [],
                 occupationSquares: [],
                 destinationSquares: [],
+              })
+            );
+          });
+
+          it("An en passant capture", () => {
+            const { getProps } = renderWithMoveValidation(
+              beforeEnPassantCaptureFen
+            );
+
+            let props = getProps();
+            TestRenderer.act(() => {
+              jest.runAllTimers();
+              props = getProps();
+            });
+
+            // from f4
+            TestRenderer.act(() => {
+              props.onSquareClick("f4");
+            });
+
+            // to e3
+            props = getProps();
+            TestRenderer.act(() => {
+              props.onSquareClick("e3");
+            });
+
+            // do not change position
+            props = getProps();
+            expect(props).toEqual(
+              expect.objectContaining({
+                position: afterEnPassantCapturePosition,
+                lastMoveSquares: ["f4", "e3"],
               })
             );
           });
