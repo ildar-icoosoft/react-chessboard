@@ -205,7 +205,7 @@ describe("Board", () => {
         expect(coordinateGrid.props.draggable).toBeTruthy();
       });
 
-      it("allowDrag", () => {
+      it("allowMoveFrom", () => {
         const testRenderer = TestRenderer.create(<Board />);
         const testInstance = testRenderer.root;
 
@@ -215,11 +215,11 @@ describe("Board", () => {
 
         expect(coordinateGrid.props.allowDrag).toBeUndefined();
 
-        const allowDrag = jest.fn();
+        const allowMoveFrom = jest.fn();
 
-        testRenderer.update(<Board allowDrag={allowDrag} />);
+        testRenderer.update(<Board allowMoveFrom={allowMoveFrom} />);
 
-        expect(coordinateGrid.props.allowDrag).toBe(allowDrag);
+        expect(coordinateGrid.props.allowDrag).toBe(allowMoveFrom);
       });
 
       it("transitionDuration", () => {

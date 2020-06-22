@@ -38,7 +38,7 @@ export interface BoardProps {
   maxWidth?: number;
   showCoordinates?: boolean;
   showResizer?: boolean;
-  allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
+  allowMoveFrom?: (pieceCode: PieceCode, coordinates: string) => boolean;
   selectionSquares?: string[];
   occupationSquares?: string[];
   destinationSquares?: string[];
@@ -65,7 +65,7 @@ export const Board: FC<BoardProps> = ({
   width = DEFAULT_BOARD_WIDTH,
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
   maxWidth = DEFAULT_BOARD_MAX_WIDTH,
-  allowDrag,
+  allowMoveFrom,
   showCoordinates = true,
   showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
@@ -138,7 +138,7 @@ export const Board: FC<BoardProps> = ({
         >
           <CoordinateGrid
             draggable={draggable}
-            allowDrag={allowDrag}
+            allowDrag={allowMoveFrom}
             orientation={orientation}
             position={positionObject}
             width={width}

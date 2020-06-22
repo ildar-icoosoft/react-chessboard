@@ -20,7 +20,7 @@ import {
 } from "./WithMoveValidation.reducer";
 
 export interface WithMoveValidationCallbackProps {
-  allowDrag: (pieceCode: PieceCode, coordinates: string) => boolean;
+  allowMoveFrom: (pieceCode: PieceCode, coordinates: string) => boolean;
   position: Position;
   draggable: boolean;
   width: number;
@@ -105,7 +105,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   }, []);
 
   return children({
-    allowDrag(pieceCode) {
+    allowMoveFrom(pieceCode) {
       return isTurnToMove(pieceCode, game!) && !game!.game_over();
     },
     position,

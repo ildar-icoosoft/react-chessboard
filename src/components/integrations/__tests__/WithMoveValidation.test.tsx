@@ -87,20 +87,20 @@ describe("WithMoveValidation", () => {
         expect(childrenCallback).toBeCalled();
       });
 
-      it("props.children({allowDrag}) returns true if it's turn to move", () => {
+      it("props.children({allowMoveFrom}) returns true if it's turn to move", () => {
         const { getProps } = renderWithMoveValidation();
 
         const props = getProps();
 
         expect(props).toEqual(
           expect.objectContaining({
-            allowDrag: expect.any(Function),
+            allowMoveFrom: expect.any(Function),
           })
         );
 
-        expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
+        expect(props.allowMoveFrom(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
 
-        expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
+        expect(props.allowMoveFrom(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
       });
 
       it("props.children({position}) if has not initialPosition prop", () => {
@@ -266,8 +266,10 @@ describe("WithMoveValidation", () => {
             );
 
             // blacks turn to move
-            expect(props.allowDrag(PieceCode.WHITE_PAWN, "e4")).toBeFalsy();
-            expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeTruthy();
+            expect(props.allowMoveFrom(PieceCode.WHITE_PAWN, "e4")).toBeFalsy();
+            expect(
+              props.allowMoveFrom(PieceCode.BLACK_PAWN, "e7")
+            ).toBeTruthy();
           });
 
           it("e2-e2", () => {
@@ -310,8 +312,10 @@ describe("WithMoveValidation", () => {
             expect(cancelMove).toBeCalledTimes(1);
 
             // whites turn to move
-            expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
-            expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
+            expect(
+              props.allowMoveFrom(PieceCode.WHITE_PAWN, "e2")
+            ).toBeTruthy();
+            expect(props.allowMoveFrom(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
           });
 
           it("e2-e7 (source - valid, target - invalid)", () => {
@@ -354,8 +358,10 @@ describe("WithMoveValidation", () => {
             expect(cancelMove).toBeCalledTimes(1);
 
             // whites turn to move
-            expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
-            expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
+            expect(
+              props.allowMoveFrom(PieceCode.WHITE_PAWN, "e2")
+            ).toBeTruthy();
+            expect(props.allowMoveFrom(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
           });
 
           it("An en passant capture", () => {
@@ -505,8 +511,10 @@ describe("WithMoveValidation", () => {
             );
 
             // blacks turn to move
-            expect(props.allowDrag(PieceCode.WHITE_PAWN, "e4")).toBeFalsy();
-            expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeTruthy();
+            expect(props.allowMoveFrom(PieceCode.WHITE_PAWN, "e4")).toBeFalsy();
+            expect(
+              props.allowMoveFrom(PieceCode.BLACK_PAWN, "e7")
+            ).toBeTruthy();
           });
 
           it("e2-e2", () => {
@@ -656,7 +664,7 @@ describe("WithMoveValidation", () => {
           })
         );
 
-        expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+        expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
       });
 
       describe("ignore square clicks and drag if draw", () => {
@@ -683,7 +691,7 @@ describe("WithMoveValidation", () => {
             })
           );
 
-          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+          expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
 
         it("staleMate", () => {
@@ -707,7 +715,7 @@ describe("WithMoveValidation", () => {
             })
           );
 
-          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+          expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
 
         it("drawBy50MoveRule", () => {
@@ -731,7 +739,7 @@ describe("WithMoveValidation", () => {
             })
           );
 
-          expect(props.allowDrag(PieceCode.BLACK_KING, "e8")).toBeFalsy();
+          expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
 
         it("drawByThreefoldRepetition", () => {
@@ -768,7 +776,7 @@ describe("WithMoveValidation", () => {
             })
           );
 
-          expect(props.allowDrag(PieceCode.WHITE_KNIGHT, "g1")).toBeFalsy();
+          expect(props.allowMoveFrom(PieceCode.WHITE_KNIGHT, "g1")).toBeFalsy();
         });
       });
 
