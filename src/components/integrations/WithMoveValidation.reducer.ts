@@ -30,7 +30,7 @@ export interface SelectedSquareData {
 }
 
 export interface ChangePositionData {
-  move: Move;
+  lastMove: Move;
   position: Position;
 }
 
@@ -91,7 +91,7 @@ const changePosition = (
     destinationSquares: [],
     occupationSquares: [],
     checkSquares: getCheckSquares(state.game!, payload.position),
-    lastMoveSquares: [payload.move.from, payload.move.to],
+    lastMoveSquares: [payload.lastMove.from, payload.lastMove.to],
   };
 };
 

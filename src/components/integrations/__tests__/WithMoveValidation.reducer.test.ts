@@ -116,4 +116,55 @@ describe("WithMoveValidation.reducer", () => {
       checkSquares: [],
     });
   });
+
+  it("CHANGE_POSITION", () => {
+    const game = new Chess(initialFen);
+
+    game.move({
+      from: "e2",
+      to: "e4",
+    });
+
+    const state = withMoveValidationReducer(
+      {
+        ...defaultState,
+        game,
+      },
+      {
+        type: WithMoveValidationAction.CHANGE_POSITION,
+        payload: {
+          lastMove: {
+            from: "e2",
+            to: "e4",
+          },
+          position: {
+            e4: PieceCode.WHITE_PAWN,
+            f2: PieceCode.WHITE_PAWN,
+            e1: PieceCode.WHITE_KING,
+            f5: PieceCode.BLACK_KING,
+            e7: PieceCode.BLACK_PAWN,
+            d3: PieceCode.BLACK_PAWN,
+          },
+        },
+      }
+    );
+
+    expect(state).toEqual({
+      game: game,
+      width: 480,
+      position: {
+        e4: PieceCode.WHITE_PAWN,
+        f2: PieceCode.WHITE_PAWN,
+        e1: PieceCode.WHITE_KING,
+        f5: PieceCode.BLACK_KING,
+        e7: PieceCode.BLACK_PAWN,
+        d3: PieceCode.BLACK_PAWN,
+      },
+      selectionSquares: [],
+      destinationSquares: [],
+      occupationSquares: [],
+      lastMoveSquares: ["e2", "e4"],
+      checkSquares: ["f5"],
+    });
+  });
 });
