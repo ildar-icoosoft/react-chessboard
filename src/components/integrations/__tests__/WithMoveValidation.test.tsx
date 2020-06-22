@@ -357,6 +357,35 @@ describe("WithMoveValidation", () => {
             expect(props.allowDrag(PieceCode.WHITE_PAWN, "e2")).toBeTruthy();
             expect(props.allowDrag(PieceCode.BLACK_PAWN, "e7")).toBeFalsy();
           });
+
+          it("An en passant capture", () => {
+            const { getProps } = renderWithMoveValidation(
+              beforeEnPassantCaptureFen
+            );
+
+            let props = getProps();
+            TestRenderer.act(() => {
+              jest.runAllTimers();
+              props = getProps();
+            });
+
+            TestRenderer.act(() => {
+              props.onDrop({
+                sourceCoordinates: "f4",
+                targetCoordinates: "e3",
+                pieceCode: PieceCode.BLACK_PAWN,
+                cancelMove() {},
+              });
+            });
+
+            props = getProps();
+            expect(props).toEqual(
+              expect.objectContaining({
+                position: afterEnPassantCapturePosition,
+                lastMoveSquares: ["f4", "e3"],
+              })
+            );
+          });
         });
       });
 
@@ -583,12 +612,12 @@ describe("WithMoveValidation", () => {
               props = getProps();
             });
 
-            // from e2
+            // from f4
             TestRenderer.act(() => {
               props.onSquareClick("f4");
             });
 
-            // to e2
+            // to e3
             props = getProps();
             TestRenderer.act(() => {
               props.onSquareClick("e3");
@@ -599,6 +628,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: afterEnPassantCapturePosition,
+                lastMoveSquares: ["f4", "e3"],
               })
             );
           });

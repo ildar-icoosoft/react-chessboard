@@ -137,10 +137,13 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       }
 
       dispatch({
-        type: WithMoveValidationAction.MOVE,
+        type: WithMoveValidationAction.CHANGE_POSITION,
         payload: {
-          from: event.sourceCoordinates,
-          to: event.targetCoordinates,
+          move: {
+            from: event.sourceCoordinates,
+            to: event.targetCoordinates,
+          },
+          position: convertFenToPositionObject(game!.fen()),
         },
       });
     },
