@@ -12,6 +12,7 @@ export enum WithMoveValidationAction {
   SELECT_SQUARE = "SELECT_SQUARE",
   CLEAR_SELECTION = "CLEAR_SELECTION",
   RESIZE = "RESIZE",
+  CHANGE_POSITION = "CHANGE_POSITION",
 }
 
 export interface WithMoveValidationState {
@@ -28,6 +29,11 @@ export interface WithMoveValidationState {
 export interface SelectedSquareData {
   selectionSquare: string;
   destinationSquares: string[];
+}
+
+export interface ChangePositionData {
+  move: Move;
+  position: Position;
 }
 
 export const getWithMoveValidationInitialState = (
@@ -97,6 +103,21 @@ const move = (
   };
 };
 
+const changePosition = (
+  state: WithMoveValidationState,
+  { payload }: Action<ChangePositionData>
+): WithMoveValidationState => {
+  return {
+    ...state,
+    position: payload.position,
+    selectionSquares: [],
+    destinationSquares: [],
+    occupationSquares: [],
+    checkSquares: getCheckSquares(state.game!, payload.position),
+    lastMoveSquares: [payload.move.from, payload.move.to],
+  };
+};
+
 const selectSquare = (
   state: WithMoveValidationState,
   { payload }: Action<SelectedSquareData>
@@ -144,6 +165,7 @@ const reducersMap: Record<
   [WithMoveValidationAction.SELECT_SQUARE]: selectSquare,
   [WithMoveValidationAction.CLEAR_SELECTION]: clearSelection,
   [WithMoveValidationAction.RESIZE]: resize,
+  [WithMoveValidationAction.CHANGE_POSITION]: changePosition,
 };
 
 export const withMoveValidationReducer = (
