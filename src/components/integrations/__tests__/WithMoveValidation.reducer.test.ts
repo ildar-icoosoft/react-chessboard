@@ -98,4 +98,22 @@ describe("WithMoveValidation.reducer", () => {
       checkSquares: [],
     });
   });
+
+  it("RESIZE action", () => {
+    const state = withMoveValidationReducer(defaultState, {
+      type: WithMoveValidationAction.RESIZE,
+      payload: 240,
+    });
+
+    expect(state).toEqual({
+      game: null,
+      width: 240,
+      position: initialPosition,
+      selectionSquares: [],
+      destinationSquares: [],
+      occupationSquares: [],
+      lastMoveSquares: [],
+      checkSquares: [],
+    });
+  });
 });
