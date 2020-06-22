@@ -28,6 +28,17 @@ const defaultState: WithMoveValidationState = {
   checkSquares: [],
 };
 
+const stateWithSelectedSquares: WithMoveValidationState = {
+  game: null,
+  width: 480,
+  position: initialPosition,
+  selectionSquares: ["e2"],
+  destinationSquares: ["e3", "e4", "d3"],
+  occupationSquares: ["d3"],
+  lastMoveSquares: [],
+  checkSquares: [],
+};
+
 describe("WithMoveValidation.reducer", () => {
   it("SET_GAME action", () => {
     const game = new Chess(initialFen);
@@ -65,6 +76,24 @@ describe("WithMoveValidation.reducer", () => {
       selectionSquares: ["e2"],
       destinationSquares: ["e3", "e4", "d3"],
       occupationSquares: ["d3"],
+      lastMoveSquares: [],
+      checkSquares: [],
+    });
+  });
+
+  it("CLEAR_SELECTION action", () => {
+    const state = withMoveValidationReducer(stateWithSelectedSquares, {
+      type: WithMoveValidationAction.CLEAR_SELECTION,
+      payload: null,
+    });
+
+    expect(state).toEqual({
+      game: null,
+      width: 480,
+      position: initialPosition,
+      selectionSquares: [],
+      destinationSquares: [],
+      occupationSquares: [],
       lastMoveSquares: [],
       checkSquares: [],
     });
