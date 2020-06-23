@@ -12,6 +12,7 @@ import {
   INITIAL_BOARD_FEN,
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
+import { PieceColor } from "../../../enums/PieceColor";
 
 const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
@@ -127,6 +128,54 @@ describe("WithMoveValidation", () => {
         );
       });
 
+      it("props.children({check: false})", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            check: false,
+          })
+        );
+      });
+
+      it("props.children({check: true})", () => {
+        const { getProps } = renderWithMoveValidation(checkmateFen);
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            check: true,
+          })
+        );
+      });
+
+      it("props.children({turnColor: PieceColor.WHITE})", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            turnColor: PieceColor.WHITE,
+          })
+        );
+      });
+
+      it("props.children({turnColor: PieceColor.BLACK})", () => {
+        const { getProps } = renderWithMoveValidation(checkmateFen);
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            turnColor: PieceColor.BLACK,
+          })
+        );
+      });
+
       it("props.children({draggable})", () => {
         const { getProps } = renderWithMoveValidation();
 
@@ -163,7 +212,7 @@ describe("WithMoveValidation", () => {
         );
       });
 
-      it("props.children({selectionSquares, destinationSquares, occupationSquares, checkSquares, lastMoveSquares}) default values", () => {
+      it("props.children({selectionSquares, destinationSquares, occupationSquares, lastMoveSquares}) default values", () => {
         const { getProps } = renderWithMoveValidation(initialFen);
 
         let props = getProps();
@@ -178,24 +227,7 @@ describe("WithMoveValidation", () => {
             selectionSquares: [],
             destinationSquares: [],
             occupationSquares: [],
-            checkSquares: [],
             lastMoveSquares: [],
-          })
-        );
-      });
-
-      it("props.children({checkSquares}) if position contains check", () => {
-        const { getProps } = renderWithMoveValidation(checkmateFen);
-
-        let props = getProps();
-        TestRenderer.act(() => {
-          jest.runAllTimers();
-          props = getProps();
-        });
-
-        expect(props).toEqual(
-          expect.objectContaining({
-            checkSquares: ["e8"],
           })
         );
       });
@@ -506,7 +538,6 @@ describe("WithMoveValidation", () => {
                 occupationSquares: [],
                 destinationSquares: [],
                 lastMoveSquares: ["e2", "e4"],
-                checkSquares: ["f5"],
               })
             );
 

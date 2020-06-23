@@ -10,7 +10,7 @@ export default {
 export const WithMoveValidationStory = () => (
   <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
     {({
-      allowDrag,
+      allowMoveFrom,
       position,
       draggable,
       onDragStart,
@@ -20,12 +20,11 @@ export const WithMoveValidationStory = () => (
       selectionSquares,
       destinationSquares,
       occupationSquares,
-      checkSquares,
       lastMoveSquares,
       width,
     }) => (
       <Board
-        allowDrag={allowDrag}
+        allowMoveFrom={allowMoveFrom}
         allowMarkers={true}
         position={position}
         draggable={draggable}
@@ -37,7 +36,6 @@ export const WithMoveValidationStory = () => (
         selectionSquares={selectionSquares}
         destinationSquares={destinationSquares}
         occupationSquares={occupationSquares}
-        checkSquares={checkSquares}
         lastMoveSquares={lastMoveSquares}
         width={width}
       />

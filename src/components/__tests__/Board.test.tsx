@@ -321,11 +321,11 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.checkSquare).toBeUndefined();
+        expect(coordinateGrid.props.checkSquare).toBeNull();
 
         testRenderer.update(<Board check={true} />);
 
-        expect(coordinateGrid.props.checkSquare).toBeUndefined();
+        expect(coordinateGrid.props.checkSquare).toBeNull();
 
         testRenderer.update(
           <Board

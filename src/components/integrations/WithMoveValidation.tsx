@@ -14,21 +14,22 @@ import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
 import { Chess, ChessInstance, Move, Square } from "chess.js";
 import {
-  withMoveValidationReducer,
-  WithMoveValidationAction,
   getWithMoveValidationInitialState,
+  WithMoveValidationAction,
+  withMoveValidationReducer,
 } from "./WithMoveValidation.reducer";
 
 export interface WithMoveValidationCallbackProps {
   allowMoveFrom: (pieceCode: PieceCode, coordinates: string) => boolean;
+  check: boolean;
   position: Position;
   draggable: boolean;
   width: number;
   selectionSquares: string[];
-  checkSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
   occupationSquares: string[];
+  turnColor: PieceColor;
 
   onDragStart(event: PieceDragStartEvent): void;
 
@@ -77,6 +78,16 @@ const getDestinationSquares = (
     .map((item) => item.to);
 };
 
+const getTurnColor = (game: ChessInstance | null): PieceColor => {
+  if (game) {
+    if (game.turn() === "w") {
+      return PieceColor.WHITE;
+    }
+    return PieceColor.BLACK;
+  }
+  return PieceColor.WHITE;
+};
+
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialFen = INITIAL_BOARD_FEN,
@@ -93,7 +104,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     occupationSquares,
     destinationSquares,
     lastMoveSquares,
-    checkSquares,
     width,
   } = state;
 
@@ -108,6 +118,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     allowMoveFrom(pieceCode) {
       return isTurnToMove(pieceCode, game!) && !game!.game_over();
     },
+    check: game ? game.in_check() : false,
     position,
     width,
     draggable: true,
@@ -218,6 +229,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     destinationSquares,
     lastMoveSquares,
     occupationSquares,
-    checkSquares,
+    turnColor: getTurnColor(game),
   });
 };

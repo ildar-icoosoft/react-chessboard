@@ -25,7 +25,6 @@ const defaultState: WithMoveValidationState = {
   occupationSquares: [],
   destinationSquares: [],
   lastMoveSquares: [],
-  checkSquares: [],
 };
 
 const stateWithSelectedSquares: WithMoveValidationState = {
@@ -36,7 +35,6 @@ const stateWithSelectedSquares: WithMoveValidationState = {
   destinationSquares: ["e3", "e4", "d3"],
   occupationSquares: ["d3"],
   lastMoveSquares: [],
-  checkSquares: [],
 };
 
 describe("WithMoveValidation.reducer", () => {
@@ -56,7 +54,6 @@ describe("WithMoveValidation.reducer", () => {
       occupationSquares: [],
       destinationSquares: [],
       lastMoveSquares: [],
-      checkSquares: [],
     });
   });
 
@@ -77,7 +74,6 @@ describe("WithMoveValidation.reducer", () => {
       destinationSquares: ["e3", "e4", "d3"],
       occupationSquares: ["d3"],
       lastMoveSquares: [],
-      checkSquares: [],
     });
   });
 
@@ -95,7 +91,6 @@ describe("WithMoveValidation.reducer", () => {
       destinationSquares: [],
       occupationSquares: [],
       lastMoveSquares: [],
-      checkSquares: [],
     });
   });
 
@@ -113,7 +108,6 @@ describe("WithMoveValidation.reducer", () => {
       destinationSquares: [],
       occupationSquares: [],
       lastMoveSquares: [],
-      checkSquares: [],
     });
   });
 
@@ -164,7 +158,6 @@ describe("WithMoveValidation.reducer", () => {
       destinationSquares: [],
       occupationSquares: [],
       lastMoveSquares: ["e2", "e4"],
-      checkSquares: ["f5"],
     });
   });
 });

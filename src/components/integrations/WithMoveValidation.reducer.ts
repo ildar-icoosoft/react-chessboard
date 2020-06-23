@@ -2,7 +2,6 @@ import { Action } from "redux-actions";
 import { ChessInstance } from "chess.js";
 import { Position } from "../../interfaces/Position";
 import { Move } from "../../interfaces/Move";
-import { PieceCode } from "../../enums/PieceCode";
 import { convertFenToPositionObject } from "../../utils/chess";
 
 export enum WithMoveValidationAction {
@@ -20,7 +19,6 @@ export interface WithMoveValidationState {
   occupationSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
-  checkSquares: string[];
   width: number;
 }
 
@@ -46,27 +44,7 @@ export const getWithMoveValidationInitialState = (
     occupationSquares: [],
     destinationSquares: [],
     lastMoveSquares: [],
-    checkSquares: [],
   };
-};
-
-const getCheckSquares = (game: ChessInstance, position: Position): string[] => {
-  const checkSquares: string[] = [];
-
-  if (game.in_check()) {
-    const turnToMove: "b" | "w" = game.turn();
-
-    const kingPieceCode =
-      turnToMove === "b" ? PieceCode.BLACK_KING : PieceCode.WHITE_KING;
-
-    for (const coordinates in position) {
-      if (position[coordinates] === kingPieceCode) {
-        checkSquares.push(coordinates);
-      }
-    }
-  }
-
-  return checkSquares;
 };
 
 const setGame = (
@@ -75,7 +53,6 @@ const setGame = (
 ): WithMoveValidationState => {
   return {
     ...state,
-    checkSquares: getCheckSquares(payload, state.position),
     game: payload,
   };
 };
@@ -90,7 +67,6 @@ const changePosition = (
     selectionSquares: [],
     destinationSquares: [],
     occupationSquares: [],
-    checkSquares: getCheckSquares(state.game!, payload.position),
     lastMoveSquares: [payload.lastMove.from, payload.lastMove.to],
   };
 };
