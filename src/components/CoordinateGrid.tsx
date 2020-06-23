@@ -58,7 +58,7 @@ export interface CoordinateGridProps {
   destinationSquares?: string[];
   lastMoveSquares?: string[];
   currentPremoveSquares?: string[];
-  checkSquare?: string | null;
+  checkSquare?: string;
   roundMarkers?: string[];
 
   onClick?(coordinates: string): void;
@@ -83,7 +83,7 @@ export const CoordinateGrid = forwardRef<
       destinationSquares = [],
       lastMoveSquares = [],
       currentPremoveSquares = [],
-      checkSquare = null,
+      checkSquare,
       allowDrag,
       transitionDuration,
       onClick,

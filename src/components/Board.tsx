@@ -63,9 +63,9 @@ const getCheckSquare = (
   check: boolean,
   position: Position,
   turnColor: PieceColor
-): string | null => {
+): string | undefined => {
   if (!check) {
-    return null;
+    return undefined;
   }
 
   const kingPieceCode =
@@ -79,7 +79,7 @@ const getCheckSquare = (
     }
   }
 
-  return null;
+  return undefined;
 };
 
 export const Board: FC<BoardProps> = ({

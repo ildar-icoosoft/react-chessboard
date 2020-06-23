@@ -321,11 +321,11 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.checkSquare).toBeNull();
+        expect(coordinateGrid.props.checkSquare).toBeUndefined();
 
         testRenderer.update(<Board check={true} />);
 
-        expect(coordinateGrid.props.checkSquare).toBeNull();
+        expect(coordinateGrid.props.checkSquare).toBeUndefined();
 
         testRenderer.update(
           <Board
@@ -344,7 +344,7 @@ describe("Board", () => {
           />
         );
 
-        expect(coordinateGrid.props.checkSquare).toEqual("e8");
+        expect(coordinateGrid.props.checkSquare).toBe("e8");
       });
 
       describe("onRightClick", () => {
