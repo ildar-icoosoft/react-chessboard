@@ -26,6 +26,7 @@ import {
   isValidFen,
   isValidPositionObject,
 } from "../utils/chess";
+import { Move } from "../interfaces/Move";
 
 export interface BoardProps {
   allowMarkers?: boolean;
@@ -57,6 +58,8 @@ export interface BoardProps {
   onDrop?(event: PieceDropEvent): void;
 
   onResize?(width: number): void;
+
+  onMove?(move: Move): void;
 }
 
 const getCheckSquare = (
@@ -107,6 +110,7 @@ export const Board: FC<BoardProps> = ({
   onDragEnd,
   onDrop,
   onResize,
+  onMove,
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -133,6 +137,29 @@ export const Board: FC<BoardProps> = ({
       if (selectionSquare) {
         if (selectionSquare === coordinates) {
           setSelectionSquare(undefined);
+          return;
+        }
+
+        if (onMove) {
+          onMove({
+            from: selectionSquare,
+            to: coordinates,
+          });
+        }
+      } else {
+        if (!positionObject[coordinates]) {
+          setSelectionSquare(undefined);
+          return;
+        }
+        setSelectionSquare(coordinates);
+      }
+    }
+
+    if (clickable && (movableColor === "both" || movableColor === turnColor)) {
+      if (selectionSquare) {
+        if (selectionSquare === coordinates) {
+          setSelectionSquare(undefined);
+          return;
         }
       } else {
         if (!positionObject[coordinates]) {

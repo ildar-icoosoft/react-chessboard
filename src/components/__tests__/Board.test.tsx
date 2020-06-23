@@ -240,39 +240,51 @@ describe("Board", () => {
       });
 
       describe("selectionSquare", () => {
-        describe("select square on mouse click", () => {
-          it("click-click moves are allowed", () => {
-            // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
-            const testRenderer = TestRenderer.create(
-              <Board position={INITIAL_BOARD_FEN} clickable={true} />
-            );
-            const testInstance = testRenderer.root;
+        it("default value", () => {
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} clickable={true} />
+          );
+          const testInstance = testRenderer.root;
 
-            const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-              CoordinateGrid
-            );
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
 
-            expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
 
-            TestRenderer.act(() => {
-              coordinateGrid.props.onClick("a1");
-            });
+        it("click-click moves are allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} clickable={true} />
+          );
+          const testInstance = testRenderer.root;
 
-            expect(coordinateGrid.props.selectionSquare).toBe("a1");
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
 
-            TestRenderer.act(() => {
-              coordinateGrid.props.onClick("a1");
-            });
-
-            expect(coordinateGrid.props.selectionSquare).toBeUndefined();
-
-            // first click on empty square
-            TestRenderer.act(() => {
-              coordinateGrid.props.onClick("a3");
-            });
-
-            expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("a1");
           });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("a1");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("a1");
+          });
+
+          // clear selection if user clicks again on this square
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          // first click on empty square
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("a3");
+          });
+
+          // do not add selection if square does not contain a piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
       });
 
@@ -615,6 +627,44 @@ describe("Board", () => {
   });
 
   describe("Events", () => {
+    describe("onMove", () => {
+      describe("Click-click move", () => {
+        it("success move", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const onMove = jest.fn();
+
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              onMove={onMove}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // first click on empty square
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e4");
+          });
+
+          expect(onMove).toBeCalledTimes(1);
+
+          expect(onMove).toBeCalledWith({
+            from: "e2",
+            to: "e4",
+          });
+        });
+      });
+    });
+
     it("onSquareClick", () => {
       const onSquareClick = jest.fn();
 
