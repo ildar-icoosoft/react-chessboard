@@ -679,36 +679,6 @@ describe("Board", () => {
 
       expect(onResize).toBeCalledWith(300);
     });
-
-    describe("onSelect", () => {
-      // dispatch onSelect only if movableColor contains turnColor and clickable (for clicks) or draggable (for drag) is true
-
-      it("raises onSelect event if clickable is true", () => {
-        const onSelect = jest.fn();
-
-        const testRenderer = TestRenderer.create(<Board onSelect={onSelect} />);
-        const testInstance = testRenderer.root;
-
-        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-          CoordinateGrid
-        );
-
-        TestRenderer.act(() => {
-          coordinateGrid.props.onClick("e2");
-        });
-
-        expect(onSelect).toBeCalledTimes(0);
-
-        testRenderer.update(<Board onSelect={onSelect} clickable={true} />);
-
-        TestRenderer.act(() => {
-          coordinateGrid.props.onClick("e2");
-        });
-
-        expect(onSelect).toBeCalledTimes(1);
-        expect(onSelect).toBeCalledWith("e2");
-      });
-    });
   });
 
   describe("DOM structure", () => {

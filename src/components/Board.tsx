@@ -48,7 +48,6 @@ export interface BoardProps {
   checkSquares?: string[];
 
   onSquareClick?(coordinates: string): void;
-  onSelect?(coordinates: string): void;
 
   onDragStart?(event: PieceDragStartEvent): void;
 
@@ -63,7 +62,6 @@ export const Board: FC<BoardProps> = ({
   allowMarkers = false,
   position = {},
   orientation = PieceColor.WHITE,
-  clickable = false,
   draggable = false,
   width = DEFAULT_BOARD_WIDTH,
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
@@ -83,7 +81,6 @@ export const Board: FC<BoardProps> = ({
   onDragEnd,
   onDrop,
   onResize,
-  onSelect,
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -102,10 +99,6 @@ export const Board: FC<BoardProps> = ({
 
     if (onSquareClick) {
       onSquareClick(coordinates);
-    }
-
-    if (clickable && onSelect) {
-      onSelect(coordinates);
     }
   };
 
