@@ -97,7 +97,7 @@ describe("CoordinateGrid", () => {
           destinationSquares={["a1", "b2"]}
           lastMoveSquares={["c3", "d4"]}
           currentPremoveSquares={["e5"]}
-          checkSquares={["f5"]}
+          checkSquare={"f5"}
         />
       );
 
@@ -795,7 +795,7 @@ describe("CoordinateGrid", () => {
             destinationSquares={["a1", "b2"]}
             lastMoveSquares={["c3", "b1"]}
             currentPremoveSquares={["a1"]}
-            checkSquares={["b1"]}
+            checkSquare={"b1"}
           />
         );
 

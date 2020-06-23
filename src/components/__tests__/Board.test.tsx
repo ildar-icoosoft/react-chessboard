@@ -12,6 +12,7 @@ import { CoordinateGrid } from "../CoordinateGrid";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
 import { Position } from "../../interfaces/Position";
+
 jest.useFakeTimers();
 
 describe("Board", () => {
@@ -320,11 +321,30 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.checkSquares).toBeUndefined();
+        expect(coordinateGrid.props.checkSquare).toBeUndefined();
 
-        testRenderer.update(<Board checkSquares={["a1"]} />);
+        testRenderer.update(<Board check={true} />);
 
-        expect(coordinateGrid.props.checkSquares).toEqual(["a1"]);
+        expect(coordinateGrid.props.checkSquare).toBeUndefined();
+
+        testRenderer.update(
+          <Board
+            check={true}
+            position={{ e1: PieceCode.WHITE_KING, e8: PieceCode.BLACK_KING }}
+          />
+        );
+
+        expect(coordinateGrid.props.checkSquare).toBe("e1");
+
+        testRenderer.update(
+          <Board
+            check={true}
+            turnColor={PieceColor.BLACK}
+            position={{ e1: PieceCode.WHITE_KING, e8: PieceCode.BLACK_KING }}
+          />
+        );
+
+        expect(coordinateGrid.props.checkSquare).toEqual("e8");
       });
 
       describe("onRightClick", () => {

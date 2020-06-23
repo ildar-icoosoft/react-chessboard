@@ -29,23 +29,24 @@ import {
 
 export interface BoardProps {
   allowMarkers?: boolean;
+  allowMoveFrom?: (pieceCode: PieceCode, coordinates: string) => boolean;
+  clickable?: boolean; // allow click-click moves
+  check?: boolean; // true for current color, false to unset
   position?: Position | string;
   orientation?: PieceColor;
   draggable?: boolean; // allow moves & premoves to use drag'n drop
-  clickable?: boolean; // allow click-click moves
   transitionDuration?: number;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
   showCoordinates?: boolean;
   showResizer?: boolean;
-  allowMoveFrom?: (pieceCode: PieceCode, coordinates: string) => boolean;
   selectionSquares?: string[];
   occupationSquares?: string[];
   destinationSquares?: string[];
   lastMoveSquares?: string[];
   currentPremoveSquares?: string[];
-  checkSquares?: string[];
+  turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
 
   onSquareClick?(coordinates: string): void;
 
@@ -57,6 +58,29 @@ export interface BoardProps {
 
   onResize?(width: number): void;
 }
+
+const getCheckSquare = (
+  check: boolean,
+  position: Position,
+  turnColor: PieceColor
+): string | undefined => {
+  if (!check) {
+    return undefined;
+  }
+
+  const kingPieceCode =
+    turnColor === PieceColor.WHITE
+      ? PieceCode.WHITE_KING
+      : PieceCode.BLACK_KING;
+
+  for (const coordinates in position) {
+    if (position[coordinates] === kingPieceCode) {
+      return coordinates;
+    }
+  }
+
+  return undefined;
+};
 
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
@@ -75,7 +99,8 @@ export const Board: FC<BoardProps> = ({
   destinationSquares,
   lastMoveSquares,
   currentPremoveSquares,
-  checkSquares,
+  check = false,
+  turnColor = PieceColor.WHITE,
   onSquareClick,
   onDragStart,
   onDragEnd,
@@ -126,6 +151,8 @@ export const Board: FC<BoardProps> = ({
     }
   };
 
+  const checkSquare = getCheckSquare(check, positionObject, turnColor);
+
   return (
     <>
       <DndProvider backend={Backend}>
@@ -148,7 +175,7 @@ export const Board: FC<BoardProps> = ({
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
             currentPremoveSquares={currentPremoveSquares}
-            checkSquares={checkSquares}
+            checkSquare={checkSquare}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}
             onDrop={onDrop}
