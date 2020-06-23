@@ -11,6 +11,8 @@ export const WithMoveValidationStory = () => (
   <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
     {({
       allowMoveFrom,
+      check,
+      turnColor,
       position,
       draggable,
       onDragStart,
@@ -26,6 +28,8 @@ export const WithMoveValidationStory = () => (
       <Board
         allowMoveFrom={allowMoveFrom}
         allowMarkers={true}
+        check={check}
+        turnColor={turnColor}
         position={position}
         draggable={draggable}
         onDragStart={onDragStart}
