@@ -25,7 +25,6 @@ export interface WithMoveValidationCallbackProps {
   position: Position;
   draggable: boolean;
   width: number;
-  selectionSquares: string[];
   destinationSquares: string[];
   lastMoveSquares: string[];
   occupationSquares: string[];
@@ -225,7 +224,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         payload: width,
       });
     },
-    selectionSquares,
     destinationSquares,
     lastMoveSquares,
     occupationSquares,

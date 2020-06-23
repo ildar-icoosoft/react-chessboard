@@ -41,7 +41,6 @@ export interface BoardProps {
   maxWidth?: number;
   showCoordinates?: boolean;
   showResizer?: boolean;
-  selectionSquares?: string[];
   occupationSquares?: string[];
   destinationSquares?: string[];
   lastMoveSquares?: string[];
@@ -131,10 +130,16 @@ export const Board: FC<BoardProps> = ({
     }
 
     if (clickable && (movableColor === "both" || movableColor === turnColor)) {
-      if (selectionSquare === coordinates) {
-        setSelectionSquare(undefined);
+      if (selectionSquare) {
+        if (selectionSquare === coordinates) {
+          setSelectionSquare(undefined);
+        }
       } else {
-        setSelectionSquare(coordinates);
+        if (!positionObject[coordinates]) {
+          setSelectionSquare(undefined);
+        } else {
+          setSelectionSquare(coordinates);
+        }
       }
     }
   };

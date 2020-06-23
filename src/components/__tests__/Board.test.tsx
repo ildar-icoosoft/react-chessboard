@@ -265,6 +265,13 @@ describe("Board", () => {
             });
 
             expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+            // first click on empty square
+            TestRenderer.act(() => {
+              coordinateGrid.props.onClick("a3");
+            });
+
+            expect(coordinateGrid.props.selectionSquare).toBeUndefined();
           });
         });
       });

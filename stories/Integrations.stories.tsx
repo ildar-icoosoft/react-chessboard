@@ -19,13 +19,13 @@ export const WithMoveValidationStory = () => (
       onDrop,
       onSquareClick,
       onResize,
-      selectionSquares,
       destinationSquares,
       occupationSquares,
       lastMoveSquares,
       width,
     }) => (
       <Board
+        clickable={true}
         allowMoveFrom={allowMoveFrom}
         allowMarkers={true}
         check={check}
@@ -37,7 +37,6 @@ export const WithMoveValidationStory = () => (
         onSquareClick={onSquareClick}
         onResize={onResize}
         transitionDuration={10000}
-        selectionSquares={selectionSquares}
         destinationSquares={destinationSquares}
         occupationSquares={occupationSquares}
         lastMoveSquares={lastMoveSquares}
