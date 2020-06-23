@@ -212,7 +212,7 @@ describe("WithMoveValidation", () => {
         );
       });
 
-      it("props.children({ destinationSquares, occupationSquares, lastMoveSquares}) default values", () => {
+      it("props.children({selectionSquares, destinationSquares, occupationSquares, lastMoveSquares}) default values", () => {
         const { getProps } = renderWithMoveValidation(initialFen);
 
         let props = getProps();
@@ -224,6 +224,7 @@ describe("WithMoveValidation", () => {
         expect(props).toEqual(
           expect.objectContaining({
             position: initialPosition,
+            selectionSquares: [],
             destinationSquares: [],
             occupationSquares: [],
             lastMoveSquares: [],
@@ -252,6 +253,7 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
+              selectionSquares: ["e2"],
               destinationSquares: ["e3", "e4", "d3"],
               occupationSquares: ["d3"],
               lastMoveSquares: [],
@@ -289,6 +291,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: positionAfterFirstMove,
+                selectionSquares: [],
                 destinationSquares: [],
                 lastMoveSquares: ["e2", "e4"],
               })
@@ -331,6 +334,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: [],
                 occupationSquares: [],
                 destinationSquares: [],
                 lastMoveSquares: [],
@@ -376,6 +380,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: [],
                 occupationSquares: [],
                 destinationSquares: [],
                 lastMoveSquares: [],
@@ -453,6 +458,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: ["e2"],
                 destinationSquares: ["e3", "e4", "d3"],
                 occupationSquares: ["d3"],
                 lastMoveSquares: [],
@@ -477,6 +483,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: [],
               })
             );
           });
@@ -498,6 +505,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: [],
               })
             );
           });
@@ -526,6 +534,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: positionAfterFirstMove,
+                selectionSquares: [],
                 occupationSquares: [],
                 destinationSquares: [],
                 lastMoveSquares: ["e2", "e4"],
@@ -564,6 +573,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: [],
                 occupationSquares: [],
                 destinationSquares: [],
               })
@@ -594,6 +604,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: ["f2"],
                 occupationSquares: [],
                 destinationSquares: ["f3", "f4"],
               })
@@ -622,6 +633,7 @@ describe("WithMoveValidation", () => {
             expect(props).toEqual(
               expect.objectContaining({
                 position: initialPosition,
+                selectionSquares: [],
                 occupationSquares: [],
                 destinationSquares: [],
               })
@@ -677,6 +689,12 @@ describe("WithMoveValidation", () => {
         });
 
         props = getProps();
+        expect(props).toEqual(
+          expect.objectContaining({
+            selectionSquares: [],
+          })
+        );
+
         expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
       });
 
@@ -698,6 +716,12 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
           expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
 
@@ -716,6 +740,12 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
           expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
 
@@ -734,6 +764,12 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
           expect(props.allowMoveFrom(PieceCode.BLACK_KING, "e8")).toBeFalsy();
         });
 
@@ -765,6 +801,12 @@ describe("WithMoveValidation", () => {
           });
 
           props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              selectionSquares: [],
+            })
+          );
+
           expect(props.allowMoveFrom(PieceCode.WHITE_KNIGHT, "g1")).toBeFalsy();
         });
       });
