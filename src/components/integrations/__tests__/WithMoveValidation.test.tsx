@@ -440,7 +440,7 @@ describe("WithMoveValidation", () => {
           );
         });
 
-        it("props after props.children({onMove})", () => {
+        it("props.children({onMove}) do valid move", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
           let props = getProps();
@@ -460,7 +460,31 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
-              destinationSquares: [],
+              // validMoves:
+            })
+          );
+        });
+
+        it("props.children({onMove}) do invalid move", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onMove({
+              from: "e2",
+              to: "e5",
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: initialPosition,
               // validMoves:
             })
           );
