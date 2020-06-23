@@ -12,12 +12,13 @@ import {
 } from "../../utils/chess";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceColor } from "../../enums/PieceColor";
-import { Chess, ChessInstance, Move, Square } from "chess.js";
+import { Chess, ChessInstance, Move as ChessJsMove, Square } from "chess.js";
 import {
   getWithMoveValidationInitialState,
   WithMoveValidationAction,
   withMoveValidationReducer,
 } from "./WithMoveValidation.reducer";
+import { Move } from "../../interfaces/Move";
 
 export interface WithMoveValidationCallbackProps {
   allowMoveFrom: (pieceCode: PieceCode, coordinates: string) => boolean;
@@ -38,6 +39,8 @@ export interface WithMoveValidationCallbackProps {
   onSquareClick(coordinates: string): void;
 
   onResize(width: number): void;
+
+  onMove(move: Move): void;
 }
 
 export interface WithMoveValidationProps {
@@ -132,7 +135,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       });
     },
     onDrop(event) {
-      const move: Move | null = game!.move({
+      const move: ChessJsMove | null = game!.move({
         from: event.sourceCoordinates as Square,
         to: event.targetCoordinates as Square,
       });
@@ -183,7 +186,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
           return;
         }
 
-        const move: Move | null = game!.move({
+        const move: ChessJsMove | null = game!.move({
           from: selectionSquares[0] as Square,
           to: coordinates as Square,
         });
@@ -230,5 +233,27 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     lastMoveSquares,
     occupationSquares,
     turnColor: getTurnColor(game),
+    onMove(move: Move) {
+      const chessJsMove: ChessJsMove | null = game!.move(move as ChessJsMove);
+      if (!chessJsMove) {
+        // invalid move
+        dispatch({
+          type: WithMoveValidationAction.CLEAR_SELECTION,
+          payload: null,
+        });
+        return;
+      }
+
+      dispatch({
+        type: WithMoveValidationAction.CHANGE_POSITION,
+        payload: {
+          lastMove: {
+            from: move.from,
+            to: move.to,
+          },
+          position: convertFenToPositionObject(game!.fen()),
+        },
+      });
+    },
   });
 };

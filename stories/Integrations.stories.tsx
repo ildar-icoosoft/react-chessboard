@@ -17,8 +17,8 @@ export const WithMoveValidationStory = () => (
       draggable,
       onDragStart,
       onDrop,
-      onSquareClick,
       onResize,
+      onMove,
       destinationSquares,
       occupationSquares,
       lastMoveSquares,
@@ -34,8 +34,8 @@ export const WithMoveValidationStory = () => (
         draggable={draggable}
         onDragStart={onDragStart}
         onDrop={onDrop}
-        onSquareClick={onSquareClick}
         onResize={onResize}
+        onMove={onMove}
         transitionDuration={10000}
         destinationSquares={destinationSquares}
         occupationSquares={occupationSquares}

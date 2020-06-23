@@ -427,6 +427,46 @@ describe("WithMoveValidation", () => {
         });
       });
 
+      describe("props.children({onMove})", () => {
+        it("props.children({onMove}) is a function", () => {
+          const { getProps } = renderWithMoveValidation();
+
+          const props = getProps();
+
+          expect(props).toEqual(
+            expect.objectContaining({
+              onMove: expect.any(Function),
+            })
+          );
+        });
+
+        it("props after props.children({onMove})", () => {
+          const { getProps } = renderWithMoveValidation(initialFen);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onMove({
+              from: "e2",
+              to: "e4",
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: positionAfterFirstMove,
+              destinationSquares: [],
+              // validMoves:
+            })
+          );
+        });
+      });
+
       it("props.children({onSquareClick}) is a function", () => {
         const { getProps } = renderWithMoveValidation();
 
