@@ -12,6 +12,7 @@ import { CoordinateGrid } from "../CoordinateGrid";
 import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
 import { Position } from "../../interfaces/Position";
+import { INITIAL_BOARD_FEN } from "../../constants/constants";
 
 jest.useFakeTimers();
 
@@ -238,19 +239,34 @@ describe("Board", () => {
         expect(coordinateGrid.props.transitionDuration).toBe(600);
       });
 
-      it("selectionSquares", () => {
-        const testRenderer = TestRenderer.create(<Board />);
-        const testInstance = testRenderer.root;
+      describe("selectionSquare", () => {
+        describe("select square on mouse click", () => {
+          it("click-click moves are allowed", () => {
+            // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+            const testRenderer = TestRenderer.create(
+              <Board position={INITIAL_BOARD_FEN} clickable={true} />
+            );
+            const testInstance = testRenderer.root;
 
-        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-          CoordinateGrid
-        );
+            const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+              CoordinateGrid
+            );
 
-        expect(coordinateGrid.props.selectionSquares).toBeUndefined();
+            expect(coordinateGrid.props.selectionSquare).toBeUndefined();
 
-        testRenderer.update(<Board selectionSquares={["a1"]} />);
+            TestRenderer.act(() => {
+              coordinateGrid.props.onClick("a1");
+            });
 
-        expect(coordinateGrid.props.selectionSquares).toEqual(["a1"]);
+            expect(coordinateGrid.props.selectionSquare).toBe("a1");
+
+            TestRenderer.act(() => {
+              coordinateGrid.props.onClick("a1");
+            });
+
+            expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+          });
+        });
       });
 
       it("occupationSquares", () => {

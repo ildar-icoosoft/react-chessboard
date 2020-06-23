@@ -92,7 +92,7 @@ describe("CoordinateGrid", () => {
 
       testRenderer.update(
         <CoordinateGridWithDnd
-          selectionSquares={["a1", "b1"]}
+          selectionSquare={"b1"}
           occupationSquares={["a2", "b2"]}
           destinationSquares={["a1", "b2"]}
           lastMoveSquares={["c3", "d4"]}
@@ -105,13 +105,13 @@ describe("CoordinateGrid", () => {
 
       testRenderer.update(
         <CoordinateGridWithDnd
-          selectionSquares={["a1", "b2", "c3"]}
+          selectionSquare={"a1"}
           occupationSquares={["b2", "d4"]}
           currentPremoveSquares={[]}
         />
       );
 
-      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(4); // a1, b2, c3, d4
+      expect(testInstance.findAllByType(HighlightedSquare).length).toBe(3); // a1, b2, d4
     });
 
     it("contains RoundMarker", () => {
@@ -274,7 +274,7 @@ describe("CoordinateGrid", () => {
     describe("HighlightedSquare", () => {
       it("remounts if coordinates are is changed", () => {
         const testRenderer = TestRenderer.create(
-          <CoordinateGridWithDnd selectionSquares={["a1"]} />
+          <CoordinateGridWithDnd destinationSquares={["a1"]} />
         );
         const testInstance = testRenderer.root;
 
@@ -282,7 +282,7 @@ describe("CoordinateGrid", () => {
         highlightedSquare = testInstance.findByType(HighlightedSquare);
 
         testRenderer.update(
-          <CoordinateGridWithDnd selectionSquares={["b1"]} />
+          <CoordinateGridWithDnd destinationSquares={["b1"]} />
         );
 
         // square is unmounted because coordinates are changed (from a1 to b1)
@@ -293,7 +293,7 @@ describe("CoordinateGrid", () => {
         highlightedSquare = testInstance.findByType(HighlightedSquare);
 
         testRenderer.update(
-          <CoordinateGridWithDnd selectionSquares={["a1", "b1", "c1"]} />
+          <CoordinateGridWithDnd destinationSquares={["a1", "b1", "c1"]} />
         );
 
         // square a1 is not unmounted because coordinates are not changed
@@ -767,7 +767,7 @@ describe("CoordinateGrid", () => {
     describe("HighlightedSquare", () => {
       it("width", () => {
         const testRenderer = TestRenderer.create(
-          <CoordinateGridWithDnd selectionSquares={["a1"]} />
+          <CoordinateGridWithDnd selectionSquare={"a1"} />
         );
         const testInstance = testRenderer.root;
 
@@ -776,7 +776,7 @@ describe("CoordinateGrid", () => {
         expect(a1Square.props.width).toBe(60);
 
         testRenderer.update(
-          <CoordinateGridWithDnd width={240} selectionSquares={["a1"]} />
+          <CoordinateGridWithDnd width={240} selectionSquare={"a1"} />
         );
 
         expect(a1Square.props.width).toBe(30);
@@ -790,7 +790,7 @@ describe("CoordinateGrid", () => {
 
         testRenderer.update(
           <CoordinateGridWithDnd
-            selectionSquares={["a1", "b1"]}
+            selectionSquare={"a1"}
             occupationSquares={["a2", "b2"]}
             destinationSquares={["a1", "b2"]}
             lastMoveSquares={["c3", "b1"]}
@@ -827,7 +827,6 @@ describe("CoordinateGrid", () => {
         );
         expect(b1Square.props.types).toEqual(
           expect.arrayContaining([
-            HighlightedSquareType.SELECTION,
             HighlightedSquareType.LAST_MOVE,
             HighlightedSquareType.CHECK,
           ])

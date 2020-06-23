@@ -53,7 +53,7 @@ export interface CoordinateGridProps {
   draggable?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   transitionDuration?: number;
-  selectionSquares?: string[];
+  selectionSquare?: string;
   occupationSquares?: string[];
   destinationSquares?: string[];
   lastMoveSquares?: string[];
@@ -78,7 +78,7 @@ export const CoordinateGrid = forwardRef<
       width = DEFAULT_BOARD_WIDTH,
       orientation = PieceColor.WHITE,
       draggable = false,
-      selectionSquares = [],
+      selectionSquare,
       occupationSquares = [],
       destinationSquares = [],
       lastMoveSquares = [],
@@ -256,7 +256,9 @@ export const CoordinateGrid = forwardRef<
 
     const normalizedHighlightedSquares: NormalizedHighlightedSquare[] = useNormalizedHighlightedSquares(
       {
-        [HighlightedSquareType.SELECTION]: selectionSquares,
+        [HighlightedSquareType.SELECTION]: selectionSquare
+          ? [selectionSquare]
+          : [],
         [HighlightedSquareType.OCCUPATION]: occupationSquares,
         [HighlightedSquareType.DESTINATION]: destinationSquares,
         [HighlightedSquareType.LAST_MOVE]: lastMoveSquares,

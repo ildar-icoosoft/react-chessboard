@@ -45,6 +45,7 @@ export interface BoardProps {
   occupationSquares?: string[];
   destinationSquares?: string[];
   lastMoveSquares?: string[];
+  movableColor?: PieceColor | "both";
   currentPremoveSquares?: string[];
   turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
 
@@ -84,6 +85,7 @@ const getCheckSquare = (
 
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
+  clickable = false,
   position = {},
   orientation = PieceColor.WHITE,
   draggable = false,
@@ -94,13 +96,13 @@ export const Board: FC<BoardProps> = ({
   showCoordinates = true,
   showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
-  selectionSquares,
   occupationSquares,
   destinationSquares,
   lastMoveSquares,
   currentPremoveSquares,
   check = false,
   turnColor = PieceColor.WHITE,
+  movableColor = "both",
   onSquareClick,
   onDragStart,
   onDragEnd,
@@ -117,6 +119,8 @@ export const Board: FC<BoardProps> = ({
 
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
+  const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
+
   const handleSquareClick = (coordinates: string): void => {
     if (allowMarkers) {
       setRoundMarkers([]);
@@ -124,6 +128,14 @@ export const Board: FC<BoardProps> = ({
 
     if (onSquareClick) {
       onSquareClick(coordinates);
+    }
+
+    if (clickable && (movableColor === "both" || movableColor === turnColor)) {
+      if (selectionSquare === coordinates) {
+        setSelectionSquare(undefined);
+      } else {
+        setSelectionSquare(coordinates);
+      }
     }
   };
 
@@ -170,7 +182,7 @@ export const Board: FC<BoardProps> = ({
             orientation={orientation}
             position={positionObject}
             width={width}
-            selectionSquares={selectionSquares}
+            selectionSquare={selectionSquare}
             occupationSquares={occupationSquares}
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
