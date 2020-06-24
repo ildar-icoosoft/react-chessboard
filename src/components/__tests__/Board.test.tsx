@@ -655,44 +655,54 @@ describe("Board", () => {
 
   describe("Events", () => {
     describe("onMove", () => {
-      describe("Click-click move", () => {
-        it("success move", () => {
-          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
-          const onMove = jest.fn();
+      it("Click-click move", () => {
+        // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        const onMove = jest.fn();
 
-          const testRenderer = TestRenderer.create(
-            <Board
-              position={initialFen}
-              clickable={true}
-              onMove={onMove}
-              validMoves={{
-                e2: ["e3", "e4", "d3"],
-                f2: ["f3", "f4"],
-                e1: ["d2", "f1", "d1", "g1", "c1"],
-              }}
-            />
-          );
-          const testInstance = testRenderer.root;
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialFen}
+            clickable={true}
+            onMove={onMove}
+            validMoves={{
+              e2: ["e3", "e4", "d3"],
+              f2: ["f3", "f4"],
+              e1: ["d2", "f1", "d1", "g1", "c1"],
+            }}
+          />
+        );
+        const testInstance = testRenderer.root;
 
-          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-            CoordinateGrid
-          );
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
 
-          TestRenderer.act(() => {
-            coordinateGrid.props.onClick("e2");
-          });
-
-          TestRenderer.act(() => {
-            coordinateGrid.props.onClick("e4");
-          });
-
-          expect(onMove).toBeCalledTimes(1);
-
-          expect(onMove).toBeCalledWith({
-            from: "e2",
-            to: "e4",
-          });
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
         });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(1);
+
+        expect(onMove).toBeCalledWith({
+          from: "e2",
+          to: "e4",
+        });
+
+        onMove.mockClear();
+
+        // invalid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e5");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
       });
     });
 
