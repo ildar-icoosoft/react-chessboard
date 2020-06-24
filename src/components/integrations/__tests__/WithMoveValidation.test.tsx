@@ -480,7 +480,9 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
-              // validMoves:
+              validMoves: {
+                f5: ["e6", "f6", "g6", "g5", "g4", "f4", "e4", "e5"],
+              },
             })
           );
         });
@@ -505,7 +507,6 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               position: initialPosition,
-              // validMoves:
             })
           );
         });

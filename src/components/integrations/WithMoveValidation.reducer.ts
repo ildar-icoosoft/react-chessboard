@@ -2,7 +2,7 @@ import { Action } from "redux-actions";
 import { ChessInstance } from "chess.js";
 import { Position } from "../../interfaces/Position";
 import { Move } from "../../interfaces/Move";
-import { convertFenToPositionObject } from "../../utils/chess";
+import { convertFenToPositionObject, getValidMoves } from "../../utils/chess";
 import { ValidMoves } from "../../types/ValidMoves";
 
 export enum WithMoveValidationAction {
@@ -54,19 +54,10 @@ const setGame = (
   state: WithMoveValidationState,
   { payload }: Action<ChessInstance>
 ): WithMoveValidationState => {
-  const validMoves: ValidMoves = {};
-
-  payload.SQUARES.forEach((square) => {
-    const moves = payload.moves({ square, verbose: true });
-    if (moves.length) {
-      validMoves[square] = moves.map((move) => move.to);
-    }
-  });
-
   return {
     ...state,
     game: payload,
-    validMoves,
+    validMoves: getValidMoves(payload),
   };
 };
 
@@ -76,6 +67,7 @@ const changePosition = (
 ): WithMoveValidationState => {
   return {
     ...state,
+    validMoves: getValidMoves(state.game as ChessInstance),
     position: payload.position,
     selectionSquares: [],
     destinationSquares: [],

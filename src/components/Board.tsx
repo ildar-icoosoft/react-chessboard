@@ -28,6 +28,7 @@ import {
   isValidPositionObject,
 } from "../utils/chess";
 import { Move } from "../interfaces/Move";
+import { ValidMoves } from "../types/ValidMoves";
 
 export interface BoardProps {
   allowMarkers?: boolean;
@@ -38,6 +39,7 @@ export interface BoardProps {
   orientation?: PieceColor;
   draggable?: boolean; // allow moves & premoves to use drag'n drop
   transitionDuration?: number;
+  validMoves?: ValidMoves;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -78,8 +80,10 @@ const getCheckSquare = (
       : PieceCode.BLACK_KING;
 
   for (const coordinates in position) {
-    if (position[coordinates] === kingPieceCode) {
-      return coordinates;
+    if (position.hasOwnProperty(coordinates)) {
+      if (position[coordinates] === kingPieceCode) {
+        return coordinates;
+      }
     }
   }
 
@@ -112,6 +116,7 @@ export const Board: FC<BoardProps> = ({
   onDrop,
   onResize,
   onMove,
+  validMoves = {},
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -165,6 +170,14 @@ export const Board: FC<BoardProps> = ({
 
       if (canSelectSquare(coordinates)) {
         setSelectionSquare(coordinates);
+        return;
+      }
+
+      if (
+        !validMoves[selectionSquare] ||
+        !validMoves[selectionSquare].includes(coordinates)
+      ) {
+        setSelectionSquare(undefined);
         return;
       }
 

@@ -14,10 +14,12 @@ import {
   convertFenToPositionObject,
   isValidFen,
   isValidPositionObject,
+  getValidMoves,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
 import { Position } from "../../interfaces/Position";
+import { Chess, ChessInstance } from "chess.js";
 
 describe("Chess utils", () => {
   it("isLightSquare()", () => {
@@ -194,5 +196,17 @@ describe("Chess utils", () => {
       // @ts-ignore
       isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP", e1: "bM" })
     ).toBe(false);
+  });
+
+  it("getValidMoves()", () => {
+    const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+
+    const game: ChessInstance = new Chess(initialFen);
+
+    expect(getValidMoves(game)).toEqual({
+      e1: ["d2", "f1", "d1", "g1", "c1"],
+      e2: ["e3", "e4", "d3"],
+      f2: ["f3", "f4"],
+    });
   });
 });

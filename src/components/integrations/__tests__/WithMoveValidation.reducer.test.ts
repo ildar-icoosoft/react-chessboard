@@ -155,7 +155,9 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: game,
-      validMoves: {},
+      validMoves: {
+        f5: ["e6", "f6", "g6", "g5", "g4", "f4", "e4", "e5"],
+      },
       width: 480,
       position: {
         e4: PieceCode.WHITE_PAWN,

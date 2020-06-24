@@ -16,6 +16,8 @@ import { INITIAL_BOARD_FEN } from "../../constants/constants";
 
 jest.useFakeTimers();
 
+const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+
 describe("Board", () => {
   it("Snapshot", () => {
     const tree = TestRenderer.create(<Board />).toJSON();
@@ -308,8 +310,8 @@ describe("Board", () => {
             coordinateGrid.props.onClick("d5");
           });
 
-          // invalid move. we must clear selection @todo
-          // expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+          // invalid move. we must clear selection
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
       });
 
@@ -660,9 +662,14 @@ describe("Board", () => {
 
           const testRenderer = TestRenderer.create(
             <Board
-              position={INITIAL_BOARD_FEN}
+              position={initialFen}
               clickable={true}
               onMove={onMove}
+              validMoves={{
+                e2: ["e3", "e4", "d3"],
+                f2: ["f3", "f4"],
+                e1: ["d2", "f1", "d1", "g1", "c1"],
+              }}
             />
           );
           const testInstance = testRenderer.root;
@@ -675,7 +682,6 @@ describe("Board", () => {
             coordinateGrid.props.onClick("e2");
           });
 
-          // first click on empty square
           TestRenderer.act(() => {
             coordinateGrid.props.onClick("e4");
           });
