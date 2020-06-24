@@ -23,6 +23,7 @@ import { without as _without } from "lodash";
 import { Resizer } from "./Resizer";
 import {
   convertFenToPositionObject,
+  getColorFromPieceCode,
   isValidFen,
   isValidPositionObject,
 } from "../utils/chess";
@@ -124,6 +125,26 @@ export const Board: FC<BoardProps> = ({
 
   const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
 
+  const canSelectSquare = (coordinates: string): boolean => {
+    if (positionObject[coordinates]) {
+      const pieceColor: PieceColor = getColorFromPieceCode(
+        positionObject[coordinates]
+      );
+
+      if (pieceColor === turnColor) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const isAllowedToClickMove = (): boolean => {
+    return !!(
+      clickable &&
+      (movableColor === "both" || movableColor === turnColor)
+    );
+  };
+
   const handleSquareClick = (coordinates: string): void => {
     if (allowMarkers) {
       setRoundMarkers([]);
@@ -133,41 +154,32 @@ export const Board: FC<BoardProps> = ({
       onSquareClick(coordinates);
     }
 
-    if (clickable && (movableColor === "both" || movableColor === turnColor)) {
-      if (selectionSquare) {
-        if (selectionSquare === coordinates) {
-          setSelectionSquare(undefined);
-          return;
-        }
-
-        if (onMove) {
-          onMove({
-            from: selectionSquare,
-            to: coordinates,
-          });
-        }
-      } else {
-        if (!positionObject[coordinates]) {
-          setSelectionSquare(undefined);
-          return;
-        }
-        setSelectionSquare(coordinates);
-      }
+    if (!isAllowedToClickMove()) {
+      return;
     }
-
-    if (clickable && (movableColor === "both" || movableColor === turnColor)) {
-      if (selectionSquare) {
-        if (selectionSquare === coordinates) {
-          setSelectionSquare(undefined);
-          return;
-        }
-      } else {
-        if (!positionObject[coordinates]) {
-          setSelectionSquare(undefined);
-        } else {
-          setSelectionSquare(coordinates);
-        }
+    if (selectionSquare) {
+      if (selectionSquare === coordinates) {
+        setSelectionSquare(undefined);
+        return;
       }
+
+      if (canSelectSquare(coordinates)) {
+        setSelectionSquare(coordinates);
+        return;
+      }
+
+      if (onMove) {
+        onMove({
+          from: selectionSquare,
+          to: coordinates,
+        });
+      }
+    } else {
+      if (!canSelectSquare(coordinates)) {
+        setSelectionSquare(undefined);
+        return;
+      }
+      setSelectionSquare(coordinates);
     }
   };
 

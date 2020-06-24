@@ -272,7 +272,14 @@ describe("Board", () => {
           expect(coordinateGrid.props.selectionSquare).toBe("a1");
 
           TestRenderer.act(() => {
-            coordinateGrid.props.onClick("a1");
+            coordinateGrid.props.onClick("e1");
+          });
+
+          // change selection if user clicks on another one piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e1");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e1");
           });
 
           // clear selection if user clicks again on this square
@@ -285,6 +292,24 @@ describe("Board", () => {
 
           // do not add selection if square does not contain a piece
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          // first click on opposite piece
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e7");
+          });
+
+          // do not add selection if square does not contain a piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e1");
+          });
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("d5");
+          });
+
+          // invalid move. we must clear selection @todo
+          // expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
       });
 
