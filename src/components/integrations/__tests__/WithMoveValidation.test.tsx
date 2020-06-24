@@ -13,6 +13,7 @@ import {
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
 import { PieceColor } from "../../../enums/PieceColor";
+import { ValidMoves } from "../../../types/ValidMoves";
 
 const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
@@ -38,6 +39,12 @@ const initialPosition: Position = {
   d3: PieceCode.BLACK_PAWN,
 };
 
+const initialPositionValidMoves: ValidMoves = {
+  e1: ["d2", "f1", "d1", "g1", "c1"],
+  e2: ["e3", "e4", "d3"],
+  f2: ["f3", "f4"],
+};
+
 // 1. e2-e4
 const positionAfterFirstMove: Position = {
   e4: PieceCode.WHITE_PAWN,
@@ -46,6 +53,10 @@ const positionAfterFirstMove: Position = {
   f5: PieceCode.BLACK_KING,
   e7: PieceCode.BLACK_PAWN,
   d3: PieceCode.BLACK_PAWN,
+};
+
+const positionAfterFirstMoveValidMoves: ValidMoves = {
+  f5: ["e6", "f6", "g6", "g5", "g4", "f4", "e4", "e5"],
 };
 
 const renderWithMoveValidation = (fen?: string) => {
@@ -223,11 +234,7 @@ describe("WithMoveValidation", () => {
 
         expect(props).toEqual(
           expect.objectContaining({
-            validMoves: {
-              e1: ["d2", "f1", "d1", "g1", "c1"],
-              e2: ["e3", "e4", "d3"],
-              f2: ["f3", "f4"],
-            },
+            validMoves: initialPositionValidMoves,
           })
         );
       });
@@ -480,9 +487,7 @@ describe("WithMoveValidation", () => {
           expect(props).toEqual(
             expect.objectContaining({
               position: positionAfterFirstMove,
-              validMoves: {
-                f5: ["e6", "f6", "g6", "g5", "g4", "f4", "e4", "e5"],
-              },
+              validMoves: positionAfterFirstMoveValidMoves,
             })
           );
         });

@@ -90,6 +90,13 @@ const getCheckSquare = (
   return undefined;
 };
 
+const getOccupationSquares = (
+  destinationSquares: string[],
+  position: Position
+): string[] => {
+  return destinationSquares.filter((item) => position[item]);
+};
+
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
   clickable = false,
@@ -103,7 +110,6 @@ export const Board: FC<BoardProps> = ({
   showCoordinates = true,
   showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
-  occupationSquares,
   lastMoveSquares,
   currentPremoveSquares,
   check = false,
@@ -220,6 +226,14 @@ export const Board: FC<BoardProps> = ({
   };
 
   const checkSquare = getCheckSquare(check, positionObject, turnColor);
+  const destinationSquares =
+    selectionSquare && validMoves[selectionSquare]
+      ? validMoves[selectionSquare]
+      : [];
+  const occupationSquares = getOccupationSquares(
+    destinationSquares,
+    positionObject
+  );
 
   return (
     <>
@@ -240,9 +254,7 @@ export const Board: FC<BoardProps> = ({
             width={width}
             selectionSquare={selectionSquare}
             occupationSquares={occupationSquares}
-            destinationSquares={
-              selectionSquare ? validMoves[selectionSquare] : undefined
-            }
+            destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
             currentPremoveSquares={currentPremoveSquares}
             checkSquare={checkSquare}

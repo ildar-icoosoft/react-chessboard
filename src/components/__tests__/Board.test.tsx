@@ -13,10 +13,24 @@ import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
 import { Position } from "../../interfaces/Position";
 import { INITIAL_BOARD_FEN } from "../../constants/constants";
+import { ValidMoves } from "../../types/ValidMoves";
 
 jest.useFakeTimers();
 
-const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+const initialPosition: Position = {
+  e2: PieceCode.WHITE_PAWN,
+  f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  f5: PieceCode.BLACK_KING,
+  e7: PieceCode.BLACK_PAWN,
+  d3: PieceCode.BLACK_PAWN,
+};
+
+const initialPositionValidMoves: ValidMoves = {
+  e1: ["d2", "f1", "d1", "g1", "c1"],
+  e2: ["e3", "e4", "d3"],
+  f2: ["f3", "f4"],
+};
 
 describe("Board", () => {
   it("Snapshot", () => {
@@ -316,26 +330,11 @@ describe("Board", () => {
       });
 
       it("occupationSquares", () => {
-        const testRenderer = TestRenderer.create(<Board />);
-        const testInstance = testRenderer.root;
-
-        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-          CoordinateGrid
-        );
-
-        expect(coordinateGrid.props.occupationSquares).toBeUndefined();
-
-        testRenderer.update(<Board occupationSquares={["a1"]} />);
-
-        expect(coordinateGrid.props.occupationSquares).toEqual(["a1"]);
-      });
-
-      it("destinationSquares", () => {
         const testRenderer = TestRenderer.create(
           <Board
-            position={initialFen}
             clickable={true}
-            validMoves={{ e2: ["e3", "e4"] }}
+            position={initialPosition}
+            validMoves={initialPositionValidMoves}
           />
         );
         const testInstance = testRenderer.root;
@@ -344,13 +343,40 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.destinationSquares).toBeUndefined();
+        expect(coordinateGrid.props.occupationSquares).toEqual([]);
 
         TestRenderer.act(() => {
           coordinateGrid.props.onClick("e2");
         });
 
-        expect(coordinateGrid.props.destinationSquares).toEqual(["e3", "e4"]);
+        expect(coordinateGrid.props.occupationSquares).toEqual(["d3"]);
+      });
+
+      it("destinationSquares", () => {
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        expect(coordinateGrid.props.destinationSquares).toEqual([]);
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+
+        expect(coordinateGrid.props.destinationSquares).toEqual([
+          "e3",
+          "e4",
+          "d3",
+        ]);
       });
 
       it("lastMoveSquares", () => {
@@ -669,14 +695,10 @@ describe("Board", () => {
 
         const testRenderer = TestRenderer.create(
           <Board
-            position={initialFen}
+            position={initialPosition}
             clickable={true}
             onMove={onMove}
-            validMoves={{
-              e2: ["e3", "e4", "d3"],
-              f2: ["f3", "f4"],
-              e1: ["d2", "f1", "d1", "g1", "c1"],
-            }}
+            validMoves={initialPositionValidMoves}
           />
         );
         const testInstance = testRenderer.root;
@@ -719,15 +741,11 @@ describe("Board", () => {
 
         const testRenderer = TestRenderer.create(
           <Board
-            position={initialFen}
+            position={initialPosition}
             movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
             clickable={true}
             onMove={onMove}
-            validMoves={{
-              e2: ["e3", "e4", "d3"],
-              f2: ["f3", "f4"],
-              e1: ["d2", "f1", "d1", "g1", "c1"],
-            }}
+            validMoves={initialPositionValidMoves}
           />
         );
         const testInstance = testRenderer.root;
@@ -750,14 +768,10 @@ describe("Board", () => {
 
         testRenderer.update(
           <Board
-            position={initialFen}
+            position={initialPosition}
             clickable={false} // clickable false, so moves are forbidden
             onMove={onMove}
-            validMoves={{
-              e2: ["e3", "e4", "d3"],
-              f2: ["f3", "f4"],
-              e1: ["d2", "f1", "d1", "g1", "c1"],
-            }}
+            validMoves={initialPositionValidMoves}
           />
         );
 
