@@ -155,6 +155,13 @@ export const Board: FC<BoardProps> = ({
     );
   };
 
+  const isAllowedToDragMove = (): boolean => {
+    return !!(
+      draggable &&
+      (movableColor === "both" || movableColor === turnColor)
+    );
+  };
+
   const handleSquareClick = (coordinates: string): void => {
     if (allowMarkers) {
       setRoundMarkers([]);
@@ -178,11 +185,12 @@ export const Board: FC<BoardProps> = ({
         return;
       }
 
+      setSelectionSquare(undefined);
+
       if (
         !validMoves[selectionSquare] ||
         !validMoves[selectionSquare].includes(coordinates)
       ) {
-        setSelectionSquare(undefined);
         return;
       }
 
@@ -208,6 +216,14 @@ export const Board: FC<BoardProps> = ({
 
     if (onDragStart) {
       onDragStart(event);
+    }
+
+    if (!isAllowedToDragMove()) {
+      return;
+    }
+
+    if (canSelectSquare(event.coordinates)) {
+      setSelectionSquare(event.coordinates);
     }
   };
 

@@ -327,6 +327,126 @@ describe("Board", () => {
           // invalid move. we must clear selection
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
+
+        it("clear selectionSquare after click-click move", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={initialPosition}
+              clickable={true}
+              validMoves={initialPositionValidMoves}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e4");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("click-click moves are not allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} clickable={false} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              movableColor={PieceColor.BLACK}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("Drag and drop moves are allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} draggable={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+        });
+
+        it("Drag and drop moves are not allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} draggable={false} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              movableColor={PieceColor.BLACK}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
       });
 
       it("occupationSquares", () => {
