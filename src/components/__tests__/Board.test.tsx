@@ -655,7 +655,7 @@ describe("Board", () => {
 
   describe("Events", () => {
     describe("onMove", () => {
-      it("Click-click move", () => {
+      it("Allowed Click-click move", () => {
         // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
         const onMove = jest.fn();
 
@@ -693,6 +693,65 @@ describe("Board", () => {
         });
 
         onMove.mockClear();
+
+        // invalid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e5");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+      });
+
+      it("Forbidden Click-click move", () => {
+        // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        const onMove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialFen}
+            movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
+            clickable={true}
+            onMove={onMove}
+            validMoves={{
+              e2: ["e3", "e4", "d3"],
+              f2: ["f3", "f4"],
+              e1: ["d2", "f1", "d1", "g1", "c1"],
+            }}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+
+        onMove.mockClear();
+
+        testRenderer.update(
+          <Board
+            position={initialFen}
+            clickable={false} // clickable false, so moves are forbidden
+            onMove={onMove}
+            validMoves={{
+              e2: ["e3", "e4", "d3"],
+              f2: ["f3", "f4"],
+              e1: ["d2", "f1", "d1", "g1", "c1"],
+            }}
+          />
+        );
 
         // invalid move
         TestRenderer.act(() => {
