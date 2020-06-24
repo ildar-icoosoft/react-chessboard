@@ -15,8 +15,6 @@ export const WithMoveValidationStory = () => (
       turnColor,
       position,
       draggable,
-      onDragStart,
-      onDrop,
       onResize,
       onMove,
       destinationSquares,
@@ -33,8 +31,6 @@ export const WithMoveValidationStory = () => (
         turnColor={turnColor}
         position={position}
         draggable={draggable}
-        onDragStart={onDragStart}
-        onDrop={onDrop}
         onResize={onResize}
         onMove={onMove}
         transitionDuration={10000}
