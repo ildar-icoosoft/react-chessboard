@@ -19,6 +19,7 @@ const initialPosition: Position = {
 
 const defaultState: WithMoveValidationState = {
   game: null,
+  validMoves: {},
   width: 480,
   position: initialPosition,
   selectionSquares: [],
@@ -29,6 +30,7 @@ const defaultState: WithMoveValidationState = {
 
 const stateWithSelectedSquares: WithMoveValidationState = {
   game: null,
+  validMoves: {},
   width: 480,
   position: initialPosition,
   selectionSquares: ["e2"],
@@ -48,6 +50,11 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game,
+      validMoves: {
+        e1: ["d2", "f1", "d1", "g1", "c1"],
+        e2: ["e3", "e4", "d3"],
+        f2: ["f3", "f4"],
+      },
       width: 480,
       position: initialPosition,
       selectionSquares: [],
@@ -68,6 +75,7 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: null,
+      validMoves: {},
       width: 480,
       position: initialPosition,
       selectionSquares: ["e2"],
@@ -85,6 +93,7 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: null,
+      validMoves: {},
       width: 480,
       position: initialPosition,
       selectionSquares: [],
@@ -102,6 +111,7 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: null,
+      validMoves: {},
       width: 240,
       position: initialPosition,
       selectionSquares: [],
@@ -145,6 +155,7 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: game,
+      validMoves: {},
       width: 480,
       position: {
         e4: PieceCode.WHITE_PAWN,

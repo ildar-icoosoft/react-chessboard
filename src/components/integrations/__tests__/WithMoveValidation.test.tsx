@@ -212,6 +212,26 @@ describe("WithMoveValidation", () => {
         );
       });
 
+      it("props.children({validMoves})", () => {
+        const { getProps } = renderWithMoveValidation(initialFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            validMoves: {
+              e1: ["d2", "f1", "d1", "g1", "c1"],
+              e2: ["e3", "e4", "d3"],
+              f2: ["f3", "f4"],
+            },
+          })
+        );
+      });
+
       it("props.children({selectionSquares, destinationSquares, occupationSquares, lastMoveSquares}) default values", () => {
         const { getProps } = renderWithMoveValidation(initialFen);
 

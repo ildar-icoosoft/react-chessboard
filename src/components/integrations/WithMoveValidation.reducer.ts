@@ -3,6 +3,7 @@ import { ChessInstance } from "chess.js";
 import { Position } from "../../interfaces/Position";
 import { Move } from "../../interfaces/Move";
 import { convertFenToPositionObject } from "../../utils/chess";
+import { ValidMoves } from "../../types/ValidMoves";
 
 export enum WithMoveValidationAction {
   SET_GAME = "SET_GAME",
@@ -14,6 +15,7 @@ export enum WithMoveValidationAction {
 
 export interface WithMoveValidationState {
   game: ChessInstance | null;
+  validMoves: ValidMoves;
   position: Position;
   selectionSquares: string[];
   occupationSquares: string[];
@@ -44,6 +46,7 @@ export const getWithMoveValidationInitialState = (
     occupationSquares: [],
     destinationSquares: [],
     lastMoveSquares: [],
+    validMoves: {},
   };
 };
 
@@ -51,9 +54,19 @@ const setGame = (
   state: WithMoveValidationState,
   { payload }: Action<ChessInstance>
 ): WithMoveValidationState => {
+  const validMoves: ValidMoves = {};
+
+  payload.SQUARES.forEach((square) => {
+    const moves = payload.moves({ square, verbose: true });
+    if (moves.length) {
+      validMoves[square] = moves.map((move) => move.to);
+    }
+  });
+
   return {
     ...state,
     game: payload,
+    validMoves,
   };
 };
 

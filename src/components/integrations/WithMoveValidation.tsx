@@ -19,6 +19,7 @@ import {
   withMoveValidationReducer,
 } from "./WithMoveValidation.reducer";
 import { Move } from "../../interfaces/Move";
+import { ValidMoves } from "../../types/ValidMoves";
 
 export interface WithMoveValidationCallbackProps {
   allowMoveFrom: (pieceCode: PieceCode, coordinates: string) => boolean;
@@ -31,6 +32,7 @@ export interface WithMoveValidationCallbackProps {
   lastMoveSquares: string[];
   occupationSquares: string[];
   turnColor: PieceColor;
+  validMoves: ValidMoves;
 
   onDragStart(event: PieceDragStartEvent): void;
 
@@ -108,6 +110,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     destinationSquares,
     lastMoveSquares,
     width,
+    validMoves,
   } = state;
 
   useEffect(() => {
@@ -255,5 +258,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         },
       });
     },
+    validMoves,
   });
 };
