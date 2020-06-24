@@ -331,7 +331,13 @@ describe("Board", () => {
       });
 
       it("destinationSquares", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialFen}
+            clickable={true}
+            validMoves={{ e2: ["e3", "e4"] }}
+          />
+        );
         const testInstance = testRenderer.root;
 
         const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
@@ -340,9 +346,11 @@ describe("Board", () => {
 
         expect(coordinateGrid.props.destinationSquares).toBeUndefined();
 
-        testRenderer.update(<Board destinationSquares={["a1"]} />);
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
 
-        expect(coordinateGrid.props.destinationSquares).toEqual(["a1"]);
+        expect(coordinateGrid.props.destinationSquares).toEqual(["e3", "e4"]);
       });
 
       it("lastMoveSquares", () => {

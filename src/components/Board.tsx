@@ -104,7 +104,6 @@ export const Board: FC<BoardProps> = ({
   showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   occupationSquares,
-  destinationSquares,
   lastMoveSquares,
   currentPremoveSquares,
   check = false,
@@ -241,7 +240,9 @@ export const Board: FC<BoardProps> = ({
             width={width}
             selectionSquare={selectionSquare}
             occupationSquares={occupationSquares}
-            destinationSquares={destinationSquares}
+            destinationSquares={
+              selectionSquare ? validMoves[selectionSquare] : undefined
+            }
             lastMoveSquares={lastMoveSquares}
             currentPremoveSquares={currentPremoveSquares}
             checkSquare={checkSquare}
