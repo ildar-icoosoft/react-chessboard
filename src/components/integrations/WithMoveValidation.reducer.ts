@@ -7,8 +7,6 @@ import { ValidMoves } from "../../types/ValidMoves";
 
 export enum WithMoveValidationAction {
   SET_GAME = "SET_GAME",
-  SELECT_SQUARE = "SELECT_SQUARE",
-  CLEAR_SELECTION = "CLEAR_SELECTION",
   RESIZE = "RESIZE",
   CHANGE_POSITION = "CHANGE_POSITION",
 }
@@ -17,16 +15,8 @@ export interface WithMoveValidationState {
   game: ChessInstance | null;
   validMoves: ValidMoves;
   position: Position;
-  selectionSquares: string[];
-  occupationSquares: string[];
-  destinationSquares: string[];
   lastMoveSquares: string[];
   width: number;
-}
-
-export interface SelectedSquareData {
-  selectionSquare: string;
-  destinationSquares: string[];
 }
 
 export interface ChangePositionData {
@@ -42,9 +32,6 @@ export const getWithMoveValidationInitialState = (
     game: null,
     width,
     position: convertFenToPositionObject(initialFen),
-    selectionSquares: [],
-    occupationSquares: [],
-    destinationSquares: [],
     lastMoveSquares: [],
     validMoves: {},
   };
@@ -69,35 +56,7 @@ const changePosition = (
     ...state,
     validMoves: getValidMoves(state.game as ChessInstance),
     position: payload.position,
-    selectionSquares: [],
-    destinationSquares: [],
-    occupationSquares: [],
     lastMoveSquares: [payload.lastMove.from, payload.lastMove.to],
-  };
-};
-
-const selectSquare = (
-  state: WithMoveValidationState,
-  { payload }: Action<SelectedSquareData>
-): WithMoveValidationState => {
-  return {
-    ...state,
-    selectionSquares: [payload.selectionSquare],
-    destinationSquares: payload.destinationSquares,
-    occupationSquares: payload.destinationSquares.filter(
-      (item) => state.position[item]
-    ),
-  };
-};
-
-const clearSelection = (
-  state: WithMoveValidationState
-): WithMoveValidationState => {
-  return {
-    ...state,
-    selectionSquares: [],
-    destinationSquares: [],
-    occupationSquares: [],
   };
 };
 
@@ -119,8 +78,6 @@ const reducersMap: Record<
   ) => WithMoveValidationState
 > = {
   [WithMoveValidationAction.SET_GAME]: setGame,
-  [WithMoveValidationAction.SELECT_SQUARE]: selectSquare,
-  [WithMoveValidationAction.CLEAR_SELECTION]: clearSelection,
   [WithMoveValidationAction.RESIZE]: resize,
   [WithMoveValidationAction.CHANGE_POSITION]: changePosition,
 };

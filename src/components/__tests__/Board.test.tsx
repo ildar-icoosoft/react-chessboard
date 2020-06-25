@@ -6,10 +6,8 @@ import { PieceCode } from "../../enums/PieceCode";
 import { PieceDragLayer } from "../PieceDragLayer";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { Coords } from "../Coords";
 import { CoordinateGrid } from "../CoordinateGrid";
-import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
 import { Position } from "../../interfaces/Position";
 import { INITIAL_BOARD_FEN } from "../../constants/constants";
@@ -31,6 +29,18 @@ const initialPositionValidMoves: ValidMoves = {
   e2: ["e3", "e4", "d3"],
   f2: ["f3", "f4"],
 };
+
+/*const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
+const staleMateFen: string = "4k3/8/3RKR2/8/8/8/8/8 b - - 0 1";
+const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/4P3/8 b - - 100 100";
+
+const beforeEnPassantCaptureFen: string =
+  "4k3/8/8/8/4Pp2/8/8/4K3 b KQkq e3 0 1";
+const afterEnPassantCapturePosition: Position = {
+  e8: PieceCode.BLACK_KING,
+  e1: PieceCode.WHITE_KING,
+  e3: PieceCode.BLACK_PAWN,
+};*/
 
 describe("Board", () => {
   it("Snapshot", () => {
@@ -1111,96 +1121,6 @@ describe("Board", () => {
 
         expect(onMove).toBeCalledTimes(0);
       });
-    });
-
-    it("onSquareClick", () => {
-      const onSquareClick = jest.fn();
-
-      const testInstance = TestRenderer.create(
-        <Board onSquareClick={onSquareClick} />
-      ).root;
-
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
-
-      TestRenderer.act(() => {
-        coordinateGrid.props.onClick("e2");
-      });
-
-      expect(onSquareClick).toBeCalledTimes(1);
-
-      expect(onSquareClick).toBeCalledWith("e2");
-    });
-
-    it("onDragStart", () => {
-      const onDragStart = jest.fn();
-
-      const testInstance = TestRenderer.create(
-        <Board onDragStart={onDragStart} />
-      ).root;
-
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
-
-      const dragStartEvent: PieceDragStartEvent = {
-        coordinates: "e2",
-        pieceCode: PieceCode.WHITE_PAWN,
-      };
-
-      TestRenderer.act(() => {
-        coordinateGrid.props.onDragStart(dragStartEvent);
-      });
-
-      expect(onDragStart).toBeCalledTimes(1);
-
-      expect(onDragStart).toBeCalledWith(dragStartEvent);
-    });
-
-    it("onDragEnd", () => {
-      const onDragEnd = jest.fn();
-
-      const testInstance = TestRenderer.create(<Board onDragEnd={onDragEnd} />)
-        .root;
-
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
-
-      TestRenderer.act(() => {
-        coordinateGrid.props.onDragEnd();
-      });
-
-      expect(onDragEnd).toBeCalledTimes(1);
-      expect(onDragEnd).toBeCalledWith();
-    });
-
-    it("onDrop", () => {
-      const onDrop = jest.fn();
-      const cancelMove = jest.fn();
-
-      const testInstance = TestRenderer.create(<Board onDrop={onDrop} />).root;
-
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
-
-      const dropEvent: PieceDropEvent = {
-        sourceCoordinates: "e2",
-        targetCoordinates: "e4",
-        pieceCode: PieceCode.WHITE_PAWN,
-        cancelMove,
-        disableTransitionInNextPosition() {},
-      };
-
-      TestRenderer.act(() => {
-        coordinateGrid.props.onDrop(dropEvent);
-      });
-
-      expect(onDrop).toBeCalledTimes(1);
-
-      expect(onDrop).toBeCalledWith(dropEvent);
     });
 
     it("onResize", () => {
