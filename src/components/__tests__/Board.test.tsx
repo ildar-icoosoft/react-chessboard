@@ -408,6 +408,16 @@ describe("Board", () => {
 
           // add selection if square contains movable piece
           expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "d2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("d2");
         });
 
         it("Drag and drop moves are not allowed", () => {
@@ -895,12 +905,114 @@ describe("Board", () => {
           />
         );
 
-        // invalid move
         TestRenderer.act(() => {
           coordinateGrid.props.onClick("e2");
         });
         TestRenderer.act(() => {
-          coordinateGrid.props.onClick("e5");
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+      });
+
+      it("Allowed Drag and drop move", () => {
+        // Drag and drop moves are allowed (turnColor white, draggable true, movableColor both)
+        const onMove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            cancelMove() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(1);
+
+        expect(onMove).toBeCalledWith({
+          from: "e2",
+          to: "e4",
+        });
+
+        onMove.mockClear();
+
+        // invalid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e5",
+            pieceCode: PieceCode.WHITE_PAWN,
+            cancelMove() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+      });
+
+      it("Forbidden Drag and drop move", () => {
+        // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        const onMove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
+            draggable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            cancelMove() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+
+        onMove.mockClear();
+
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={false} // clickable false, so moves are forbidden
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            cancelMove() {},
+          });
         });
 
         expect(onMove).toBeCalledTimes(0);

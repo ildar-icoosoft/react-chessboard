@@ -117,8 +117,8 @@ export const Board: FC<BoardProps> = ({
   movableColor = "both",
   onSquareClick,
   onDragStart,
-  onDragEnd,
   onDrop,
+  onDragEnd,
   onResize,
   onMove,
   validMoves = {},
@@ -209,6 +209,30 @@ export const Board: FC<BoardProps> = ({
     }
   };
 
+  const handleDrop = (event: PieceDropEvent): void => {
+    if (onDrop) {
+      onDrop(event);
+    }
+
+    if (!isAllowedToDragMove()) {
+      return;
+    }
+
+    if (
+      !validMoves[event.sourceCoordinates] ||
+      !validMoves[event.sourceCoordinates].includes(event.targetCoordinates)
+    ) {
+      return;
+    }
+
+    if (onMove) {
+      onMove({
+        from: event.sourceCoordinates,
+        to: event.targetCoordinates,
+      });
+    }
+  };
+
   const handleDragStart = (event: PieceDragStartEvent): void => {
     if (allowMarkers) {
       setRoundMarkers([]);
@@ -276,7 +300,7 @@ export const Board: FC<BoardProps> = ({
             checkSquare={checkSquare}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}
-            onDrop={onDrop}
+            onDrop={handleDrop}
             onDragStart={handleDragStart}
             onDragEnd={onDragEnd}
             transitionDuration={transitionDuration}
