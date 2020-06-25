@@ -1086,7 +1086,6 @@ describe("Board", () => {
             sourceCoordinates: "e2",
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
-            cancelMove() {},
             disableTransitionInNextPosition() {},
           });
         });
@@ -1106,7 +1105,6 @@ describe("Board", () => {
             sourceCoordinates: "e2",
             targetCoordinates: "e5",
             pieceCode: PieceCode.WHITE_PAWN,
-            cancelMove() {},
             disableTransitionInNextPosition() {},
           });
         });
@@ -1167,7 +1165,6 @@ describe("Board", () => {
             sourceCoordinates: "e2",
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
-            cancelMove() {},
             disableTransitionInNextPosition() {},
           });
         });
@@ -1190,7 +1187,6 @@ describe("Board", () => {
             sourceCoordinates: "e2",
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
-            cancelMove() {},
             disableTransitionInNextPosition() {},
           });
         });
@@ -1232,7 +1228,6 @@ describe("Board", () => {
             sourceCoordinates: "e2",
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
-            cancelMove() {},
             disableTransitionInNextPosition() {},
           });
         });

@@ -1439,7 +1439,7 @@ describe("CoordinateGrid", () => {
             sourceCoordinates: "a8",
             targetCoordinates: "b7",
             pieceCode: PieceCode.WHITE_KING,
-            cancelMove: expect.any(Function),
+            disableTransitionInNextPosition: expect.any(Function),
           })
         );
 

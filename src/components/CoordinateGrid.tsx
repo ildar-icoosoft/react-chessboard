@@ -214,7 +214,6 @@ export const CoordinateGrid = forwardRef<
     const [
       transitionPieces,
       disableTransitionInNextPosition,
-      enableTransitionInNextPosition,
     ] = useTransitionPieces(position, (coordinates) =>
       getSquareXYCoordinates(coordinates, width, orientation)
     );
@@ -236,7 +235,6 @@ export const CoordinateGrid = forwardRef<
               orientation
             ),
             pieceCode: item.pieceCode as PieceCode,
-            cancelMove: enableTransitionInNextPosition,
             disableTransitionInNextPosition,
           });
         }
