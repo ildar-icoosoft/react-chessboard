@@ -106,7 +106,6 @@ export const Board: FC<BoardProps> = ({
   width = DEFAULT_BOARD_WIDTH,
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
   maxWidth = DEFAULT_BOARD_MAX_WIDTH,
-  allowMoveFrom,
   showCoordinates = true,
   showResizer = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
@@ -285,6 +284,16 @@ export const Board: FC<BoardProps> = ({
     positionObject
   );
 
+  const allowDrag = (pieceCode: PieceCode): boolean => {
+    const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
+
+    return (
+      draggable &&
+      (movableColor === "both" || movableColor === turnColor) &&
+      pieceColor === turnColor
+    );
+  };
+
   return (
     <>
       <DndProvider backend={Backend}>
@@ -298,7 +307,7 @@ export const Board: FC<BoardProps> = ({
         >
           <CoordinateGrid
             draggable={draggable}
-            allowDrag={allowMoveFrom}
+            allowDrag={allowDrag}
             orientation={orientation}
             position={positionObject}
             width={width}

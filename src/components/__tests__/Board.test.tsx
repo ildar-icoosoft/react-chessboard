@@ -223,21 +223,51 @@ describe("Board", () => {
         expect(coordinateGrid.props.draggable).toBeTruthy();
       });
 
-      it("allowMoveFrom", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+      it("allowDrag", () => {
+        const testRenderer = TestRenderer.create(
+          <Board position={initialPosition} />
+        );
         const testInstance = testRenderer.root;
 
         const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.allowDrag).toBeUndefined();
+        expect(coordinateGrid.props.allowDrag).toBeInstanceOf(Function);
 
-        const allowMoveFrom = jest.fn();
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeFalsy(); // draggable is false
 
-        testRenderer.update(<Board allowMoveFrom={allowMoveFrom} />);
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
+        ).toBeFalsy(); // black's move
 
-        expect(coordinateGrid.props.allowDrag).toBe(allowMoveFrom);
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            movableColor={PieceColor.BLACK}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
+        ).toBeFalsy(); // movable color is  black
+
+        testRenderer.update(
+          <Board position={initialPosition} draggable={true} />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeTruthy(); // draggable is true
       });
 
       it("transitionDuration", () => {
