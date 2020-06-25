@@ -225,6 +225,8 @@ export const Board: FC<BoardProps> = ({
       return;
     }
 
+    event.disableTransitionInNextPosition();
+
     if (onMove) {
       onMove({
         from: event.sourceCoordinates,
@@ -249,6 +251,14 @@ export const Board: FC<BoardProps> = ({
     if (canSelectSquare(event.coordinates)) {
       setSelectionSquare(event.coordinates);
     }
+  };
+
+  const handleDragEnd = (): void => {
+    if (onDragEnd) {
+      onDragEnd();
+    }
+
+    setSelectionSquare(undefined);
   };
 
   const handleSquareRightClick = (
@@ -302,7 +312,7 @@ export const Board: FC<BoardProps> = ({
             onRightClick={handleSquareRightClick}
             onDrop={handleDrop}
             onDragStart={handleDragStart}
-            onDragEnd={onDragEnd}
+            onDragEnd={handleDragEnd}
             transitionDuration={transitionDuration}
             roundMarkers={roundMarkers}
           />

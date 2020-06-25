@@ -457,6 +457,37 @@ describe("Board", () => {
 
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
+
+        it("clear selectionSquare after onDragEnd", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={initialPosition}
+              draggable={true}
+              validMoves={initialPositionValidMoves}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragEnd();
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
       });
 
       it("occupationSquares", () => {
@@ -940,6 +971,7 @@ describe("Board", () => {
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             cancelMove() {},
+            disableTransitionInNextPosition() {},
           });
         });
 
@@ -959,10 +991,40 @@ describe("Board", () => {
             targetCoordinates: "e5",
             pieceCode: PieceCode.WHITE_PAWN,
             cancelMove() {},
+            disableTransitionInNextPosition() {},
           });
         });
 
         expect(onMove).toBeCalledTimes(0);
+      });
+
+      it("dropEvent disableTransitionInNextPosition() must be called if move is valid", () => {
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        const disableTransitionInNextPosition = jest.fn();
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition,
+          });
+        });
+
+        expect(disableTransitionInNextPosition).toBeCalledTimes(1);
       });
 
       it("Forbidden Drag and drop move", () => {
@@ -990,6 +1052,7 @@ describe("Board", () => {
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             cancelMove() {},
+            disableTransitionInNextPosition() {},
           });
         });
 
@@ -1012,6 +1075,7 @@ describe("Board", () => {
             targetCoordinates: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             cancelMove() {},
+            disableTransitionInNextPosition() {},
           });
         });
 
@@ -1097,6 +1161,7 @@ describe("Board", () => {
         targetCoordinates: "e4",
         pieceCode: PieceCode.WHITE_PAWN,
         cancelMove,
+        disableTransitionInNextPosition() {},
       };
 
       TestRenderer.act(() => {

@@ -530,8 +530,10 @@ describe("CoordinateGrid", () => {
         });
 
         describe("Transition on drag drop moves", () => {
-          it("disabled transition if event.cancelMove() was not called", () => {
-            const onDrop = jest.fn();
+          it("disabled transition if event.disableTransitionInNextPosition() was called", () => {
+            const onDrop = jest.fn((event: PieceDropEvent) => {
+              event.disableTransitionInNextPosition();
+            });
 
             const ref = createRef<ReactDndRefType>();
 
@@ -604,10 +606,8 @@ describe("CoordinateGrid", () => {
             });
           });
 
-          it("enabled transition if event.cancelMove() was called", () => {
-            const onDrop = jest.fn((event: PieceDropEvent) => {
-              event.cancelMove();
-            });
+          it("enabled transition if event.disableTransitionInNextPosition() was not called", () => {
+            const onDrop = jest.fn();
 
             const ref = createRef<ReactDndRefType>();
 

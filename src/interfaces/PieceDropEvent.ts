@@ -5,4 +5,5 @@ export interface PieceDropEvent {
   targetCoordinates: string;
   pieceCode: PieceCode;
   cancelMove(): void;
+  disableTransitionInNextPosition(): void;
 }

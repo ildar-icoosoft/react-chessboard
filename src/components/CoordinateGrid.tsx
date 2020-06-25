@@ -225,8 +225,6 @@ export const CoordinateGrid = forwardRef<
         if (onDrop) {
           const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
 
-          disableTransitionInNextPosition();
-
           onDrop({
             sourceCoordinates: item.coordinates as string,
             targetCoordinates: getSquareAlgebraicCoordinates(
@@ -239,6 +237,7 @@ export const CoordinateGrid = forwardRef<
             ),
             pieceCode: item.pieceCode as PieceCode,
             cancelMove: enableTransitionInNextPosition,
+            disableTransitionInNextPosition,
           });
         }
       },
