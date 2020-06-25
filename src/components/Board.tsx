@@ -39,6 +39,7 @@ export interface BoardProps {
   draggable?: boolean; // allow moves & premoves to use drag'n drop
   transitionDuration?: number;
   validMoves?: ValidMoves;
+  viewOnly?: boolean;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -106,6 +107,7 @@ export const Board: FC<BoardProps> = ({
   onResize,
   onMove,
   validMoves = {},
+  viewOnly = false,
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -147,6 +149,10 @@ export const Board: FC<BoardProps> = ({
   };
 
   const handleSquareClick = (coordinates: string): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (allowMarkers) {
       setRoundMarkers([]);
     }
@@ -190,6 +196,10 @@ export const Board: FC<BoardProps> = ({
   };
 
   const handleDrop = (event: PieceDropEvent): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (!isAllowedToDragMove()) {
       return;
     }
@@ -212,6 +222,10 @@ export const Board: FC<BoardProps> = ({
   };
 
   const handleDragStart = (event: PieceDragStartEvent): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (allowMarkers) {
       setRoundMarkers([]);
     }
@@ -232,6 +246,10 @@ export const Board: FC<BoardProps> = ({
   const handleSquareRightClick = (
     event: CoordinateGridRightClickEvent
   ): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (allowMarkers) {
       event.mouseEvent.preventDefault();
 

@@ -528,6 +528,38 @@ describe("Board", () => {
           // add selection if square contains movable piece
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
+
+        it("empty selection square if viewOnly is true", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={initialPosition}
+              viewOnly={true}
+              clickable={true}
+              draggable={true}
+              validMoves={initialPositionValidMoves}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
       });
 
       it("occupationSquares", () => {
@@ -682,6 +714,23 @@ describe("Board", () => {
           });
 
           expect(mouseEvent.defaultPrevented).toBeTruthy();
+
+          // in viewOnly mode defaultPrevented must be false
+          testRenderer.update(<Board allowMarkers={true} viewOnly={true} />);
+
+          mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(mouseEvent.defaultPrevented).toBeFalsy();
         });
       });
 
@@ -752,6 +801,33 @@ describe("Board", () => {
           });
 
           expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+        });
+
+        it("ignore right clicks if viewOnly is true", () => {
+          const testRenderer = TestRenderer.create(
+            <Board allowMarkers={true} viewOnly={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          const mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
 
           TestRenderer.act(() => {
             coordinateGrid.props.onRightClick({
@@ -1108,6 +1184,48 @@ describe("Board", () => {
             validMoves={initialPositionValidMoves}
           />
         );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            cancelMove() {},
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+      });
+
+      it("Forbidden moves if viewOnly is true", () => {
+        const onMove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            viewOnly={true}
+            clickable={true}
+            draggable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
 
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
