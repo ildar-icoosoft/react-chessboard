@@ -32,7 +32,6 @@ import { ValidMoves } from "../types/ValidMoves";
 
 export interface BoardProps {
   allowMarkers?: boolean;
-  allowMoveFrom?: (pieceCode: PieceCode, coordinates: string) => boolean;
   clickable?: boolean; // allow click-click moves
   check?: boolean; // true for current color, false to unset
   position?: Position | string;
@@ -45,20 +44,10 @@ export interface BoardProps {
   maxWidth?: number;
   showCoordinates?: boolean;
   showResizer?: boolean;
-  occupationSquares?: string[];
-  destinationSquares?: string[];
   lastMoveSquares?: string[];
   movableColor?: PieceColor | "both";
   currentPremoveSquares?: string[];
   turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
-
-  onSquareClick?(coordinates: string): void;
-
-  onDragStart?(event: PieceDragStartEvent): void;
-
-  onDragEnd?(): void;
-
-  onDrop?(event: PieceDropEvent): void;
 
   onResize?(width: number): void;
 
@@ -114,10 +103,6 @@ export const Board: FC<BoardProps> = ({
   check = false,
   turnColor = PieceColor.WHITE,
   movableColor = "both",
-  onSquareClick,
-  onDragStart,
-  onDrop,
-  onDragEnd,
   onResize,
   onMove,
   validMoves = {},
@@ -166,10 +151,6 @@ export const Board: FC<BoardProps> = ({
       setRoundMarkers([]);
     }
 
-    if (onSquareClick) {
-      onSquareClick(coordinates);
-    }
-
     if (!isAllowedToClickMove()) {
       return;
     }
@@ -209,10 +190,6 @@ export const Board: FC<BoardProps> = ({
   };
 
   const handleDrop = (event: PieceDropEvent): void => {
-    if (onDrop) {
-      onDrop(event);
-    }
-
     if (!isAllowedToDragMove()) {
       return;
     }
@@ -239,10 +216,6 @@ export const Board: FC<BoardProps> = ({
       setRoundMarkers([]);
     }
 
-    if (onDragStart) {
-      onDragStart(event);
-    }
-
     if (!isAllowedToDragMove()) {
       return;
     }
@@ -253,10 +226,6 @@ export const Board: FC<BoardProps> = ({
   };
 
   const handleDragEnd = (): void => {
-    if (onDragEnd) {
-      onDragEnd();
-    }
-
     setSelectionSquare(undefined);
   };
 

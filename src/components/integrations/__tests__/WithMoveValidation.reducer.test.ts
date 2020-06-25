@@ -22,20 +22,6 @@ const defaultState: WithMoveValidationState = {
   validMoves: {},
   width: 480,
   position: initialPosition,
-  selectionSquares: [],
-  occupationSquares: [],
-  destinationSquares: [],
-  lastMoveSquares: [],
-};
-
-const stateWithSelectedSquares: WithMoveValidationState = {
-  game: null,
-  validMoves: {},
-  width: 480,
-  position: initialPosition,
-  selectionSquares: ["e2"],
-  destinationSquares: ["e3", "e4", "d3"],
-  occupationSquares: ["d3"],
   lastMoveSquares: [],
 };
 
@@ -57,48 +43,6 @@ describe("WithMoveValidation.reducer", () => {
       },
       width: 480,
       position: initialPosition,
-      selectionSquares: [],
-      occupationSquares: [],
-      destinationSquares: [],
-      lastMoveSquares: [],
-    });
-  });
-
-  it("SELECT_SQUARE action", () => {
-    const state = withMoveValidationReducer(defaultState, {
-      type: WithMoveValidationAction.SELECT_SQUARE,
-      payload: {
-        selectionSquare: "e2",
-        destinationSquares: ["e3", "e4", "d3"],
-      },
-    });
-
-    expect(state).toEqual({
-      game: null,
-      validMoves: {},
-      width: 480,
-      position: initialPosition,
-      selectionSquares: ["e2"],
-      destinationSquares: ["e3", "e4", "d3"],
-      occupationSquares: ["d3"],
-      lastMoveSquares: [],
-    });
-  });
-
-  it("CLEAR_SELECTION action", () => {
-    const state = withMoveValidationReducer(stateWithSelectedSquares, {
-      type: WithMoveValidationAction.CLEAR_SELECTION,
-      payload: null,
-    });
-
-    expect(state).toEqual({
-      game: null,
-      validMoves: {},
-      width: 480,
-      position: initialPosition,
-      selectionSquares: [],
-      destinationSquares: [],
-      occupationSquares: [],
       lastMoveSquares: [],
     });
   });
@@ -114,9 +58,6 @@ describe("WithMoveValidation.reducer", () => {
       validMoves: {},
       width: 240,
       position: initialPosition,
-      selectionSquares: [],
-      destinationSquares: [],
-      occupationSquares: [],
       lastMoveSquares: [],
     });
   });
@@ -167,9 +108,6 @@ describe("WithMoveValidation.reducer", () => {
         e7: PieceCode.BLACK_PAWN,
         d3: PieceCode.BLACK_PAWN,
       },
-      selectionSquares: [],
-      destinationSquares: [],
-      occupationSquares: [],
       lastMoveSquares: ["e2", "e4"],
     });
   });
