@@ -18,6 +18,7 @@ export const WithMoveValidationStory = () => (
       onMove,
       lastMoveSquares,
       validMoves,
+      viewOnly,
       width,
     }) => (
       <Board
@@ -31,6 +32,7 @@ export const WithMoveValidationStory = () => (
         onMove={onMove}
         transitionDuration={10000}
         validMoves={validMoves}
+        viewOnly={viewOnly}
         lastMoveSquares={lastMoveSquares}
         width={width}
       />

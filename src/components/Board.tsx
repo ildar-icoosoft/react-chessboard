@@ -272,6 +272,10 @@ export const Board: FC<BoardProps> = ({
   );
 
   const allowDrag = (pieceCode: PieceCode): boolean => {
+    if (viewOnly) {
+      return false;
+    }
+
     const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
 
     return (

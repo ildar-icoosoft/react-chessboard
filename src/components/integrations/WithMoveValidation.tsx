@@ -23,6 +23,7 @@ export interface WithMoveValidationCallbackProps {
   lastMoveSquares: string[];
   turnColor: PieceColor;
   validMoves: ValidMoves;
+  viewOnly: boolean;
 
   onResize(width: number): void;
 
@@ -96,5 +97,6 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       });
     },
     validMoves,
+    viewOnly: game ? game.game_over() : false,
   });
 };

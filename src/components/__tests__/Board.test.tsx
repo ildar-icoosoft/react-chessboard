@@ -278,6 +278,13 @@ describe("Board", () => {
         expect(
           coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
         ).toBeTruthy(); // draggable is true
+
+        testRenderer.update(
+          <Board position={initialPosition} draggable={true} viewOnly={true} />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeFalsy(); // viewOnly is true
       });
 
       it("transitionDuration", () => {

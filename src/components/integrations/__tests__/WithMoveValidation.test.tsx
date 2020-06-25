@@ -176,6 +176,38 @@ describe("WithMoveValidation", () => {
         );
       });
 
+      it("props.children({viewOnly}) default value", () => {
+        const { getProps } = renderWithMoveValidation(initialFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            viewOnly: false,
+          })
+        );
+      });
+
+      it("props.children({viewOnly}) if game is over", () => {
+        const { getProps } = renderWithMoveValidation(checkmateFen);
+
+        let props = getProps();
+        TestRenderer.act(() => {
+          jest.runAllTimers();
+          props = getProps();
+        });
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            viewOnly: true,
+          })
+        );
+      });
+
       it("props.children({draggable})", () => {
         const { getProps } = renderWithMoveValidation();
 
