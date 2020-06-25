@@ -79,7 +79,7 @@ describe("Board", () => {
 
       expect(testInstance.findAllByType(Resizer).length).toBe(1);
 
-      testRenderer.update(<Board showResizer={false} />);
+      testRenderer.update(<Board resizable={false} />);
 
       expect(testInstance.findAllByType(Resizer).length).toBe(0);
     });

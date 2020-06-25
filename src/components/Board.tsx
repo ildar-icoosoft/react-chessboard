@@ -43,7 +43,7 @@ export interface BoardProps {
   minWidth?: number;
   maxWidth?: number;
   showCoordinates?: boolean;
-  showResizer?: boolean;
+  resizable?: boolean;
   lastMoveSquares?: string[];
   movableColor?: PieceColor | "both";
   currentPremoveSquares?: string[];
@@ -96,7 +96,7 @@ export const Board: FC<BoardProps> = ({
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
   maxWidth = DEFAULT_BOARD_MAX_WIDTH,
   showCoordinates = true,
-  showResizer = true,
+  resizable = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   lastMoveSquares,
   currentPremoveSquares,
@@ -296,7 +296,7 @@ export const Board: FC<BoardProps> = ({
           />
 
           {showCoordinates && <Coords orientation={orientation} />}
-          {showResizer && (
+          {resizable && (
             <Resizer
               width={width}
               minWidth={minWidth}
