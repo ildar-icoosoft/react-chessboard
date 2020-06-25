@@ -4,9 +4,9 @@ import {
   DEFAULT_BOARD_WIDTH,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
-import { convertFenToPositionObject } from "../../utils/chess";
+import { convertFenToPositionObject, getTurnColor } from "../../utils/chess";
 import { PieceColor } from "../../enums/PieceColor";
-import { Chess, ChessInstance, Move as ChessJsMove } from "chess.js";
+import { Chess, Move as ChessJsMove } from "chess.js";
 import {
   getWithMoveValidationInitialState,
   WithMoveValidationAction,
@@ -37,16 +37,6 @@ export interface WithMoveValidationProps {
     callbackProps: WithMoveValidationCallbackProps
   ): ReactElement<any, any> | null;
 }
-
-const getTurnColor = (game: ChessInstance | null): PieceColor => {
-  if (game) {
-    if (game.turn() === "w") {
-      return PieceColor.WHITE;
-    }
-    return PieceColor.BLACK;
-  }
-  return PieceColor.WHITE;
-};
 
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,

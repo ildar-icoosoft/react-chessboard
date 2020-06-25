@@ -319,3 +319,13 @@ export const getValidMoves = (game: ChessInstance): ValidMoves => {
 
   return validMoves;
 };
+
+export const getTurnColor = (game: ChessInstance | null): PieceColor => {
+  if (game) {
+    if (game.turn() === "w") {
+      return PieceColor.WHITE;
+    }
+    return PieceColor.BLACK;
+  }
+  return PieceColor.WHITE;
+};

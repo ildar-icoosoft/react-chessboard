@@ -15,6 +15,7 @@ import {
   isValidFen,
   isValidPositionObject,
   getValidMoves,
+  getTurnColor,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -208,5 +209,22 @@ describe("Chess utils", () => {
       e2: ["e3", "e4", "d3"],
       f2: ["f3", "f4"],
     });
+  });
+
+  it("getTurnColor()", () => {
+    expect(getTurnColor(null)).toBe(PieceColor.WHITE);
+
+    const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+
+    const game: ChessInstance = new Chess(initialFen);
+
+    expect(getTurnColor(game)).toBe(PieceColor.WHITE);
+
+    game.move({
+      from: "e2",
+      to: "e4",
+    });
+
+    expect(getTurnColor(game)).toBe(PieceColor.BLACK);
   });
 });
