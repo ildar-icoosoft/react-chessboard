@@ -494,14 +494,28 @@ describe("Board", () => {
               movableColor={PieceColor.BLACK}
             />
           );
-
           TestRenderer.act(() => {
             coordinateGrid.props.onDragStart({
               coordinates: "e2",
               pieceCode: PieceCode.WHITE_PAWN,
             });
           });
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
 
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              turnColor={PieceColor.BLACK}
+              movableColor={PieceColor.BLACK}
+            />
+          );
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
