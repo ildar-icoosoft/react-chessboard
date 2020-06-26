@@ -126,8 +126,6 @@ export const Board: FC<BoardProps> = ({
     );
   };
 
-  const playPremove = () => {};
-
   const handleSquareClick = (coordinates: string): void => {
     if (viewOnly) {
       return;
@@ -156,13 +154,16 @@ export const Board: FC<BoardProps> = ({
 
       if (turnColor !== movableColor && movableColor !== "both") {
         if (onSetPremove) {
-          onSetPremove(
-            {
-              from: selectionSquare,
-              to: coordinates,
-            },
-            playPremove
-          );
+          const premove: Move = {
+            from: selectionSquare,
+            to: coordinates,
+          };
+          onSetPremove(premove, () => {
+            if (onMove) {
+              onMove(premove);
+            }
+            setPremoveSquares([]);
+          });
         }
         setPremoveSquares([selectionSquare, coordinates]);
         return;
@@ -201,13 +202,16 @@ export const Board: FC<BoardProps> = ({
 
     if (turnColor !== movableColor && movableColor !== "both") {
       if (onSetPremove) {
-        onSetPremove(
-          {
-            from: event.sourceCoordinates,
-            to: event.targetCoordinates,
-          },
-          playPremove
-        );
+        const premove: Move = {
+          from: event.sourceCoordinates,
+          to: event.targetCoordinates,
+        };
+        onSetPremove(premove, () => {
+          if (onMove) {
+            onMove(premove);
+          }
+          setPremoveSquares([]);
+        });
       }
       setPremoveSquares([event.sourceCoordinates, event.targetCoordinates]);
       return;
