@@ -103,15 +103,14 @@ export const Board: FC<BoardProps> = ({
 
   const canSelectSquare = (coordinates: string): boolean => {
     if (positionObject[coordinates]) {
-      if (premovable) {
-        return true;
-      }
-
       const pieceColor: PieceColor = getColorFromPieceCode(
         positionObject[coordinates]
       );
 
-      if (pieceColor === turnColor) {
+      if (
+        (movableColor === "both" || pieceColor === movableColor) &&
+        (premovable || pieceColor === turnColor)
+      ) {
         return true;
       }
     }
@@ -311,9 +310,8 @@ export const Board: FC<BoardProps> = ({
 
     return (
       draggable &&
-      (premovable ||
-        ((movableColor === "both" || movableColor === turnColor) &&
-          pieceColor === turnColor))
+      (movableColor === "both" || movableColor === pieceColor) &&
+      (premovable || pieceColor === turnColor)
     );
   };
 

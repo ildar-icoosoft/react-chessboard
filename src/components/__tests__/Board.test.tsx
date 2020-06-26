@@ -274,6 +274,10 @@ describe("Board", () => {
           coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
         ).toBeTruthy(); // black's move, but premoves are allowed
 
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.BLACK_PAWN, "e7")
+        ).toBeFalsy(); // user can't move opposite pieces
+
         testRenderer.update(
           <Board
             position={initialPosition}
@@ -426,6 +430,13 @@ describe("Board", () => {
 
           // add selection if square contains movable piece
           expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e7");
+          });
+
+          // user can't move opposite piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
         it("clear selectionSquare after click-click move", () => {
@@ -614,6 +625,23 @@ describe("Board", () => {
             coordinateGrid.props.onDragStart({
               coordinates: "e2",
               pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              turnColor={PieceColor.BLACK}
+              movableColor={PieceColor.WHITE}
+              premovable={true}
+            />
+          );
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e7",
+              pieceCode: PieceCode.BLACK_PAWN,
             });
           });
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
@@ -1393,6 +1421,7 @@ describe("Board", () => {
           expect.any(Function)
         );
         expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+        expect(coordinateGrid.props.selectionSquare).toBeUndefined();
       });
 
       it("Drag and drop premove if it is not user's turn to move", () => {
@@ -1435,6 +1464,7 @@ describe("Board", () => {
           expect.any(Function)
         );
         expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+        expect(coordinateGrid.props.selectionSquare).toBeUndefined();
       });
 
       it("playPremove() must trigger onMove event and clear premoveSquares (drag drop premove)", () => {
