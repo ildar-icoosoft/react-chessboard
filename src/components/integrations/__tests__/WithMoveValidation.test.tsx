@@ -208,6 +208,30 @@ describe("WithMoveValidation", () => {
         );
       });
 
+      it("props.children({allowMarkers})", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            allowMarkers: true,
+          })
+        );
+      });
+
+      it("props.children({clickable})", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            clickable: true,
+          })
+        );
+      });
+
       it("props.children({draggable})", () => {
         const { getProps } = renderWithMoveValidation();
 

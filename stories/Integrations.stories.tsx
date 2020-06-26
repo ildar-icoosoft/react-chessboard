@@ -10,6 +10,8 @@ export default {
 export const WithMoveValidationStory = () => (
   <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
     {({
+      clickable,
+      allowMarkers,
       check,
       turnColor,
       position,
@@ -22,8 +24,8 @@ export const WithMoveValidationStory = () => (
       width,
     }) => (
       <Board
-        clickable={true}
-        allowMarkers={true}
+        clickable={clickable}
+        allowMarkers={clickable}
         check={check}
         turnColor={turnColor}
         position={position}

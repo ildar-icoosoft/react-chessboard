@@ -16,6 +16,8 @@ import { Move } from "../../interfaces/Move";
 import { ValidMoves } from "../../types/ValidMoves";
 
 export interface WithMoveValidationCallbackProps {
+  allowMarkers: boolean;
+  clickable: boolean;
   check: boolean;
   position: Position;
   draggable: boolean;
@@ -60,6 +62,8 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     check: game ? game.in_check() : false,
     position,
     width,
+    allowMarkers: true,
+    clickable: true,
     draggable: true,
     onResize(width: number) {
       dispatch({
