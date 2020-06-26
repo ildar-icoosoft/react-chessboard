@@ -56,6 +56,7 @@ export interface BoardProps {
   onResize?(width: number): void;
 
   onMove?(move: Move): void;
+  onPremove?(move: Move): void;
 }
 
 export const Board: FC<BoardProps> = ({
@@ -71,12 +72,12 @@ export const Board: FC<BoardProps> = ({
   resizable = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   lastMoveSquares,
-  currentPremoveSquares,
   check = false,
   turnColor = PieceColor.WHITE,
   movableColor = "both",
   onResize,
   onMove,
+  onPremove,
   validMoves = {},
   viewOnly = false,
   premovable = false,
@@ -92,6 +93,7 @@ export const Board: FC<BoardProps> = ({
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
   const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
+  const [premoveSquares, setPremoveSquares] = useState<string[]>([]);
 
   const canSelectSquare = (coordinates: string): boolean => {
     if (positionObject[coordinates]) {
@@ -136,6 +138,7 @@ export const Board: FC<BoardProps> = ({
     if (!isAllowedToClickMove()) {
       return;
     }
+
     if (selectionSquare) {
       if (selectionSquare === coordinates) {
         setSelectionSquare(undefined);
@@ -148,6 +151,17 @@ export const Board: FC<BoardProps> = ({
       }
 
       setSelectionSquare(undefined);
+
+      if (turnColor !== movableColor && movableColor !== "both") {
+        if (onPremove) {
+          onPremove({
+            from: selectionSquare,
+            to: coordinates,
+          });
+        }
+        setPremoveSquares([selectionSquare, coordinates]);
+        return;
+      }
 
       if (
         !validMoves[selectionSquare] ||
@@ -177,6 +191,17 @@ export const Board: FC<BoardProps> = ({
     }
 
     if (!isAllowedToDragMove()) {
+      return;
+    }
+
+    if (turnColor !== movableColor && movableColor !== "both") {
+      if (onPremove) {
+        onPremove({
+          from: event.sourceCoordinates,
+          to: event.targetCoordinates,
+        });
+      }
+      setPremoveSquares([event.sourceCoordinates, event.targetCoordinates]);
       return;
     }
 
@@ -285,7 +310,7 @@ export const Board: FC<BoardProps> = ({
             occupationSquares={occupationSquares}
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
-            currentPremoveSquares={currentPremoveSquares}
+            currentPremoveSquares={premoveSquares}
             checkSquare={checkSquare}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}
