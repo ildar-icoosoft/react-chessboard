@@ -48,11 +48,14 @@ const positionAfterFirstMoveValidMoves: ValidMoves = {
   f5: ["e6", "f6", "g6", "g5", "g4", "f4", "e4", "e5"],
 };
 
-const renderWithMoveValidation = (fen?: string) => {
+const renderWithMoveValidation = (
+  fen?: string,
+  playerVsCompMode: boolean = false
+) => {
   let callbackProps: WithMoveValidationCallbackProps;
 
   TestRenderer.create(
-    <WithMoveValidation initialFen={fen}>
+    <WithMoveValidation initialFen={fen} playerVsCompMode={playerVsCompMode}>
       {(props) => {
         callbackProps = props;
 
@@ -240,6 +243,30 @@ describe("WithMoveValidation", () => {
         expect(props).toEqual(
           expect.objectContaining({
             draggable: true,
+          })
+        );
+      });
+
+      it("props.children({movableColor} playerVsPlayer)", () => {
+        const { getProps } = renderWithMoveValidation();
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            movableColor: "both",
+          })
+        );
+      });
+
+      it("props.children({movableColor} playerVsComp)", () => {
+        const { getProps } = renderWithMoveValidation(undefined, true);
+
+        const props = getProps();
+
+        expect(props).toEqual(
+          expect.objectContaining({
+            movableColor: PieceColor.WHITE,
           })
         );
       });

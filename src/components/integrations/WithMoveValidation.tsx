@@ -26,6 +26,7 @@ export interface WithMoveValidationCallbackProps {
   turnColor: PieceColor;
   validMoves: ValidMoves;
   viewOnly: boolean;
+  movableColor: PieceColor | "both";
 
   onResize(width: number): void;
 
@@ -34,6 +35,7 @@ export interface WithMoveValidationCallbackProps {
 
 export interface WithMoveValidationProps {
   initialFen?: string;
+  playerVsCompMode?: boolean;
 
   children(
     callbackProps: WithMoveValidationCallbackProps
@@ -43,6 +45,7 @@ export interface WithMoveValidationProps {
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
   initialFen = INITIAL_BOARD_FEN,
+  playerVsCompMode = false,
 }) => {
   const [state, dispatch] = useReducer(
     withMoveValidationReducer,
@@ -50,6 +53,25 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   );
 
   const { game, position, lastMoveSquares, width, validMoves } = state;
+
+  const computerMove = () => {
+    const moves = game!.moves({ verbose: true });
+    const move = moves[Math.floor(Math.random() * moves.length)];
+    if (moves.length > 0) {
+      game!.move(move.san);
+
+      dispatch({
+        type: WithMoveValidationAction.CHANGE_POSITION,
+        payload: {
+          lastMove: {
+            from: move.from,
+            to: move.to,
+          },
+          position: convertFenToPositionObject(game!.fen()),
+        },
+      });
+    }
+  };
 
   useEffect(() => {
     dispatch({
@@ -65,6 +87,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     allowMarkers: true,
     clickable: true,
     draggable: true,
+    movableColor: playerVsCompMode ? PieceColor.WHITE : "both",
     onResize(width: number) {
       dispatch({
         type: WithMoveValidationAction.RESIZE,
@@ -89,6 +112,10 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
           position: convertFenToPositionObject(game!.fen()),
         },
       });
+
+      if (playerVsCompMode) {
+        setTimeout(computerMove, 3000);
+      }
     },
     validMoves,
     viewOnly: game ? game.game_over() : false,

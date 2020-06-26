@@ -7,11 +7,12 @@ export default {
   title: "Integrations",
 };
 
-export const WithMoveValidationStory = () => (
+export const PlayerVsPlayer = () => (
   <WithMoveValidation initialFen={INITIAL_BOARD_FEN}>
     {({
       clickable,
       allowMarkers,
+      movableColor,
       check,
       turnColor,
       position,
@@ -25,14 +26,15 @@ export const WithMoveValidationStory = () => (
     }) => (
       <Board
         clickable={clickable}
-        allowMarkers={clickable}
+        allowMarkers={allowMarkers}
+        movableColor={movableColor}
         check={check}
         turnColor={turnColor}
         position={position}
         draggable={draggable}
         onResize={onResize}
         onMove={onMove}
-        transitionDuration={10000}
+        transitionDuration={300}
         validMoves={validMoves}
         viewOnly={viewOnly}
         lastMoveSquares={lastMoveSquares}
@@ -42,7 +44,50 @@ export const WithMoveValidationStory = () => (
   </WithMoveValidation>
 );
 
-WithMoveValidationStory.story = {
+PlayerVsPlayer.story = {
+  parameters: {
+    jest: ["WithMoveValidation"],
+  },
+};
+
+export const PlayerVsComputer = () => (
+  <WithMoveValidation initialFen={INITIAL_BOARD_FEN} playerVsCompMode={true}>
+    {({
+      clickable,
+      allowMarkers,
+      movableColor,
+      check,
+      turnColor,
+      position,
+      draggable,
+      onResize,
+      onMove,
+      lastMoveSquares,
+      validMoves,
+      viewOnly,
+      width,
+    }) => (
+      <Board
+        clickable={clickable}
+        allowMarkers={allowMarkers}
+        movableColor={movableColor}
+        check={check}
+        turnColor={turnColor}
+        position={position}
+        draggable={draggable}
+        onResize={onResize}
+        onMove={onMove}
+        transitionDuration={300}
+        validMoves={validMoves}
+        viewOnly={viewOnly}
+        lastMoveSquares={lastMoveSquares}
+        width={width}
+      />
+    )}
+  </WithMoveValidation>
+);
+
+PlayerVsComputer.story = {
   parameters: {
     jest: ["WithMoveValidation"],
   },
