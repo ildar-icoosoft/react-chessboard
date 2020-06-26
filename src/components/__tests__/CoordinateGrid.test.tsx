@@ -96,7 +96,7 @@ describe("CoordinateGrid", () => {
           occupationSquares={["a2", "b2"]}
           destinationSquares={["a1", "b2"]}
           lastMoveSquares={["c3", "d4"]}
-          currentPremoveSquares={["e5"]}
+          premoveSquares={["e5"]}
           checkSquare={"f5"}
         />
       );
@@ -107,7 +107,7 @@ describe("CoordinateGrid", () => {
         <CoordinateGridWithDnd
           selectionSquare={"a1"}
           occupationSquares={["b2", "d4"]}
-          currentPremoveSquares={[]}
+          premoveSquares={[]}
         />
       );
 
@@ -794,7 +794,7 @@ describe("CoordinateGrid", () => {
             occupationSquares={["a2", "b2"]}
             destinationSquares={["a1", "b2"]}
             lastMoveSquares={["c3", "b1"]}
-            currentPremoveSquares={["a1"]}
+            premoveSquares={["a1"]}
             checkSquare={"b1"}
           />
         );
@@ -812,7 +812,7 @@ describe("CoordinateGrid", () => {
           expect.arrayContaining([
             HighlightedSquareType.SELECTION,
             HighlightedSquareType.DESTINATION,
-            HighlightedSquareType.CURRENT_PREMOVE,
+            HighlightedSquareType.PREMOVE,
           ])
         );
 

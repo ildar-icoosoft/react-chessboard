@@ -748,7 +748,7 @@ describe("Board", () => {
         expect(coordinateGrid.props.lastMoveSquares).toEqual(["a1"]);
       });
 
-      it("currentPremoveSquares default value", () => {
+      it("premoveSquares default value", () => {
         const testRenderer = TestRenderer.create(<Board />);
         const testInstance = testRenderer.root;
 
@@ -756,7 +756,7 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.currentPremoveSquares).toEqual([]);
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
       });
 
       it("checkSquares", () => {
@@ -1388,10 +1388,7 @@ describe("Board", () => {
           from: "e2",
           to: "e4",
         });
-        expect(coordinateGrid.props.currentPremoveSquares).toEqual([
-          "e2",
-          "e4",
-        ]);
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
       });
 
       it("Drag and drop premove if it is not user's turn to move", () => {
@@ -1430,10 +1427,7 @@ describe("Board", () => {
           from: "e2",
           to: "e4",
         });
-        expect(coordinateGrid.props.currentPremoveSquares).toEqual([
-          "e2",
-          "e4",
-        ]);
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
       });
     });
 

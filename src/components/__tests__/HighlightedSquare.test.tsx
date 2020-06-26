@@ -10,7 +10,7 @@ describe("HighlightedSquare", () => {
     it("empty content if empty props.types", () => {
       const { container, rerender } = render(
         <HighlightedSquare
-          types={[HighlightedSquareType.CURRENT_PREMOVE]}
+          types={[HighlightedSquareType.PREMOVE]}
           xYCoordinates={{ x: 0, y: 0 }}
         />
       );
@@ -25,7 +25,7 @@ describe("HighlightedSquare", () => {
     it("contains data-testid highlighted-square", () => {
       const { queryByTestId } = render(
         <HighlightedSquare
-          types={[HighlightedSquareType.CURRENT_PREMOVE]}
+          types={[HighlightedSquareType.PREMOVE]}
           xYCoordinates={{ x: 0, y: 0 }}
         />
       );
@@ -35,7 +35,7 @@ describe("HighlightedSquare", () => {
     it("contains CSS transform style", () => {
       const { getByTestId, rerender } = render(
         <HighlightedSquare
-          types={[HighlightedSquareType.CURRENT_PREMOVE]}
+          types={[HighlightedSquareType.PREMOVE]}
           xYCoordinates={{ x: 0, y: 0 }}
         />
       );
@@ -48,7 +48,7 @@ describe("HighlightedSquare", () => {
 
       rerender(
         <HighlightedSquare
-          types={[HighlightedSquareType.CURRENT_PREMOVE]}
+          types={[HighlightedSquareType.PREMOVE]}
           xYCoordinates={{ x: 100, y: 200 }}
         />
       );

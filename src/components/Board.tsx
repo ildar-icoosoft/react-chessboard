@@ -50,7 +50,7 @@ export interface BoardProps {
   premovable?: boolean;
   lastMoveSquares?: string[];
   movableColor?: PieceColor | "both";
-  currentPremoveSquares?: string[];
+  premoveSquares?: string[];
   turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
 
   onResize?(width: number): void;
@@ -310,7 +310,7 @@ export const Board: FC<BoardProps> = ({
             occupationSquares={occupationSquares}
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
-            currentPremoveSquares={premoveSquares}
+            premoveSquares={premoveSquares}
             checkSquare={checkSquare}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}
