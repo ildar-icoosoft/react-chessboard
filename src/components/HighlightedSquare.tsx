@@ -8,7 +8,7 @@ export enum HighlightedSquareType {
   DESTINATION = "destination",
   OCCUPATION = "selected",
   LAST_MOVE = "lastMove",
-  CURRENT_PREMOVE = "currentPremove",
+  PREMOVE = "premove",
   CHECK = "check",
 }
 
@@ -45,9 +45,7 @@ export const HighlightedSquare: FC<CoordsProps> = ({
           !types.includes(HighlightedSquareType.CHECK),
         [css.lastMove]: types.includes(HighlightedSquareType.LAST_MOVE),
         [css.check]: types.includes(HighlightedSquareType.CHECK),
-        [css.currentPremove]: types.includes(
-          HighlightedSquareType.CURRENT_PREMOVE
-        ),
+        [css.currentPremove]: types.includes(HighlightedSquareType.PREMOVE),
         [css.hover]: isDragOver,
       })}
       style={{

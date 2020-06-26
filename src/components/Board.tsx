@@ -47,14 +47,21 @@ export interface BoardProps {
   maxWidth?: number;
   showCoordinates?: boolean;
   resizable?: boolean;
+  premovable?: boolean;
   lastMoveSquares?: string[];
   movableColor?: PieceColor | "both";
-  currentPremoveSquares?: string[];
+  premoveSquares?: string[];
   turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
 
   onResize?(width: number): void;
 
   onMove?(move: Move): void;
+  onSetPremove?(
+    move: Move,
+    playPremove: () => void,
+    cancelPremove: () => void
+  ): void;
+  onUnsetPremove?(): void;
 }
 
 export const Board: FC<BoardProps> = ({
@@ -70,14 +77,16 @@ export const Board: FC<BoardProps> = ({
   resizable = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   lastMoveSquares,
-  currentPremoveSquares,
   check = false,
   turnColor = PieceColor.WHITE,
   movableColor = "both",
   onResize,
   onMove,
+  onSetPremove,
+  onUnsetPremove,
   validMoves = {},
   viewOnly = false,
+  premovable = false,
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -90,6 +99,7 @@ export const Board: FC<BoardProps> = ({
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
   const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
+  const [premoveSquares, setPremoveSquares] = useState<string[]>([]);
 
   const canSelectSquare = (coordinates: string): boolean => {
     if (positionObject[coordinates]) {
@@ -97,7 +107,10 @@ export const Board: FC<BoardProps> = ({
         positionObject[coordinates]
       );
 
-      if (pieceColor === turnColor) {
+      if (
+        (movableColor === "both" || pieceColor === movableColor) &&
+        (premovable || pieceColor === turnColor)
+      ) {
         return true;
       }
     }
@@ -107,15 +120,31 @@ export const Board: FC<BoardProps> = ({
   const isAllowedToClickMove = (): boolean => {
     return !!(
       clickable &&
-      (movableColor === "both" || movableColor === turnColor)
+      (premovable || movableColor === "both" || movableColor === turnColor)
     );
   };
 
   const isAllowedToDragMove = (): boolean => {
     return !!(
       draggable &&
-      (movableColor === "both" || movableColor === turnColor)
+      (premovable || movableColor === "both" || movableColor === turnColor)
     );
+  };
+
+  const makePlayPremoveCallback = (premove: Move) => {
+    return () => {
+      if (onMove) {
+        onMove(premove);
+      }
+      setPremoveSquares([]);
+    };
+  };
+
+  const cancelPremove = (): void => {
+    if (onUnsetPremove) {
+      onUnsetPremove();
+    }
+    setPremoveSquares([]);
   };
 
   const handleSquareClick = (coordinates: string): void => {
@@ -127,9 +156,14 @@ export const Board: FC<BoardProps> = ({
       setRoundMarkers([]);
     }
 
+    if (premoveSquares.length) {
+      cancelPremove();
+    }
+
     if (!isAllowedToClickMove()) {
       return;
     }
+
     if (selectionSquare) {
       if (selectionSquare === coordinates) {
         setSelectionSquare(undefined);
@@ -142,6 +176,22 @@ export const Board: FC<BoardProps> = ({
       }
 
       setSelectionSquare(undefined);
+
+      if (turnColor !== movableColor && movableColor !== "both") {
+        if (onSetPremove) {
+          const premove: Move = {
+            from: selectionSquare,
+            to: coordinates,
+          };
+          onSetPremove(
+            premove,
+            makePlayPremoveCallback(premove),
+            cancelPremove
+          );
+        }
+        setPremoveSquares([selectionSquare, coordinates]);
+        return;
+      }
 
       if (
         !validMoves[selectionSquare] ||
@@ -174,6 +224,18 @@ export const Board: FC<BoardProps> = ({
       return;
     }
 
+    if (turnColor !== movableColor && movableColor !== "both") {
+      if (onSetPremove) {
+        const premove: Move = {
+          from: event.sourceCoordinates,
+          to: event.targetCoordinates,
+        };
+        onSetPremove(premove, makePlayPremoveCallback(premove), cancelPremove);
+      }
+      setPremoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+      return;
+    }
+
     if (
       !validMoves[event.sourceCoordinates] ||
       !validMoves[event.sourceCoordinates].includes(event.targetCoordinates)
@@ -198,6 +260,10 @@ export const Board: FC<BoardProps> = ({
 
     if (allowMarkers) {
       setRoundMarkers([]);
+    }
+
+    if (premoveSquares.length) {
+      cancelPremove();
     }
 
     if (!isAllowedToDragMove()) {
@@ -252,8 +318,8 @@ export const Board: FC<BoardProps> = ({
 
     return (
       draggable &&
-      (movableColor === "both" || movableColor === turnColor) &&
-      pieceColor === turnColor
+      (movableColor === "both" || movableColor === pieceColor) &&
+      (premovable || pieceColor === turnColor)
     );
   };
 
@@ -278,7 +344,7 @@ export const Board: FC<BoardProps> = ({
             occupationSquares={occupationSquares}
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
-            currentPremoveSquares={currentPremoveSquares}
+            premoveSquares={premoveSquares}
             checkSquare={checkSquare}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}

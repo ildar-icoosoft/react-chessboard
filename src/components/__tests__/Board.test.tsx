@@ -265,6 +265,23 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             draggable={true}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+            premovable={true}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
+        ).toBeTruthy(); // black's move, but premoves are allowed
+
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.BLACK_PAWN, "e7")
+        ).toBeFalsy(); // user can't move opposite pieces
+
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
             movableColor={PieceColor.BLACK}
           />
         );
@@ -316,7 +333,7 @@ describe("Board", () => {
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
-        it("click-click moves are allowed", () => {
+        it("selection by click if click-click moves are allowed and player's turn to move", () => {
           // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
           const testRenderer = TestRenderer.create(
             <Board position={INITIAL_BOARD_FEN} clickable={true} />
@@ -361,7 +378,7 @@ describe("Board", () => {
             coordinateGrid.props.onClick("e7");
           });
 
-          // do not add selection if square does not contain a piece
+          // do not add selection if square contains opposite piece
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
 
           TestRenderer.act(() => {
@@ -372,6 +389,53 @@ describe("Board", () => {
           });
 
           // invalid move. we must clear selection
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("selection by click if click-click moves are allowed and it is not player's turn to move", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+              premovable={true}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e7");
+          });
+
+          // user can't move opposite piece
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
@@ -435,8 +499,8 @@ describe("Board", () => {
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
-        it("Drag and drop moves are allowed", () => {
-          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        it("selection by Drag if drag and drop moves are allowed and player's turn to move", () => {
+          // Click-click moves are allowed (turnColor white, draggable true, movableColor both)
           const testRenderer = TestRenderer.create(
             <Board position={INITIAL_BOARD_FEN} draggable={true} />
           );
@@ -465,6 +529,53 @@ describe("Board", () => {
 
           // add selection if square contains movable piece
           expect(coordinateGrid.props.selectionSquare).toBe("d2");
+        });
+
+        it("selection by Drag if drag and drop moves are allowed and it is not player's turn to move", () => {
+          // Click-click moves are allowed (turnColor white, draggable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+              premovable={true}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
         });
 
         it("Drag and drop moves are not allowed", () => {
@@ -514,6 +625,23 @@ describe("Board", () => {
             coordinateGrid.props.onDragStart({
               coordinates: "e2",
               pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              turnColor={PieceColor.BLACK}
+              movableColor={PieceColor.WHITE}
+              premovable={true}
+            />
+          );
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e7",
+              pieceCode: PieceCode.BLACK_PAWN,
             });
           });
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
@@ -648,7 +776,7 @@ describe("Board", () => {
         expect(coordinateGrid.props.lastMoveSquares).toEqual(["a1"]);
       });
 
-      it("currentPremoveSquares", () => {
+      it("premoveSquares default value", () => {
         const testRenderer = TestRenderer.create(<Board />);
         const testInstance = testRenderer.root;
 
@@ -656,11 +784,7 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.currentPremoveSquares).toBeUndefined();
-
-        testRenderer.update(<Board currentPremoveSquares={["a1"]} />);
-
-        expect(coordinateGrid.props.currentPremoveSquares).toEqual(["a1"]);
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
       });
 
       it("checkSquares", () => {
@@ -1254,6 +1378,426 @@ describe("Board", () => {
         });
 
         expect(onMove).toBeCalledTimes(0);
+      });
+    });
+
+    describe("onSetPremove", () => {
+      it("Click premove if it is not user's turn to move", () => {
+        const onSetPremove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            premovable={true}
+            onSetPremove={onSetPremove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onSetPremove).toBeCalledTimes(1);
+
+        expect(onSetPremove).toBeCalledWith(
+          {
+            from: "e2",
+            to: "e4",
+          },
+          expect.any(Function),
+          expect.any(Function)
+        );
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+        expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+      });
+
+      it("Drag and drop premove if it is not user's turn to move", () => {
+        const onSetPremove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            premovable={true}
+            onSetPremove={onSetPremove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(onSetPremove).toBeCalledTimes(1);
+
+        expect(onSetPremove).toBeCalledWith(
+          {
+            from: "e2",
+            to: "e4",
+          },
+          expect.any(Function),
+          expect.any(Function)
+        );
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+        expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+      });
+
+      it("playPremove() must trigger onMove event and clear premoveSquares (drag drop premove)", () => {
+        const onMove = jest.fn();
+
+        let playPremove: null | (() => void);
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            premovable={true}
+            onSetPremove={(_move, _playPremove) => {
+              playPremove = _playPremove;
+            }}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onMove.mockClear();
+
+        TestRenderer.act(() => {
+          playPremove!();
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onMove).toBeCalledTimes(1);
+        expect(onMove).toBeCalledWith({
+          from: "e2",
+          to: "e4",
+        });
+      });
+
+      it("playPremove() must trigger onMove event and clear premoveSquares (click premove)", () => {
+        const onMove = jest.fn();
+
+        let playPremove: null | (() => void);
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            premovable={true}
+            onSetPremove={(_move, _playPremove) => {
+              playPremove = _playPremove;
+            }}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onMove.mockClear();
+
+        TestRenderer.act(() => {
+          playPremove!();
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onMove).toBeCalledTimes(1);
+        expect(onMove).toBeCalledWith({
+          from: "e2",
+          to: "e4",
+        });
+      });
+
+      it("cancelPremove() must trigger onUnsetPremove event and clear premoveSquares (click premove)", () => {
+        const onUnsetPremove = jest.fn();
+
+        let cancelPremove: null | (() => void);
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            premovable={true}
+            onSetPremove={(_move, _playPremove, _cancelPremove) => {
+              cancelPremove = _cancelPremove;
+            }}
+            onUnsetPremove={onUnsetPremove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onUnsetPremove.mockClear();
+
+        TestRenderer.act(() => {
+          cancelPremove!();
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onUnsetPremove).toBeCalledTimes(1);
+        expect(onUnsetPremove).toBeCalledWith();
+      });
+
+      it("cancelPremove() must trigger onUnsetPremove event and clear premoveSquares (drag drop premove)", () => {
+        const onUnsetPremove = jest.fn();
+
+        let cancelPremove: null | (() => void);
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            premovable={true}
+            onSetPremove={(_move, _playPremove, _cancelPremove) => {
+              cancelPremove = _cancelPremove;
+            }}
+            onUnsetPremove={onUnsetPremove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onUnsetPremove.mockClear();
+
+        TestRenderer.act(() => {
+          cancelPremove!();
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onUnsetPremove).toBeCalledTimes(1);
+        expect(onUnsetPremove).toBeCalledWith();
+      });
+    });
+
+    describe("onUnsetPremove", () => {
+      it("if premove is set clicks and drag must trigger onUnsetPremove event (click premove)", () => {
+        const onUnsetPremove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            premovable={true}
+            onUnsetPremove={onUnsetPremove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // test click
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onUnsetPremove.mockClear();
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e5");
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onUnsetPremove).toBeCalledTimes(1);
+        expect(onUnsetPremove).toBeCalledWith();
+
+        // test drag
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onUnsetPremove.mockClear();
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDragStart({
+            coordinates: "d2",
+            pieceCode: PieceCode.WHITE_PAWN,
+          });
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onUnsetPremove).toBeCalledTimes(1);
+        expect(onUnsetPremove).toBeCalledWith();
+      });
+
+      it("if premove is set clicks must trigger onUnsetPremove event  (drag drop premove)", () => {
+        const onUnsetPremove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            premovable={true}
+            onUnsetPremove={onUnsetPremove}
+            validMoves={initialPositionValidMoves}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // test click
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onUnsetPremove.mockClear();
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e5");
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onUnsetPremove).toBeCalledTimes(1);
+        expect(onUnsetPremove).toBeCalledWith();
+
+        // test drag
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
+
+        onUnsetPremove.mockClear();
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDragStart({
+            coordinates: "d2",
+            pieceCode: PieceCode.WHITE_PAWN,
+          });
+        });
+
+        expect(coordinateGrid.props.premoveSquares).toEqual([]);
+
+        expect(onUnsetPremove).toBeCalledTimes(1);
+        expect(onUnsetPremove).toBeCalledWith();
       });
     });
 

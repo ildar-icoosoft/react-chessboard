@@ -62,6 +62,8 @@ export const PlayerVsComputer = () => (
       draggable,
       onResize,
       onMove,
+      onSetPremove,
+      onUnsetPremove,
       lastMoveSquares,
       validMoves,
       viewOnly,
@@ -77,11 +79,14 @@ export const PlayerVsComputer = () => (
         draggable={draggable}
         onResize={onResize}
         onMove={onMove}
+        onSetPremove={onSetPremove}
+        onUnsetPremove={onUnsetPremove}
         transitionDuration={300}
         validMoves={validMoves}
         viewOnly={viewOnly}
         lastMoveSquares={lastMoveSquares}
         width={width}
+        premovable={true}
       />
     )}
   </WithMoveValidation>
