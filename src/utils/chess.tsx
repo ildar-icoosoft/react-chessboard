@@ -329,3 +329,28 @@ export const getTurnColor = (game: ChessInstance | null): PieceColor => {
   }
   return PieceColor.WHITE;
 };
+
+export const getKingSquare = (
+  position: Position,
+  color: PieceColor
+): string | undefined => {
+  const kingPieceCode =
+    color === PieceColor.WHITE ? PieceCode.WHITE_KING : PieceCode.BLACK_KING;
+
+  for (const coordinates in position) {
+    if (position.hasOwnProperty(coordinates)) {
+      if (position[coordinates] === kingPieceCode) {
+        return coordinates;
+      }
+    }
+  }
+
+  return undefined;
+};
+
+export const getOccupationSquares = (
+  position: Position,
+  destinationSquares: string[]
+): string[] => {
+  return destinationSquares.filter((item) => position[item]);
+};

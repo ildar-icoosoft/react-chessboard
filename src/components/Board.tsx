@@ -24,6 +24,8 @@ import { Resizer } from "./Resizer";
 import {
   convertFenToPositionObject,
   getColorFromPieceCode,
+  getKingSquare,
+  getOccupationSquares,
   isValidFen,
   isValidPositionObject,
 } from "../utils/chess";
@@ -54,38 +56,6 @@ export interface BoardProps {
 
   onMove?(move: Move): void;
 }
-
-const getCheckSquare = (
-  check: boolean,
-  position: Position,
-  turnColor: PieceColor
-): string | undefined => {
-  if (!check) {
-    return undefined;
-  }
-
-  const kingPieceCode =
-    turnColor === PieceColor.WHITE
-      ? PieceCode.WHITE_KING
-      : PieceCode.BLACK_KING;
-
-  for (const coordinates in position) {
-    if (position.hasOwnProperty(coordinates)) {
-      if (position[coordinates] === kingPieceCode) {
-        return coordinates;
-      }
-    }
-  }
-
-  return undefined;
-};
-
-const getOccupationSquares = (
-  destinationSquares: string[],
-  position: Position
-): string[] => {
-  return destinationSquares.filter((item) => position[item]);
-};
 
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
@@ -261,14 +231,16 @@ export const Board: FC<BoardProps> = ({
     }
   };
 
-  const checkSquare = getCheckSquare(check, positionObject, turnColor);
+  const checkSquare = check
+    ? getKingSquare(positionObject, turnColor)
+    : undefined;
   const destinationSquares =
     selectionSquare && validMoves[selectionSquare]
       ? validMoves[selectionSquare]
       : [];
   const occupationSquares = getOccupationSquares(
-    destinationSquares,
-    positionObject
+    positionObject,
+    destinationSquares
   );
 
   const allowDrag = (pieceCode: PieceCode): boolean => {

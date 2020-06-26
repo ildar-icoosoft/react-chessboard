@@ -1,21 +1,23 @@
 import {
+  convertFenToPositionObject,
   getColorFromPieceCode,
   getDistanceBetweenSquares,
   getFileIndex,
   getFileNameFromCoordinates,
+  getKingSquare,
   getNearestSquare,
+  getOccupationSquares,
   getPieceCoordinatesFromPosition,
-  getSquareXYCoordinates,
   getPositionDiff,
   getRankIndex,
   getRankNameFromCoordinates,
-  isLightSquare,
   getSquareAlgebraicCoordinates,
-  convertFenToPositionObject,
+  getSquareXYCoordinates,
+  getTurnColor,
+  getValidMoves,
+  isLightSquare,
   isValidFen,
   isValidPositionObject,
-  getValidMoves,
-  getTurnColor,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
@@ -226,5 +228,28 @@ describe("Chess utils", () => {
     });
 
     expect(getTurnColor(game)).toBe(PieceColor.BLACK);
+  });
+
+  it("getKingSquare()", () => {
+    const position: Position = {
+      e1: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    };
+
+    expect(getKingSquare(position, PieceColor.WHITE)).toBe("e1");
+    expect(getKingSquare(position, PieceColor.BLACK)).toBe("e6");
+  });
+
+  it("getOccupationSquares()", () => {
+    const position: Position = {
+      e1: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    };
+
+    expect(getOccupationSquares(position, ["e5", "e6", "e8"])).toEqual(
+      expect.arrayContaining(["e5", "e6"])
+    );
   });
 });
