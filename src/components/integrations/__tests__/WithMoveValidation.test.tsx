@@ -414,6 +414,71 @@ describe("WithMoveValidation", () => {
         });
       });
 
+      describe("props.children({onSetPremove})", () => {
+        it("must call playPremove() if onSetPremove was called", () => {
+          const playPremove = jest.fn();
+
+          const { getProps } = renderWithMoveValidation(initialFen, true);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onMove({
+              from: "e2",
+              to: "e4",
+            });
+          });
+          TestRenderer.act(() => {
+            props.onSetPremove(
+              {
+                from: "g1",
+                to: "f3",
+              },
+              playPremove
+            );
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: positionAfterFirstMove,
+              validMoves: positionAfterFirstMoveValidMoves,
+              lastMoveSquares: ["e2", "e4"],
+              turnColor: PieceColor.BLACK,
+            })
+          );
+
+          TestRenderer.act(() => {
+            jest.advanceTimersByTime(3000);
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.not.objectContaining({
+              position: positionAfterFirstMove,
+              validMoves: positionAfterFirstMoveValidMoves,
+              lastMoveSquares: ["e2", "e4"],
+            })
+          );
+          expect(props).toEqual(
+            expect.objectContaining({
+              turnColor: PieceColor.WHITE,
+            })
+          );
+
+          TestRenderer.act(() => {
+            jest.advanceTimersByTime(100);
+          });
+
+          expect(playPremove).toBeCalledTimes(1);
+          expect(playPremove).toBeCalledWith();
+        });
+      });
+
       it("props.children({width})", () => {
         const { getProps } = renderWithMoveValidation();
 

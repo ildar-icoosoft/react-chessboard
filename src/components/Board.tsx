@@ -56,7 +56,7 @@ export interface BoardProps {
   onResize?(width: number): void;
 
   onMove?(move: Move): void;
-  onPremove?(move: Move): void;
+  onSetPremove?(move: Move, playPremove: () => void): void;
 }
 
 export const Board: FC<BoardProps> = ({
@@ -77,7 +77,7 @@ export const Board: FC<BoardProps> = ({
   movableColor = "both",
   onResize,
   onMove,
-  onPremove,
+  onSetPremove,
   validMoves = {},
   viewOnly = false,
   premovable = false,
@@ -126,6 +126,8 @@ export const Board: FC<BoardProps> = ({
     );
   };
 
+  const playPremove = () => {};
+
   const handleSquareClick = (coordinates: string): void => {
     if (viewOnly) {
       return;
@@ -153,11 +155,14 @@ export const Board: FC<BoardProps> = ({
       setSelectionSquare(undefined);
 
       if (turnColor !== movableColor && movableColor !== "both") {
-        if (onPremove) {
-          onPremove({
-            from: selectionSquare,
-            to: coordinates,
-          });
+        if (onSetPremove) {
+          onSetPremove(
+            {
+              from: selectionSquare,
+              to: coordinates,
+            },
+            playPremove
+          );
         }
         setPremoveSquares([selectionSquare, coordinates]);
         return;
@@ -195,11 +200,14 @@ export const Board: FC<BoardProps> = ({
     }
 
     if (turnColor !== movableColor && movableColor !== "both") {
-      if (onPremove) {
-        onPremove({
-          from: event.sourceCoordinates,
-          to: event.targetCoordinates,
-        });
+      if (onSetPremove) {
+        onSetPremove(
+          {
+            from: event.sourceCoordinates,
+            to: event.targetCoordinates,
+          },
+          playPremove
+        );
       }
       setPremoveSquares([event.sourceCoordinates, event.targetCoordinates]);
       return;

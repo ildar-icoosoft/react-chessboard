@@ -1353,16 +1353,16 @@ describe("Board", () => {
       });
     });
 
-    describe("onPremove", () => {
+    describe("onSetPremove", () => {
       it("Click premove if it is not user's turn to move", () => {
-        const onPremove = jest.fn();
+        const onSetPremove = jest.fn();
 
         const testRenderer = TestRenderer.create(
           <Board
             position={initialPosition}
             clickable={true}
             premovable={true}
-            onPremove={onPremove}
+            onSetPremove={onSetPremove}
             validMoves={initialPositionValidMoves}
             turnColor={PieceColor.BLACK}
             movableColor={PieceColor.WHITE}
@@ -1382,24 +1382,27 @@ describe("Board", () => {
           coordinateGrid.props.onClick("e4");
         });
 
-        expect(onPremove).toBeCalledTimes(1);
+        expect(onSetPremove).toBeCalledTimes(1);
 
-        expect(onPremove).toBeCalledWith({
-          from: "e2",
-          to: "e4",
-        });
+        expect(onSetPremove).toBeCalledWith(
+          {
+            from: "e2",
+            to: "e4",
+          },
+          expect.any(Function)
+        );
         expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
       });
 
       it("Drag and drop premove if it is not user's turn to move", () => {
-        const onPremove = jest.fn();
+        const onSetPremove = jest.fn();
 
         const testRenderer = TestRenderer.create(
           <Board
             position={initialPosition}
             draggable={true}
             premovable={true}
-            onPremove={onPremove}
+            onSetPremove={onSetPremove}
             validMoves={initialPositionValidMoves}
             turnColor={PieceColor.BLACK}
             movableColor={PieceColor.WHITE}
@@ -1421,12 +1424,15 @@ describe("Board", () => {
           });
         });
 
-        expect(onPremove).toBeCalledTimes(1);
+        expect(onSetPremove).toBeCalledTimes(1);
 
-        expect(onPremove).toBeCalledWith({
-          from: "e2",
-          to: "e4",
-        });
+        expect(onSetPremove).toBeCalledWith(
+          {
+            from: "e2",
+            to: "e4",
+          },
+          expect.any(Function)
+        );
         expect(coordinateGrid.props.premoveSquares).toEqual(["e2", "e4"]);
       });
     });

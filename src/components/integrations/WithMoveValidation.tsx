@@ -1,4 +1,4 @@
-import { FC, ReactElement, useEffect, useReducer } from "react";
+import { FC, ReactElement, useEffect, useReducer, useRef } from "react";
 import { Position } from "../../interfaces/Position";
 import {
   DEFAULT_BOARD_WIDTH,
@@ -31,6 +31,7 @@ export interface WithMoveValidationCallbackProps {
   onResize(width: number): void;
 
   onMove(move: Move): void;
+  onSetPremove(move: Move, playPremove: () => void): void;
 }
 
 export interface WithMoveValidationProps {
@@ -52,6 +53,8 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     getWithMoveValidationInitialState(initialFen, DEFAULT_BOARD_WIDTH)
   );
 
+  const premove = useRef<[Move, () => void] | null>(null);
+
   const { game, position, lastMoveSquares, width, validMoves } = state;
 
   const computerMove = () => {
@@ -70,6 +73,10 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
           position: convertFenToPositionObject(game!.fen()),
         },
       });
+
+      if (premove.current) {
+        premove.current[1]();
+      }
     }
   };
 
@@ -119,5 +126,8 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     },
     validMoves,
     viewOnly: game ? game.game_over() : false,
+    onSetPremove(move: Move, playPremove: () => void) {
+      premove.current = [move, playPremove];
+    },
   });
 };
