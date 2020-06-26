@@ -156,6 +156,10 @@ export const Board: FC<BoardProps> = ({
       setRoundMarkers([]);
     }
 
+    if (premoveSquares.length) {
+      cancelPremove();
+    }
+
     if (!isAllowedToClickMove()) {
       return;
     }

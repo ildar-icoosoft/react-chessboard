@@ -31,7 +31,12 @@ export interface WithMoveValidationCallbackProps {
   onResize(width: number): void;
 
   onMove(move: Move): void;
-  onSetPremove(move: Move, playPremove: () => void): void;
+  onSetPremove(
+    move: Move,
+    playPremove: () => void,
+    cancelPremove: () => void
+  ): void;
+  onUnsetPremove(): void;
 }
 
 export interface WithMoveValidationProps {
@@ -53,7 +58,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     getWithMoveValidationInitialState(initialFen, DEFAULT_BOARD_WIDTH)
   );
 
-  const premove = useRef<[Move, () => void] | null>(null);
+  const premove = useRef<[Move, () => void, () => void] | null>(null);
 
   const { game, position, lastMoveSquares, width, validMoves } = state;
 
@@ -75,7 +80,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       });
 
       if (premove.current) {
-        premove.current[1]();
+        premove.current[1](); // playPremove()
       }
     }
   };
@@ -126,8 +131,15 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     },
     validMoves,
     viewOnly: game ? game.game_over() : false,
-    onSetPremove(move: Move, playPremove: () => void) {
-      premove.current = [move, playPremove];
+    onSetPremove(
+      move: Move,
+      playPremove: () => void,
+      cancelPremove: () => void
+    ) {
+      premove.current = [move, playPremove, cancelPremove];
+    },
+    onUnsetPremove() {
+      premove.current = null;
     },
   });
 };
