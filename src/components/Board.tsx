@@ -47,6 +47,7 @@ export interface BoardProps {
   maxWidth?: number;
   showCoordinates?: boolean;
   resizable?: boolean;
+  premovable?: boolean;
   lastMoveSquares?: string[];
   movableColor?: PieceColor | "both";
   currentPremoveSquares?: string[];
@@ -78,6 +79,7 @@ export const Board: FC<BoardProps> = ({
   onMove,
   validMoves = {},
   viewOnly = false,
+  premovable = false,
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -93,6 +95,10 @@ export const Board: FC<BoardProps> = ({
 
   const canSelectSquare = (coordinates: string): boolean => {
     if (positionObject[coordinates]) {
+      if (premovable) {
+        return true;
+      }
+
       const pieceColor: PieceColor = getColorFromPieceCode(
         positionObject[coordinates]
       );
@@ -107,14 +113,14 @@ export const Board: FC<BoardProps> = ({
   const isAllowedToClickMove = (): boolean => {
     return !!(
       clickable &&
-      (movableColor === "both" || movableColor === turnColor)
+      (premovable || movableColor === "both" || movableColor === turnColor)
     );
   };
 
   const isAllowedToDragMove = (): boolean => {
     return !!(
       draggable &&
-      (movableColor === "both" || movableColor === turnColor)
+      (premovable || movableColor === "both" || movableColor === turnColor)
     );
   };
 
@@ -252,8 +258,9 @@ export const Board: FC<BoardProps> = ({
 
     return (
       draggable &&
-      (movableColor === "both" || movableColor === turnColor) &&
-      pieceColor === turnColor
+      (premovable ||
+        ((movableColor === "both" || movableColor === turnColor) &&
+          pieceColor === turnColor))
     );
   };
 

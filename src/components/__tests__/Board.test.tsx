@@ -265,6 +265,19 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             draggable={true}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+            premovable={true}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
+        ).toBeTruthy(); // black's move, but premoves are allowed
+
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
             movableColor={PieceColor.BLACK}
           />
         );
@@ -316,7 +329,7 @@ describe("Board", () => {
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
-        it("click-click moves are allowed", () => {
+        it("selection by click if click-click moves are allowed and player's turn to move", () => {
           // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
           const testRenderer = TestRenderer.create(
             <Board position={INITIAL_BOARD_FEN} clickable={true} />
@@ -361,7 +374,7 @@ describe("Board", () => {
             coordinateGrid.props.onClick("e7");
           });
 
-          // do not add selection if square does not contain a piece
+          // do not add selection if square contains opposite piece
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
 
           TestRenderer.act(() => {
@@ -373,6 +386,46 @@ describe("Board", () => {
 
           // invalid move. we must clear selection
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("selection by click if click-click moves are allowed and it is not player's turn to move", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+              premovable={true}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
         });
 
         it("clear selectionSquare after click-click move", () => {
@@ -435,8 +488,8 @@ describe("Board", () => {
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
-        it("Drag and drop moves are allowed", () => {
-          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        it("selection by Drag if drag and drop moves are allowed and player's turn to move", () => {
+          // Click-click moves are allowed (turnColor white, draggable true, movableColor both)
           const testRenderer = TestRenderer.create(
             <Board position={INITIAL_BOARD_FEN} draggable={true} />
           );
@@ -465,6 +518,53 @@ describe("Board", () => {
 
           // add selection if square contains movable piece
           expect(coordinateGrid.props.selectionSquare).toBe("d2");
+        });
+
+        it("selection by Drag if drag and drop moves are allowed and it is not player's turn to move", () => {
+          // Click-click moves are allowed (turnColor white, draggable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              movableColor={PieceColor.WHITE}
+              turnColor={PieceColor.BLACK}
+              premovable={true}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
         });
 
         it("Drag and drop moves are not allowed", () => {

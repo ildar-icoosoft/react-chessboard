@@ -82,6 +82,7 @@ export const PlayerVsComputer = () => (
         viewOnly={viewOnly}
         lastMoveSquares={lastMoveSquares}
         width={width}
+        premovable={true}
       />
     )}
   </WithMoveValidation>
