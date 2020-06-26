@@ -343,6 +343,51 @@ describe("WithMoveValidation", () => {
           );
         });
 
+        it("computer move after props.children({onMove}) in playerVsComp mode", () => {
+          const { getProps } = renderWithMoveValidation(initialFen, true);
+
+          let props = getProps();
+          TestRenderer.act(() => {
+            jest.runAllTimers();
+            props = getProps();
+          });
+
+          TestRenderer.act(() => {
+            props.onMove({
+              from: "e2",
+              to: "e4",
+            });
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.objectContaining({
+              position: positionAfterFirstMove,
+              validMoves: positionAfterFirstMoveValidMoves,
+              lastMoveSquares: ["e2", "e4"],
+              turnColor: PieceColor.BLACK,
+            })
+          );
+
+          TestRenderer.act(() => {
+            jest.advanceTimersByTime(3000);
+          });
+
+          props = getProps();
+          expect(props).toEqual(
+            expect.not.objectContaining({
+              position: positionAfterFirstMove,
+              validMoves: positionAfterFirstMoveValidMoves,
+              lastMoveSquares: ["e2", "e4"],
+            })
+          );
+          expect(props).toEqual(
+            expect.objectContaining({
+              turnColor: PieceColor.WHITE,
+            })
+          );
+        });
+
         it("props.children({onMove}) do invalid move", () => {
           const { getProps } = renderWithMoveValidation(initialFen);
 
