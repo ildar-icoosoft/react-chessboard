@@ -19,24 +19,10 @@ const initialPosition: Position = {
 
 const defaultState: WithMoveValidationState = {
   game: null,
+  validMoves: {},
   width: 480,
   position: initialPosition,
-  selectionSquares: [],
-  occupationSquares: [],
-  destinationSquares: [],
   lastMoveSquares: [],
-  checkSquares: [],
-};
-
-const stateWithSelectedSquares: WithMoveValidationState = {
-  game: null,
-  width: 480,
-  position: initialPosition,
-  selectionSquares: ["e2"],
-  destinationSquares: ["e3", "e4", "d3"],
-  occupationSquares: ["d3"],
-  lastMoveSquares: [],
-  checkSquares: [],
 };
 
 describe("WithMoveValidation.reducer", () => {
@@ -50,52 +36,14 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game,
-      width: 480,
-      position: initialPosition,
-      selectionSquares: [],
-      occupationSquares: [],
-      destinationSquares: [],
-      lastMoveSquares: [],
-      checkSquares: [],
-    });
-  });
-
-  it("SELECT_SQUARE action", () => {
-    const state = withMoveValidationReducer(defaultState, {
-      type: WithMoveValidationAction.SELECT_SQUARE,
-      payload: {
-        selectionSquare: "e2",
-        destinationSquares: ["e3", "e4", "d3"],
+      validMoves: {
+        e1: ["d2", "f1", "d1", "g1", "c1"],
+        e2: ["e3", "e4", "d3"],
+        f2: ["f3", "f4"],
       },
-    });
-
-    expect(state).toEqual({
-      game: null,
       width: 480,
       position: initialPosition,
-      selectionSquares: ["e2"],
-      destinationSquares: ["e3", "e4", "d3"],
-      occupationSquares: ["d3"],
       lastMoveSquares: [],
-      checkSquares: [],
-    });
-  });
-
-  it("CLEAR_SELECTION action", () => {
-    const state = withMoveValidationReducer(stateWithSelectedSquares, {
-      type: WithMoveValidationAction.CLEAR_SELECTION,
-      payload: null,
-    });
-
-    expect(state).toEqual({
-      game: null,
-      width: 480,
-      position: initialPosition,
-      selectionSquares: [],
-      destinationSquares: [],
-      occupationSquares: [],
-      lastMoveSquares: [],
-      checkSquares: [],
     });
   });
 
@@ -107,13 +55,10 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: null,
+      validMoves: {},
       width: 240,
       position: initialPosition,
-      selectionSquares: [],
-      destinationSquares: [],
-      occupationSquares: [],
       lastMoveSquares: [],
-      checkSquares: [],
     });
   });
 
@@ -151,6 +96,9 @@ describe("WithMoveValidation.reducer", () => {
 
     expect(state).toEqual({
       game: game,
+      validMoves: {
+        f5: ["e6", "f6", "g6", "g5", "g4", "f4", "e4", "e5"],
+      },
       width: 480,
       position: {
         e4: PieceCode.WHITE_PAWN,
@@ -160,11 +108,7 @@ describe("WithMoveValidation.reducer", () => {
         e7: PieceCode.BLACK_PAWN,
         d3: PieceCode.BLACK_PAWN,
       },
-      selectionSquares: [],
-      destinationSquares: [],
-      occupationSquares: [],
       lastMoveSquares: ["e2", "e4"],
-      checkSquares: ["f5"],
     });
   });
 });

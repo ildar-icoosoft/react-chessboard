@@ -4,11 +4,13 @@ import { PieceCode } from "../enums/PieceCode";
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
 import {
-  without as _without,
-  isString as _isString,
   isObject as _isObject,
+  isString as _isString,
+  without as _without,
 } from "lodash";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
+import { ChessInstance } from "chess.js";
+import { ValidMoves } from "../types/ValidMoves";
 
 /**
  * @param a1-h8
@@ -303,4 +305,52 @@ export const isValidPositionObject = (position: any): boolean => {
     }
   }
   return true;
+};
+
+export const getValidMoves = (game: ChessInstance): ValidMoves => {
+  const validMoves: ValidMoves = {};
+
+  game.SQUARES.forEach((square) => {
+    const moves = game.moves({ square, verbose: true });
+    if (moves.length) {
+      validMoves[square] = moves.map((move) => move.to);
+    }
+  });
+
+  return validMoves;
+};
+
+export const getTurnColor = (game: ChessInstance | null): PieceColor => {
+  if (game) {
+    if (game.turn() === "w") {
+      return PieceColor.WHITE;
+    }
+    return PieceColor.BLACK;
+  }
+  return PieceColor.WHITE;
+};
+
+export const getKingSquare = (
+  position: Position,
+  color: PieceColor
+): string | undefined => {
+  const kingPieceCode =
+    color === PieceColor.WHITE ? PieceCode.WHITE_KING : PieceCode.BLACK_KING;
+
+  for (const coordinates in position) {
+    if (position.hasOwnProperty(coordinates)) {
+      if (position[coordinates] === kingPieceCode) {
+        return coordinates;
+      }
+    }
+  }
+
+  return undefined;
+};
+
+export const getOccupationSquares = (
+  position: Position,
+  destinationSquares: string[]
+): string[] => {
+  return destinationSquares.filter((item) => position[item]);
 };

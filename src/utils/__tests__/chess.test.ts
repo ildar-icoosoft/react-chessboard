@@ -1,23 +1,28 @@
 import {
+  convertFenToPositionObject,
   getColorFromPieceCode,
   getDistanceBetweenSquares,
   getFileIndex,
   getFileNameFromCoordinates,
+  getKingSquare,
   getNearestSquare,
+  getOccupationSquares,
   getPieceCoordinatesFromPosition,
-  getSquareXYCoordinates,
   getPositionDiff,
   getRankIndex,
   getRankNameFromCoordinates,
-  isLightSquare,
   getSquareAlgebraicCoordinates,
-  convertFenToPositionObject,
+  getSquareXYCoordinates,
+  getTurnColor,
+  getValidMoves,
+  isLightSquare,
   isValidFen,
   isValidPositionObject,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
 import { Position } from "../../interfaces/Position";
+import { Chess, ChessInstance } from "chess.js";
 
 describe("Chess utils", () => {
   it("isLightSquare()", () => {
@@ -194,5 +199,57 @@ describe("Chess utils", () => {
       // @ts-ignore
       isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP", e1: "bM" })
     ).toBe(false);
+  });
+
+  it("getValidMoves()", () => {
+    const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+
+    const game: ChessInstance = new Chess(initialFen);
+
+    expect(getValidMoves(game)).toEqual({
+      e1: ["d2", "f1", "d1", "g1", "c1"],
+      e2: ["e3", "e4", "d3"],
+      f2: ["f3", "f4"],
+    });
+  });
+
+  it("getTurnColor()", () => {
+    expect(getTurnColor(null)).toBe(PieceColor.WHITE);
+
+    const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+
+    const game: ChessInstance = new Chess(initialFen);
+
+    expect(getTurnColor(game)).toBe(PieceColor.WHITE);
+
+    game.move({
+      from: "e2",
+      to: "e4",
+    });
+
+    expect(getTurnColor(game)).toBe(PieceColor.BLACK);
+  });
+
+  it("getKingSquare()", () => {
+    const position: Position = {
+      e1: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    };
+
+    expect(getKingSquare(position, PieceColor.WHITE)).toBe("e1");
+    expect(getKingSquare(position, PieceColor.BLACK)).toBe("e6");
+  });
+
+  it("getOccupationSquares()", () => {
+    const position: Position = {
+      e1: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    };
+
+    expect(getOccupationSquares(position, ["e5", "e6", "e8"])).toEqual(
+      expect.arrayContaining(["e5", "e6"])
+    );
   });
 });

@@ -6,13 +6,41 @@ import { PieceCode } from "../../enums/PieceCode";
 import { PieceDragLayer } from "../PieceDragLayer";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { PieceDropEvent } from "../../interfaces/PieceDropEvent";
 import { Coords } from "../Coords";
 import { CoordinateGrid } from "../CoordinateGrid";
-import { PieceDragStartEvent } from "../../interfaces/PieceDragStartEvent";
 import { Resizer } from "../Resizer";
 import { Position } from "../../interfaces/Position";
+import { INITIAL_BOARD_FEN } from "../../constants/constants";
+import { ValidMoves } from "../../types/ValidMoves";
+
 jest.useFakeTimers();
+
+const initialPosition: Position = {
+  e2: PieceCode.WHITE_PAWN,
+  f2: PieceCode.WHITE_PAWN,
+  e1: PieceCode.WHITE_KING,
+  f5: PieceCode.BLACK_KING,
+  e7: PieceCode.BLACK_PAWN,
+  d3: PieceCode.BLACK_PAWN,
+};
+
+const initialPositionValidMoves: ValidMoves = {
+  e1: ["d2", "f1", "d1", "g1", "c1"],
+  e2: ["e3", "e4", "d3"],
+  f2: ["f3", "f4"],
+};
+
+/*const insufficientMaterialFen: string = "4k3/8/4K3/8/8/8/8/8 b - - 0 1";
+const staleMateFen: string = "4k3/8/3RKR2/8/8/8/8/8 b - - 0 1";
+const drawBy50MoveRuleFen: string = "4k3/8/4K3/8/8/8/4P3/8 b - - 100 100";
+
+const beforeEnPassantCaptureFen: string =
+  "4k3/8/8/8/4Pp2/8/8/4K3 b KQkq e3 0 1";
+const afterEnPassantCapturePosition: Position = {
+  e8: PieceCode.BLACK_KING,
+  e1: PieceCode.WHITE_KING,
+  e3: PieceCode.BLACK_PAWN,
+};*/
 
 describe("Board", () => {
   it("Snapshot", () => {
@@ -51,7 +79,7 @@ describe("Board", () => {
 
       expect(testInstance.findAllByType(Resizer).length).toBe(1);
 
-      testRenderer.update(<Board showResizer={false} />);
+      testRenderer.update(<Board resizable={false} />);
 
       expect(testInstance.findAllByType(Resizer).length).toBe(0);
     });
@@ -206,20 +234,57 @@ describe("Board", () => {
       });
 
       it("allowDrag", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(
+          <Board position={initialPosition} />
+        );
         const testInstance = testRenderer.root;
 
         const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.allowDrag).toBeUndefined();
+        expect(coordinateGrid.props.allowDrag).toBeInstanceOf(Function);
 
-        const allowDrag = jest.fn();
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeFalsy(); // draggable is false
 
-        testRenderer.update(<Board allowDrag={allowDrag} />);
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            turnColor={PieceColor.BLACK}
+            movableColor={PieceColor.WHITE}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
+        ).toBeFalsy(); // black's move
 
-        expect(coordinateGrid.props.allowDrag).toBe(allowDrag);
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            movableColor={PieceColor.BLACK}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "a4")
+        ).toBeFalsy(); // movable color is  black
+
+        testRenderer.update(
+          <Board position={initialPosition} draggable={true} />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeTruthy(); // draggable is true
+
+        testRenderer.update(
+          <Board position={initialPosition} draggable={true} viewOnly={true} />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeFalsy(); // viewOnly is true
       });
 
       it("transitionDuration", () => {
@@ -237,49 +302,335 @@ describe("Board", () => {
         expect(coordinateGrid.props.transitionDuration).toBe(600);
       });
 
-      it("selectionSquares", () => {
-        const testRenderer = TestRenderer.create(<Board />);
-        const testInstance = testRenderer.root;
+      describe("selectionSquare", () => {
+        it("default value", () => {
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} clickable={true} />
+          );
+          const testInstance = testRenderer.root;
 
-        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-          CoordinateGrid
-        );
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
 
-        expect(coordinateGrid.props.selectionSquares).toBeUndefined();
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
 
-        testRenderer.update(<Board selectionSquares={["a1"]} />);
+        it("click-click moves are allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} clickable={true} />
+          );
+          const testInstance = testRenderer.root;
 
-        expect(coordinateGrid.props.selectionSquares).toEqual(["a1"]);
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("a1");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("a1");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e1");
+          });
+
+          // change selection if user clicks on another one piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e1");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e1");
+          });
+
+          // clear selection if user clicks again on this square
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          // first click on empty square
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("a3");
+          });
+
+          // do not add selection if square does not contain a piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          // first click on opposite piece
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e7");
+          });
+
+          // do not add selection if square does not contain a piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e1");
+          });
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("d5");
+          });
+
+          // invalid move. we must clear selection
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("clear selectionSquare after click-click move", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={initialPosition}
+              clickable={true}
+              validMoves={initialPositionValidMoves}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e4");
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("click-click moves are not allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} clickable={false} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              movableColor={PieceColor.BLACK}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("Drag and drop moves are allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} draggable={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "d2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBe("d2");
+        });
+
+        it("Drag and drop moves are not allowed", () => {
+          // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+          const testRenderer = TestRenderer.create(
+            <Board position={INITIAL_BOARD_FEN} draggable={false} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              movableColor={PieceColor.BLACK}
+            />
+          );
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              draggable={true}
+              turnColor={PieceColor.BLACK}
+              movableColor={PieceColor.BLACK}
+            />
+          );
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("clear selectionSquare after onDragEnd", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={initialPosition}
+              draggable={true}
+              validMoves={initialPositionValidMoves}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBe("e2");
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragEnd();
+          });
+
+          // add selection if square contains movable piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
+
+        it("empty selection square if viewOnly is true", () => {
+          const testRenderer = TestRenderer.create(
+            <Board
+              position={initialPosition}
+              viewOnly={true}
+              clickable={true}
+              draggable={true}
+              validMoves={initialPositionValidMoves}
+            />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onDragStart({
+              coordinates: "e2",
+              pieceCode: PieceCode.WHITE_PAWN,
+            });
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+        });
       });
 
       it("occupationSquares", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(
+          <Board
+            clickable={true}
+            position={initialPosition}
+            validMoves={initialPositionValidMoves}
+          />
+        );
         const testInstance = testRenderer.root;
 
         const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.occupationSquares).toBeUndefined();
+        expect(coordinateGrid.props.occupationSquares).toEqual([]);
 
-        testRenderer.update(<Board occupationSquares={["a1"]} />);
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
 
-        expect(coordinateGrid.props.occupationSquares).toEqual(["a1"]);
+        expect(coordinateGrid.props.occupationSquares).toEqual(["d3"]);
       });
 
       it("destinationSquares", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            validMoves={initialPositionValidMoves}
+          />
+        );
         const testInstance = testRenderer.root;
 
         const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.destinationSquares).toBeUndefined();
+        expect(coordinateGrid.props.destinationSquares).toEqual([]);
 
-        testRenderer.update(<Board destinationSquares={["a1"]} />);
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
 
-        expect(coordinateGrid.props.destinationSquares).toEqual(["a1"]);
+        expect(coordinateGrid.props.destinationSquares).toEqual([
+          "e3",
+          "e4",
+          "d3",
+        ]);
       });
 
       it("lastMoveSquares", () => {
@@ -320,11 +671,30 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.checkSquares).toBeUndefined();
+        expect(coordinateGrid.props.checkSquare).toBeUndefined();
 
-        testRenderer.update(<Board checkSquares={["a1"]} />);
+        testRenderer.update(<Board check={true} />);
 
-        expect(coordinateGrid.props.checkSquares).toEqual(["a1"]);
+        expect(coordinateGrid.props.checkSquare).toBeUndefined();
+
+        testRenderer.update(
+          <Board
+            check={true}
+            position={{ e1: PieceCode.WHITE_KING, e8: PieceCode.BLACK_KING }}
+          />
+        );
+
+        expect(coordinateGrid.props.checkSquare).toBe("e1");
+
+        testRenderer.update(
+          <Board
+            check={true}
+            turnColor={PieceColor.BLACK}
+            position={{ e1: PieceCode.WHITE_KING, e8: PieceCode.BLACK_KING }}
+          />
+        );
+
+        expect(coordinateGrid.props.checkSquare).toBe("e8");
       });
 
       describe("onRightClick", () => {
@@ -365,6 +735,23 @@ describe("Board", () => {
           });
 
           expect(mouseEvent.defaultPrevented).toBeTruthy();
+
+          // in viewOnly mode defaultPrevented must be false
+          testRenderer.update(<Board allowMarkers={true} viewOnly={true} />);
+
+          mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(mouseEvent.defaultPrevented).toBeFalsy();
         });
       });
 
@@ -435,6 +822,33 @@ describe("Board", () => {
           });
 
           expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onRightClick({
+              coordinates: "a1",
+              mouseEvent,
+            });
+          });
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+        });
+
+        it("ignore right clicks if viewOnly is true", () => {
+          const testRenderer = TestRenderer.create(
+            <Board allowMarkers={true} viewOnly={true} />
+          );
+          const testInstance = testRenderer.root;
+
+          const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+            CoordinateGrid
+          );
+
+          expect(coordinateGrid.props.roundMarkers).toEqual([]);
+
+          const mouseEvent = new MouseEvent("contextMenu", {
+            bubbles: true,
+            cancelable: true,
+          });
 
           TestRenderer.act(() => {
             coordinateGrid.props.onRightClick({
@@ -572,93 +986,275 @@ describe("Board", () => {
   });
 
   describe("Events", () => {
-    it("onSquareClick", () => {
-      const onSquareClick = jest.fn();
+    describe("onMove", () => {
+      it("Allowed Click-click move", () => {
+        // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        const onMove = jest.fn();
 
-      const testInstance = TestRenderer.create(
-        <Board onSquareClick={onSquareClick} />
-      ).root;
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            clickable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
 
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
 
-      TestRenderer.act(() => {
-        coordinateGrid.props.onClick("e2");
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(1);
+
+        expect(onMove).toBeCalledWith({
+          from: "e2",
+          to: "e4",
+        });
+
+        onMove.mockClear();
+
+        // invalid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e5");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
       });
 
-      expect(onSquareClick).toBeCalledTimes(1);
+      it("Forbidden Click-click move", () => {
+        // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        const onMove = jest.fn();
 
-      expect(onSquareClick).toBeCalledWith("e2");
-    });
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
+            clickable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
 
-    it("onDragStart", () => {
-      const onDragStart = jest.fn();
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
 
-      const testInstance = TestRenderer.create(
-        <Board onDragStart={onDragStart} />
-      ).root;
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
 
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
+        expect(onMove).toBeCalledTimes(0);
 
-      const dragStartEvent: PieceDragStartEvent = {
-        coordinates: "e2",
-        pieceCode: PieceCode.WHITE_PAWN,
-      };
+        onMove.mockClear();
 
-      TestRenderer.act(() => {
-        coordinateGrid.props.onDragStart(dragStartEvent);
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            clickable={false} // clickable false, so moves are forbidden
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
       });
 
-      expect(onDragStart).toBeCalledTimes(1);
+      it("Allowed Drag and drop move", () => {
+        // Drag and drop moves are allowed (turnColor white, draggable true, movableColor both)
+        const onMove = jest.fn();
 
-      expect(onDragStart).toBeCalledWith(dragStartEvent);
-    });
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
 
-    it("onDragEnd", () => {
-      const onDragEnd = jest.fn();
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
 
-      const testInstance = TestRenderer.create(<Board onDragEnd={onDragEnd} />)
-        .root;
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
 
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
+        expect(onMove).toBeCalledTimes(1);
 
-      TestRenderer.act(() => {
-        coordinateGrid.props.onDragEnd();
+        expect(onMove).toBeCalledWith({
+          from: "e2",
+          to: "e4",
+        });
+
+        onMove.mockClear();
+
+        // invalid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e5",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
       });
 
-      expect(onDragEnd).toBeCalledTimes(1);
-      expect(onDragEnd).toBeCalledWith();
-    });
+      it("dropEvent disableTransitionInNextPosition() must be called if move is valid", () => {
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
 
-    it("onDrop", () => {
-      const onDrop = jest.fn();
-      const cancelMove = jest.fn();
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
 
-      const testInstance = TestRenderer.create(<Board onDrop={onDrop} />).root;
+        const disableTransitionInNextPosition = jest.fn();
 
-      const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
-        CoordinateGrid
-      );
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition,
+          });
+        });
 
-      const dropEvent: PieceDropEvent = {
-        sourceCoordinates: "e2",
-        targetCoordinates: "e4",
-        pieceCode: PieceCode.WHITE_PAWN,
-        cancelMove,
-      };
-
-      TestRenderer.act(() => {
-        coordinateGrid.props.onDrop(dropEvent);
+        expect(disableTransitionInNextPosition).toBeCalledTimes(1);
       });
 
-      expect(onDrop).toBeCalledTimes(1);
+      it("Forbidden Drag and drop move", () => {
+        // Click-click moves are allowed (turnColor white, clickable true, movableColor both)
+        const onMove = jest.fn();
 
-      expect(onDrop).toBeCalledWith(dropEvent);
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
+            draggable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+
+        onMove.mockClear();
+
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={false} // clickable false, so moves are forbidden
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+      });
+
+      it("Forbidden moves if viewOnly is true", () => {
+        const onMove = jest.fn();
+
+        const testRenderer = TestRenderer.create(
+          <Board
+            position={initialPosition}
+            viewOnly={true}
+            clickable={true}
+            draggable={true}
+            onMove={onMove}
+            validMoves={initialPositionValidMoves}
+          />
+        );
+        const testInstance = testRenderer.root;
+
+        const coordinateGrid: TestRenderer.ReactTestInstance = testInstance.findByType(
+          CoordinateGrid
+        );
+
+        // valid move
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e2");
+        });
+        TestRenderer.act(() => {
+          coordinateGrid.props.onClick("e4");
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+
+        TestRenderer.act(() => {
+          coordinateGrid.props.onDrop({
+            sourceCoordinates: "e2",
+            targetCoordinates: "e4",
+            pieceCode: PieceCode.WHITE_PAWN,
+            disableTransitionInNextPosition() {},
+          });
+        });
+
+        expect(onMove).toBeCalledTimes(0);
+      });
     });
 
     it("onResize", () => {

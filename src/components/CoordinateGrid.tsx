@@ -53,12 +53,12 @@ export interface CoordinateGridProps {
   draggable?: boolean;
   allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
   transitionDuration?: number;
-  selectionSquares?: string[];
+  selectionSquare?: string;
   occupationSquares?: string[];
   destinationSquares?: string[];
   lastMoveSquares?: string[];
   currentPremoveSquares?: string[];
-  checkSquares?: string[];
+  checkSquare?: string;
   roundMarkers?: string[];
 
   onClick?(coordinates: string): void;
@@ -78,12 +78,12 @@ export const CoordinateGrid = forwardRef<
       width = DEFAULT_BOARD_WIDTH,
       orientation = PieceColor.WHITE,
       draggable = false,
-      selectionSquares = [],
+      selectionSquare,
       occupationSquares = [],
       destinationSquares = [],
       lastMoveSquares = [],
       currentPremoveSquares = [],
-      checkSquares = [],
+      checkSquare,
       allowDrag,
       transitionDuration,
       onClick,
@@ -214,7 +214,6 @@ export const CoordinateGrid = forwardRef<
     const [
       transitionPieces,
       disableTransitionInNextPosition,
-      enableTransitionInNextPosition,
     ] = useTransitionPieces(position, (coordinates) =>
       getSquareXYCoordinates(coordinates, width, orientation)
     );
@@ -224,8 +223,6 @@ export const CoordinateGrid = forwardRef<
       drop(item: PieceDragObject, monitor) {
         if (onDrop) {
           const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
-
-          disableTransitionInNextPosition();
 
           onDrop({
             sourceCoordinates: item.coordinates as string,
@@ -238,7 +235,7 @@ export const CoordinateGrid = forwardRef<
               orientation
             ),
             pieceCode: item.pieceCode as PieceCode,
-            cancelMove: enableTransitionInNextPosition,
+            disableTransitionInNextPosition,
           });
         }
       },
@@ -256,12 +253,14 @@ export const CoordinateGrid = forwardRef<
 
     const normalizedHighlightedSquares: NormalizedHighlightedSquare[] = useNormalizedHighlightedSquares(
       {
-        [HighlightedSquareType.SELECTION]: selectionSquares,
+        [HighlightedSquareType.SELECTION]: selectionSquare
+          ? [selectionSquare]
+          : [],
         [HighlightedSquareType.OCCUPATION]: occupationSquares,
         [HighlightedSquareType.DESTINATION]: destinationSquares,
         [HighlightedSquareType.LAST_MOVE]: lastMoveSquares,
         [HighlightedSquareType.CURRENT_PREMOVE]: currentPremoveSquares,
-        [HighlightedSquareType.CHECK]: checkSquares,
+        [HighlightedSquareType.CHECK]: checkSquare ? [checkSquare] : [],
       }
     );
 

@@ -2,31 +2,21 @@ import { Action } from "redux-actions";
 import { ChessInstance } from "chess.js";
 import { Position } from "../../interfaces/Position";
 import { Move } from "../../interfaces/Move";
-import { PieceCode } from "../../enums/PieceCode";
-import { convertFenToPositionObject } from "../../utils/chess";
+import { convertFenToPositionObject, getValidMoves } from "../../utils/chess";
+import { ValidMoves } from "../../types/ValidMoves";
 
 export enum WithMoveValidationAction {
   SET_GAME = "SET_GAME",
-  SELECT_SQUARE = "SELECT_SQUARE",
-  CLEAR_SELECTION = "CLEAR_SELECTION",
   RESIZE = "RESIZE",
   CHANGE_POSITION = "CHANGE_POSITION",
 }
 
 export interface WithMoveValidationState {
   game: ChessInstance | null;
+  validMoves: ValidMoves;
   position: Position;
-  selectionSquares: string[];
-  occupationSquares: string[];
-  destinationSquares: string[];
   lastMoveSquares: string[];
-  checkSquares: string[];
   width: number;
-}
-
-export interface SelectedSquareData {
-  selectionSquare: string;
-  destinationSquares: string[];
 }
 
 export interface ChangePositionData {
@@ -42,31 +32,9 @@ export const getWithMoveValidationInitialState = (
     game: null,
     width,
     position: convertFenToPositionObject(initialFen),
-    selectionSquares: [],
-    occupationSquares: [],
-    destinationSquares: [],
     lastMoveSquares: [],
-    checkSquares: [],
+    validMoves: {},
   };
-};
-
-const getCheckSquares = (game: ChessInstance, position: Position): string[] => {
-  const checkSquares: string[] = [];
-
-  if (game.in_check()) {
-    const turnToMove: "b" | "w" = game.turn();
-
-    const kingPieceCode =
-      turnToMove === "b" ? PieceCode.BLACK_KING : PieceCode.WHITE_KING;
-
-    for (const coordinates in position) {
-      if (position[coordinates] === kingPieceCode) {
-        checkSquares.push(coordinates);
-      }
-    }
-  }
-
-  return checkSquares;
 };
 
 const setGame = (
@@ -75,8 +43,8 @@ const setGame = (
 ): WithMoveValidationState => {
   return {
     ...state,
-    checkSquares: getCheckSquares(payload, state.position),
     game: payload,
+    validMoves: getValidMoves(payload),
   };
 };
 
@@ -86,37 +54,9 @@ const changePosition = (
 ): WithMoveValidationState => {
   return {
     ...state,
+    validMoves: getValidMoves(state.game as ChessInstance),
     position: payload.position,
-    selectionSquares: [],
-    destinationSquares: [],
-    occupationSquares: [],
-    checkSquares: getCheckSquares(state.game!, payload.position),
     lastMoveSquares: [payload.lastMove.from, payload.lastMove.to],
-  };
-};
-
-const selectSquare = (
-  state: WithMoveValidationState,
-  { payload }: Action<SelectedSquareData>
-): WithMoveValidationState => {
-  return {
-    ...state,
-    selectionSquares: [payload.selectionSquare],
-    destinationSquares: payload.destinationSquares,
-    occupationSquares: payload.destinationSquares.filter(
-      (item) => state.position[item]
-    ),
-  };
-};
-
-const clearSelection = (
-  state: WithMoveValidationState
-): WithMoveValidationState => {
-  return {
-    ...state,
-    selectionSquares: [],
-    destinationSquares: [],
-    occupationSquares: [],
   };
 };
 
@@ -138,8 +78,6 @@ const reducersMap: Record<
   ) => WithMoveValidationState
 > = {
   [WithMoveValidationAction.SET_GAME]: setGame,
-  [WithMoveValidationAction.SELECT_SQUARE]: selectSquare,
-  [WithMoveValidationAction.CLEAR_SELECTION]: clearSelection,
   [WithMoveValidationAction.RESIZE]: resize,
   [WithMoveValidationAction.CHANGE_POSITION]: changePosition,
 };

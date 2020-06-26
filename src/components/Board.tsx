@@ -23,63 +23,61 @@ import { without as _without } from "lodash";
 import { Resizer } from "./Resizer";
 import {
   convertFenToPositionObject,
+  getColorFromPieceCode,
+  getKingSquare,
+  getOccupationSquares,
   isValidFen,
   isValidPositionObject,
 } from "../utils/chess";
+import { Move } from "../interfaces/Move";
+import { ValidMoves } from "../types/ValidMoves";
 
 export interface BoardProps {
   allowMarkers?: boolean;
+  clickable?: boolean; // allow click-click moves
+  check?: boolean; // true for current color, false to unset
   position?: Position | string;
   orientation?: PieceColor;
-  draggable?: boolean;
+  draggable?: boolean; // allow moves & premoves to use drag'n drop
   transitionDuration?: number;
+  validMoves?: ValidMoves;
+  viewOnly?: boolean;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
   showCoordinates?: boolean;
-  showResizer?: boolean;
-  allowDrag?: (pieceCode: PieceCode, coordinates: string) => boolean;
-  selectionSquares?: string[];
-  occupationSquares?: string[];
-  destinationSquares?: string[];
+  resizable?: boolean;
   lastMoveSquares?: string[];
+  movableColor?: PieceColor | "both";
   currentPremoveSquares?: string[];
-  checkSquares?: string[];
-
-  onSquareClick?(coordinates: string): void;
-
-  onDragStart?(event: PieceDragStartEvent): void;
-
-  onDragEnd?(): void;
-
-  onDrop?(event: PieceDropEvent): void;
+  turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
 
   onResize?(width: number): void;
+
+  onMove?(move: Move): void;
 }
 
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
+  clickable = false,
   position = {},
   orientation = PieceColor.WHITE,
   draggable = false,
   width = DEFAULT_BOARD_WIDTH,
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
   maxWidth = DEFAULT_BOARD_MAX_WIDTH,
-  allowDrag,
   showCoordinates = true,
-  showResizer = true,
+  resizable = true,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
-  selectionSquares,
-  occupationSquares,
-  destinationSquares,
   lastMoveSquares,
   currentPremoveSquares,
-  checkSquares,
-  onSquareClick,
-  onDragStart,
-  onDragEnd,
-  onDrop,
+  check = false,
+  turnColor = PieceColor.WHITE,
+  movableColor = "both",
   onResize,
+  onMove,
+  validMoves = {},
+  viewOnly = false,
 }) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
@@ -91,29 +89,137 @@ export const Board: FC<BoardProps> = ({
 
   const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
+  const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
+
+  const canSelectSquare = (coordinates: string): boolean => {
+    if (positionObject[coordinates]) {
+      const pieceColor: PieceColor = getColorFromPieceCode(
+        positionObject[coordinates]
+      );
+
+      if (pieceColor === turnColor) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const isAllowedToClickMove = (): boolean => {
+    return !!(
+      clickable &&
+      (movableColor === "both" || movableColor === turnColor)
+    );
+  };
+
+  const isAllowedToDragMove = (): boolean => {
+    return !!(
+      draggable &&
+      (movableColor === "both" || movableColor === turnColor)
+    );
+  };
+
   const handleSquareClick = (coordinates: string): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (allowMarkers) {
       setRoundMarkers([]);
     }
 
-    if (onSquareClick) {
-      onSquareClick(coordinates);
+    if (!isAllowedToClickMove()) {
+      return;
+    }
+    if (selectionSquare) {
+      if (selectionSquare === coordinates) {
+        setSelectionSquare(undefined);
+        return;
+      }
+
+      if (canSelectSquare(coordinates)) {
+        setSelectionSquare(coordinates);
+        return;
+      }
+
+      setSelectionSquare(undefined);
+
+      if (
+        !validMoves[selectionSquare] ||
+        !validMoves[selectionSquare].includes(coordinates)
+      ) {
+        return;
+      }
+
+      if (onMove) {
+        onMove({
+          from: selectionSquare,
+          to: coordinates,
+        });
+      }
+    } else {
+      if (!canSelectSquare(coordinates)) {
+        setSelectionSquare(undefined);
+        return;
+      }
+      setSelectionSquare(coordinates);
+    }
+  };
+
+  const handleDrop = (event: PieceDropEvent): void => {
+    if (viewOnly) {
+      return;
+    }
+
+    if (!isAllowedToDragMove()) {
+      return;
+    }
+
+    if (
+      !validMoves[event.sourceCoordinates] ||
+      !validMoves[event.sourceCoordinates].includes(event.targetCoordinates)
+    ) {
+      return;
+    }
+
+    event.disableTransitionInNextPosition();
+
+    if (onMove) {
+      onMove({
+        from: event.sourceCoordinates,
+        to: event.targetCoordinates,
+      });
     }
   };
 
   const handleDragStart = (event: PieceDragStartEvent): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (allowMarkers) {
       setRoundMarkers([]);
     }
 
-    if (onDragStart) {
-      onDragStart(event);
+    if (!isAllowedToDragMove()) {
+      return;
     }
+
+    if (canSelectSquare(event.coordinates)) {
+      setSelectionSquare(event.coordinates);
+    }
+  };
+
+  const handleDragEnd = (): void => {
+    setSelectionSquare(undefined);
   };
 
   const handleSquareRightClick = (
     event: CoordinateGridRightClickEvent
   ): void => {
+    if (viewOnly) {
+      return;
+    }
+
     if (allowMarkers) {
       event.mouseEvent.preventDefault();
 
@@ -123,6 +229,32 @@ export const Board: FC<BoardProps> = ({
         setRoundMarkers(roundMarkers.concat(event.coordinates));
       }
     }
+  };
+
+  const checkSquare = check
+    ? getKingSquare(positionObject, turnColor)
+    : undefined;
+  const destinationSquares =
+    selectionSquare && validMoves[selectionSquare]
+      ? validMoves[selectionSquare]
+      : [];
+  const occupationSquares = getOccupationSquares(
+    positionObject,
+    destinationSquares
+  );
+
+  const allowDrag = (pieceCode: PieceCode): boolean => {
+    if (viewOnly) {
+      return false;
+    }
+
+    const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
+
+    return (
+      draggable &&
+      (movableColor === "both" || movableColor === turnColor) &&
+      pieceColor === turnColor
+    );
   };
 
   return (
@@ -142,23 +274,23 @@ export const Board: FC<BoardProps> = ({
             orientation={orientation}
             position={positionObject}
             width={width}
-            selectionSquares={selectionSquares}
+            selectionSquare={selectionSquare}
             occupationSquares={occupationSquares}
             destinationSquares={destinationSquares}
             lastMoveSquares={lastMoveSquares}
             currentPremoveSquares={currentPremoveSquares}
-            checkSquares={checkSquares}
+            checkSquare={checkSquare}
             onClick={handleSquareClick}
             onRightClick={handleSquareRightClick}
-            onDrop={onDrop}
+            onDrop={handleDrop}
             onDragStart={handleDragStart}
-            onDragEnd={onDragEnd}
+            onDragEnd={handleDragEnd}
             transitionDuration={transitionDuration}
             roundMarkers={roundMarkers}
           />
 
           {showCoordinates && <Coords orientation={orientation} />}
-          {showResizer && (
+          {resizable && (
             <Resizer
               width={width}
               minWidth={minWidth}
