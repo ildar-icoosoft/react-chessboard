@@ -56,7 +56,12 @@ export interface BoardProps {
   onResize?(width: number): void;
 
   onMove?(move: Move): void;
-  onSetPremove?(move: Move, playPremove: () => void): void;
+  onSetPremove?(
+    move: Move,
+    playPremove: () => void,
+    cancelPremove: () => void
+  ): void;
+  onUnsetPremove?(): void;
 }
 
 export const Board: FC<BoardProps> = ({
@@ -78,6 +83,7 @@ export const Board: FC<BoardProps> = ({
   onResize,
   onMove,
   onSetPremove,
+  onUnsetPremove,
   validMoves = {},
   viewOnly = false,
   premovable = false,
@@ -126,6 +132,22 @@ export const Board: FC<BoardProps> = ({
     );
   };
 
+  const makePlayPremoveCallback = (premove: Move) => {
+    return () => {
+      if (onMove) {
+        onMove(premove);
+      }
+      setPremoveSquares([]);
+    };
+  };
+
+  const cancelPremove = (): void => {
+    if (onUnsetPremove) {
+      onUnsetPremove();
+    }
+    setPremoveSquares([]);
+  };
+
   const handleSquareClick = (coordinates: string): void => {
     if (viewOnly) {
       return;
@@ -158,12 +180,11 @@ export const Board: FC<BoardProps> = ({
             from: selectionSquare,
             to: coordinates,
           };
-          onSetPremove(premove, () => {
-            if (onMove) {
-              onMove(premove);
-            }
-            setPremoveSquares([]);
-          });
+          onSetPremove(
+            premove,
+            makePlayPremoveCallback(premove),
+            cancelPremove
+          );
         }
         setPremoveSquares([selectionSquare, coordinates]);
         return;
@@ -206,12 +227,7 @@ export const Board: FC<BoardProps> = ({
           from: event.sourceCoordinates,
           to: event.targetCoordinates,
         };
-        onSetPremove(premove, () => {
-          if (onMove) {
-            onMove(premove);
-          }
-          setPremoveSquares([]);
-        });
+        onSetPremove(premove, makePlayPremoveCallback(premove), cancelPremove);
       }
       setPremoveSquares([event.sourceCoordinates, event.targetCoordinates]);
       return;
