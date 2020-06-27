@@ -1,5 +1,3 @@
-import { PieceCode } from "../enums/PieceCode";
-
 export interface Move {
   /**
    * The location the piece is moving from.
@@ -12,9 +10,4 @@ export interface Move {
    * Must be in san format, e.g "a1"
    */
   to: string;
-
-  /**
-   * If this move results in a promotion, this will have the unit promotion.
-   */
-  promotion?: PieceCode;
 }

@@ -14,10 +14,27 @@ import {
 } from "../../../constants/constants";
 import { PieceColor } from "../../../enums/PieceColor";
 import { ValidMoves } from "../../../types/ValidMoves";
+import { PromotionChoice } from "../PromotionChoice";
+
+jest.mock("antd");
 
 const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
 const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";
+
+const prePromotionFen: string = "k7/4P3/4K3/8/8/8/8/8 w - - 0 1";
+
+const prePromotionPosition: Position = {
+  a8: PieceCode.BLACK_KING,
+  e7: PieceCode.WHITE_PAWN,
+  e6: PieceCode.WHITE_KING,
+};
+
+const promotionPosition: Position = {
+  a8: PieceCode.BLACK_KING,
+  e8: PieceCode.WHITE_BISHOP,
+  e6: PieceCode.WHITE_KING,
+};
 
 const initialPosition: Position = {
   e2: PieceCode.WHITE_PAWN,
@@ -54,7 +71,7 @@ const renderWithMoveValidation = (
 ) => {
   let callbackProps: WithMoveValidationCallbackProps;
 
-  TestRenderer.create(
+  const testRenderer = TestRenderer.create(
     <WithMoveValidation initialFen={fen} playerVsCompMode={playerVsCompMode}>
       {(props) => {
         callbackProps = props;
@@ -63,17 +80,74 @@ const renderWithMoveValidation = (
       }}
     </WithMoveValidation>
   );
+  const testInstance = testRenderer.root;
 
   return {
     getProps() {
       return callbackProps;
     },
+    testRenderer,
+    testInstance,
   };
 };
 
 jest.useFakeTimers();
 
 describe("WithMoveValidation", () => {
+  describe("children components", () => {
+    it("contains 1 PromotionChoice", () => {
+      const { testInstance } = renderWithMoveValidation();
+
+      expect(testInstance.findAllByType(PromotionChoice).length).toBe(1);
+    });
+  });
+
+  describe("children components props", () => {
+    it("PromotionChoice", () => {
+      const { testInstance, getProps } = renderWithMoveValidation(
+        prePromotionFen
+      );
+
+      let props = getProps();
+      TestRenderer.act(() => {
+        jest.runAllTimers();
+        props = getProps();
+      });
+
+      const promotionChoice: TestRenderer.ReactTestInstance = testInstance.findByType(
+        PromotionChoice
+      );
+
+      expect(props.position).toEqual(prePromotionPosition);
+
+      expect(promotionChoice.props.showPromotionChoice).toBe(false);
+      expect(promotionChoice.props.turnColor).toBe(PieceColor.WHITE);
+
+      TestRenderer.act(() => {
+        props.onMove({
+          from: "e7",
+          to: "e8",
+        });
+      });
+
+      props = getProps();
+      expect(props.position).toEqual(prePromotionPosition);
+
+      expect(promotionChoice.props.showPromotionChoice).toBe(true);
+      expect(promotionChoice.props.turnColor).toBe(PieceColor.WHITE);
+
+      TestRenderer.act(() => {
+        promotionChoice.props.onPromotion("b");
+      });
+
+      props = getProps();
+      expect(props.position).toEqual(promotionPosition);
+
+      expect(promotionChoice.props.showPromotionChoice).toBe(false);
+      expect(promotionChoice.props.turnColor).toBe(PieceColor.BLACK);
+    });
+  });
+
   describe("callback props", () => {
     describe("props.children()", () => {
       it("must be called immediately", () => {

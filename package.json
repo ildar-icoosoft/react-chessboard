@@ -79,6 +79,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "antd": "^4.3.5",
     "chess.js": "^0.10.3",
     "classnames": "^2.2.6",
     "ii-react-libraries": "^1.0.0",
