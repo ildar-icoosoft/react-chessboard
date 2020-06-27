@@ -6,6 +6,11 @@ import css from "./PromotionChoice.scss";
 import classNames from "classnames";
 import { PieceType } from "chess.js";
 
+jest.mock("antd", () => ({
+  // @ts-ignore
+  Modal: ({ children }) => children,
+}));
+
 export interface PromotionChoiceProps {
   showPromotionChoice?: boolean;
   turnColor?: PieceColor;
