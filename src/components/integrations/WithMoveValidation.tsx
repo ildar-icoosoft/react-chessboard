@@ -14,10 +14,7 @@ import {
 } from "./WithMoveValidation.reducer";
 import { Move } from "../../interfaces/Move";
 import { ValidMoves } from "../../types/ValidMoves";
-import { Modal } from "antd";
-import "antd/dist/antd.css";
-import css from "./WithMoveValidation.scss";
-import classNames from "classnames";
+import { PromotionChoice } from "./PromotionChoice";
 
 export interface WithMoveValidationCallbackProps {
   allowMarkers: boolean;
@@ -105,7 +102,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
 
   const promotionMove = useRef<Move | null>(null);
 
-  const promotion = (promotionPiece: Exclude<PieceType, "p">): void => {
+  const promotionHandler = (promotionPiece: Exclude<PieceType, "p">): void => {
     const move: Move = promotionMove.current as Move;
 
     const chessJsMove: ChessJsMove | null = game!.move({
@@ -159,6 +156,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         turnColor,
         onMove(move: Move) {
           const moves = game!.moves({ verbose: true });
+
           for (let i = 0, len = moves.length; i < len; i++) {
             /* eslint-disable-line */
             if (
@@ -212,42 +210,11 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
           premove.current = null;
         },
       })}
-      <Modal visible={showPromotionChoice} footer={null} closable={false}>
-        <div style={{ textAlign: "center", cursor: "pointer" }}>
-          <span role="presentation" onClick={() => promotion("q")}>
-            <div
-              className={classNames(css.piece, {
-                [css.wQ]: turnColor === PieceColor.WHITE,
-                [css.bQ]: turnColor === PieceColor.BLACK,
-              })}
-            />
-          </span>
-          <span role="presentation" onClick={() => promotion("r")}>
-            <div
-              className={classNames(css.piece, {
-                [css.wR]: turnColor === PieceColor.WHITE,
-                [css.bR]: turnColor === PieceColor.BLACK,
-              })}
-            />
-          </span>
-          <span role="presentation" onClick={() => promotion("b")}>
-            <div
-              className={classNames(css.piece, {
-                [css.wB]: turnColor === PieceColor.WHITE,
-                [css.bB]: turnColor === PieceColor.BLACK,
-              })}
-            />
-          </span>
-          <span role="presentation" onClick={() => promotion("n")}>
-            <div
-              className={classNames(css.piece, {
-                [css.wN]: turnColor === PieceColor.WHITE,
-                [css.bN]: turnColor === PieceColor.BLACK,
-              })}
-            />
-          </span>
-        </div>
-      </Modal>
+      <PromotionChoice
+        showPromotionChoice={showPromotionChoice}
+        turnColor={turnColor}
+        onPromotion={promotionHandler}
+      />
     </>
   );
 };

@@ -23,6 +23,7 @@ const defaultState: WithMoveValidationState = {
   width: 480,
   position: initialPosition,
   lastMoveSquares: [],
+  showPromotionChoice: false,
 };
 
 describe("WithMoveValidation.reducer", () => {
@@ -44,6 +45,7 @@ describe("WithMoveValidation.reducer", () => {
       width: 480,
       position: initialPosition,
       lastMoveSquares: [],
+      showPromotionChoice: false,
     });
   });
 
@@ -59,6 +61,7 @@ describe("WithMoveValidation.reducer", () => {
       width: 240,
       position: initialPosition,
       lastMoveSquares: [],
+      showPromotionChoice: false,
     });
   });
 
@@ -109,6 +112,7 @@ describe("WithMoveValidation.reducer", () => {
         d3: PieceCode.BLACK_PAWN,
       },
       lastMoveSquares: ["e2", "e4"],
+      showPromotionChoice: false,
     });
   });
 });
