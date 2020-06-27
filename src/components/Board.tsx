@@ -33,35 +33,33 @@ import { Move } from "../interfaces/Move";
 import { ValidMoves } from "../types/ValidMoves";
 
 export interface BoardProps {
-  allowMarkers?: boolean;
-  clickable?: boolean; // allow click-click moves
+  allowMarkers?: boolean; // allow round markers with right click
   check?: boolean; // true for current color, false to unset
-  position?: Position | string;
-  orientation?: PieceColor;
+  clickable?: boolean; // allow click-click moves
   draggable?: boolean; // allow moves & premoves to use drag'n drop
-  transitionDuration?: number;
-  validMoves?: ValidMoves;
-  viewOnly?: boolean;
-  width?: number;
-  minWidth?: number;
-  maxWidth?: number;
-  showCoordinates?: boolean;
-  resizable?: boolean;
-  premovable?: boolean;
-  lastMoveSquares?: string[];
-  movableColor?: PieceColor | "both";
-  premoveSquares?: string[];
+  lastMoveSquares?: string[]; // squares part of the last move ["c3", "c4"]
   turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
-
-  onResize?(width: number): void;
-
-  onMove?(move: Move): void;
+  maxWidth?: number; // Max width in pixels
+  minWidth?: number; // Min width in pixels
+  movableColor?: PieceColor | "both"; // color that can move. white | black | both
+  onMove?(move: Move): void; // called after move
+  onResize?(width: number): void; // called after resize
   onSetPremove?(
     move: Move,
     playPremove: () => void,
     cancelPremove: () => void
-  ): void;
-  onUnsetPremove?(): void;
+  ): void; // called after the premove has been set
+  onUnsetPremove?(): void; // called after the premove has been unset
+  orientation?: PieceColor; // board orientation. white | black
+  position?: Position | string; // FEN string or Position object
+  premovable?: boolean; // allow premoves for color that can not move
+  premoveSquares?: string[]; // premove destinations for the current selection
+  resizable?: boolean; // allow resize
+  showCoordinates?: boolean; // include coords attributes
+  transitionDuration?: number; // The time in seconds it takes for a piece to slide to the target square
+  validMoves?: ValidMoves; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
+  viewOnly?: boolean; // don't bind events: the user will never be able to move pieces around
+  width?: number; // board width in pixels
 }
 
 export const Board: FC<BoardProps> = ({
