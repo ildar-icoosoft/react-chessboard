@@ -28,7 +28,11 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
   return (
     <Modal visible={showPromotionChoice} footer={null} closable={false}>
       <div style={{ textAlign: "center", cursor: "pointer" }}>
-        <span role="presentation" onClick={makePromotionHandler("q")}>
+        <span
+          data-testid={"promotion-q"}
+          role="presentation"
+          onClick={makePromotionHandler("q")}
+        >
           <div
             className={classNames(css.piece, {
               [css.wQ]: turnColor === PieceColor.WHITE,
@@ -36,7 +40,11 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
             })}
           />
         </span>
-        <span role="presentation" onClick={makePromotionHandler("r")}>
+        <span
+          data-testid={"promotion-r"}
+          role="presentation"
+          onClick={makePromotionHandler("r")}
+        >
           <div
             className={classNames(css.piece, {
               [css.wR]: turnColor === PieceColor.WHITE,
@@ -44,7 +52,11 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
             })}
           />
         </span>
-        <span role="presentation" onClick={makePromotionHandler("b")}>
+        <span
+          data-testid={"promotion-b"}
+          role="presentation"
+          onClick={makePromotionHandler("b")}
+        >
           <div
             className={classNames(css.piece, {
               [css.wB]: turnColor === PieceColor.WHITE,
@@ -52,7 +64,11 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
             })}
           />
         </span>
-        <span role="presentation" onClick={makePromotionHandler("n")}>
+        <span
+          data-testid={"promotion-n"}
+          role="presentation"
+          onClick={makePromotionHandler("n")}
+        >
           <div
             className={classNames(css.piece, {
               [css.wN]: turnColor === PieceColor.WHITE,

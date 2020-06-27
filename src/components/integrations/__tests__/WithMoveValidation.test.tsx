@@ -16,7 +16,7 @@ import { PieceColor } from "../../../enums/PieceColor";
 import { ValidMoves } from "../../../types/ValidMoves";
 import { PromotionChoice } from "../PromotionChoice";
 
-jest.mock("../PromotionChoice");
+jest.mock("antd");
 
 const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
