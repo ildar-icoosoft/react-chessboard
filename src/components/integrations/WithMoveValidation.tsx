@@ -4,7 +4,11 @@ import {
   DEFAULT_BOARD_WIDTH,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
-import { convertFenToPositionObject, getTurnColor } from "../../utils/chess";
+import {
+  convertFenToPositionObject,
+  getTurnColor,
+  playMoveSound,
+} from "../../utils/chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { Chess, Move as ChessJsMove, PieceType, Square } from "chess.js";
 import {
@@ -76,6 +80,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
     if (moves.length > 0) {
       game!.move(move.san);
 
+      playMoveSound();
       dispatch({
         type: WithMoveValidationAction.CHANGE_POSITION,
         payload: {
@@ -114,6 +119,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       return;
     }
 
+    playMoveSound();
     dispatch({
       type: WithMoveValidationAction.CHANGE_POSITION,
       payload: {
@@ -182,6 +188,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
             return;
           }
 
+          playMoveSound();
           dispatch({
             type: WithMoveValidationAction.CHANGE_POSITION,
             payload: {

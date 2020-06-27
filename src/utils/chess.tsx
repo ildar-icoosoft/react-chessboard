@@ -354,3 +354,10 @@ export const getOccupationSquares = (
 ): string[] => {
   return destinationSquares.filter((item) => position[item]);
 };
+
+export const playMoveSound = () => {
+  const audio = new Audio(
+    "https://lichess1.org/assets/sound/standard/Move.ogg"
+  );
+  audio.play();
+};
