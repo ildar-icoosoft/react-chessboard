@@ -50,8 +50,11 @@ PlayerVsPlayer.story = {
   },
 };
 
+const prePromotionFen: string =
+  "rnbqkbn1/pppppppP/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 export const PlayerVsComputer = () => (
-  <WithMoveValidation initialFen={INITIAL_BOARD_FEN} playerVsCompMode={true}>
+  <WithMoveValidation initialFen={prePromotionFen} playerVsCompMode={true}>
     {({
       clickable,
       allowMarkers,

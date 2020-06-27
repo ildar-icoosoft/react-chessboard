@@ -9,6 +9,8 @@ export enum WithMoveValidationAction {
   SET_GAME = "SET_GAME",
   RESIZE = "RESIZE",
   CHANGE_POSITION = "CHANGE_POSITION",
+  SHOW_PROMOTION_CHOICE = "SHOW_PROMOTION_CHOICE",
+  HIDE_PROMOTION_CHOICE = "HIDE_PROMOTION_CHOICE",
 }
 
 export interface WithMoveValidationState {
@@ -17,6 +19,7 @@ export interface WithMoveValidationState {
   position: Position;
   lastMoveSquares: string[];
   width: number;
+  showPromotionChoice: boolean;
 }
 
 export interface ChangePositionData {
@@ -34,6 +37,7 @@ export const getWithMoveValidationInitialState = (
     position: convertFenToPositionObject(initialFen),
     lastMoveSquares: [],
     validMoves: {},
+    showPromotionChoice: false,
   };
 };
 
@@ -70,6 +74,24 @@ const resize = (
   };
 };
 
+const showPromotionChoice = (
+  state: WithMoveValidationState
+): WithMoveValidationState => {
+  return {
+    ...state,
+    showPromotionChoice: true,
+  };
+};
+
+const hidePromotionChoice = (
+  state: WithMoveValidationState
+): WithMoveValidationState => {
+  return {
+    ...state,
+    showPromotionChoice: false,
+  };
+};
+
 const reducersMap: Record<
   string,
   (
@@ -80,6 +102,8 @@ const reducersMap: Record<
   [WithMoveValidationAction.SET_GAME]: setGame,
   [WithMoveValidationAction.RESIZE]: resize,
   [WithMoveValidationAction.CHANGE_POSITION]: changePosition,
+  [WithMoveValidationAction.SHOW_PROMOTION_CHOICE]: showPromotionChoice,
+  [WithMoveValidationAction.HIDE_PROMOTION_CHOICE]: hidePromotionChoice,
 };
 
 export const withMoveValidationReducer = (
