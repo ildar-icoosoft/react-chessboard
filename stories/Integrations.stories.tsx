@@ -50,11 +50,8 @@ PlayerVsPlayer.story = {
   },
 };
 
-const prePromotionFen: string =
-  "rnbqkbn1/pppppppP/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
 export const PlayerVsComputer = () => (
-  <WithMoveValidation initialFen={prePromotionFen} playerVsCompMode={true}>
+  <WithMoveValidation initialFen={INITIAL_BOARD_FEN} playerVsCompMode={true}>
     {({
       clickable,
       allowMarkers,
@@ -96,6 +93,56 @@ export const PlayerVsComputer = () => (
 );
 
 PlayerVsComputer.story = {
+  parameters: {
+    jest: ["WithMoveValidation"],
+  },
+};
+
+const prePromotionFen: string = "k7/4P3/4K3/8/8/8/8/8 w - - 0 1";
+
+export const PlayerVsComputerPromotionPosition = () => (
+  <WithMoveValidation initialFen={prePromotionFen} playerVsCompMode={true}>
+    {({
+      clickable,
+      allowMarkers,
+      movableColor,
+      check,
+      turnColor,
+      position,
+      draggable,
+      onResize,
+      onMove,
+      onSetPremove,
+      onUnsetPremove,
+      lastMoveSquares,
+      validMoves,
+      viewOnly,
+      width,
+    }) => (
+      <Board
+        clickable={clickable}
+        allowMarkers={allowMarkers}
+        movableColor={movableColor}
+        check={check}
+        turnColor={turnColor}
+        position={position}
+        draggable={draggable}
+        onResize={onResize}
+        onMove={onMove}
+        onSetPremove={onSetPremove}
+        onUnsetPremove={onUnsetPremove}
+        transitionDuration={300}
+        validMoves={validMoves}
+        viewOnly={viewOnly}
+        lastMoveSquares={lastMoveSquares}
+        width={width}
+        premovable={true}
+      />
+    )}
+  </WithMoveValidation>
+);
+
+PlayerVsComputerPromotionPosition.story = {
   parameters: {
     jest: ["WithMoveValidation"],
   },
