@@ -4,11 +4,7 @@ import {
   DEFAULT_BOARD_WIDTH,
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
-import {
-  convertFenToPositionObject,
-  getTurnColor,
-  playMoveSound,
-} from "../../utils/chess";
+import { convertFenToPositionObject, getTurnColor } from "../../utils/chess";
 import { PieceColor } from "../../enums/PieceColor";
 import { Chess, Move as ChessJsMove, PieceType, Square } from "chess.js";
 import {
@@ -52,6 +48,13 @@ export interface WithMoveValidationProps {
     callbackProps: WithMoveValidationCallbackProps
   ): ReactElement<any, any> | null;
 }
+
+const playMoveSound = () => {
+  const audio = new Audio(
+    "https://lichess1.org/assets/sound/standard/Move.ogg"
+  );
+  audio.play();
+};
 
 export const WithMoveValidation: FC<WithMoveValidationProps> = ({
   children,
