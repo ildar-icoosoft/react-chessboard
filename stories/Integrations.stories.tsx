@@ -98,7 +98,7 @@ PlayerVsComputer.story = {
   },
 };
 
-const prePromotionFen: string = "k7/4P3/4K3/8/8/8/8/8 w - - 0 1";
+const prePromotionFen: string = "k7/4P3/4K3/8/8/8/4p3/8 b - - 0 1";
 
 export const PlayerVsComputerPromotionPosition = () => (
   <WithMoveValidation initialFen={prePromotionFen} playerVsCompMode={true}>
