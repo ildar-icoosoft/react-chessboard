@@ -1023,7 +1023,7 @@ describe("Board", () => {
 
         it("drag start must clear roundMarkers", () => {
           const testRenderer = TestRenderer.create(
-            <Board allowMarkers={true} />
+            <Board allowMarkers={true} draggable={true} />
           );
           const testInstance = testRenderer.root;
 
@@ -1671,6 +1671,7 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             clickable={true}
+            draggable={true}
             premovable={true}
             onUnsetPremove={onUnsetPremove}
             validMoves={initialPositionValidMoves}
