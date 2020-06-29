@@ -302,6 +302,18 @@ describe("Board", () => {
         expect(
           coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
         ).toBeFalsy(); // viewOnly is true
+
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            turnColor={PieceColor.BLACK}
+            premovable={true}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeFalsy(); // ignore premovable if movableColor both
       });
 
       it("transitionDuration", () => {
@@ -436,6 +448,22 @@ describe("Board", () => {
           });
 
           // user can't move opposite piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              turnColor={PieceColor.BLACK}
+              premovable={true}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // ignore premove if movableColor is both
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
