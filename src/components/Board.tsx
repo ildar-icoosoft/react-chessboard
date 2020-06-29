@@ -30,6 +30,7 @@ import {
 } from "../utils/chess";
 import { Move } from "../interfaces/Move";
 import { ValidMoves } from "../types/ValidMoves";
+import { PieceCode } from "../enums/PieceCode";
 
 export interface BoardProps {
   allowMarkers?: boolean; // allow round markers with right click
@@ -98,20 +99,13 @@ export const Board: FC<BoardProps> = ({
   const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
   const [premoveSquares, setPremoveSquares] = useState<string[]>([]);
 
-  const canSelectSquare = (coordinates: string): boolean => {
-    if (positionObject[coordinates]) {
-      const pieceColor: PieceColor = getColorFromPieceCode(
-        positionObject[coordinates]
-      );
+  const canMoveWithPiece = (pieceCode: PieceCode): boolean => {
+    const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
 
-      if (
-        (movableColor === "both" || pieceColor === movableColor) &&
-        (premovable || pieceColor === turnColor)
-      ) {
-        return true;
-      }
-    }
-    return false;
+    return (
+      (movableColor === "both" || pieceColor === movableColor) &&
+      (premovable || pieceColor === turnColor)
+    );
   };
 
   const isAllowedToClickMove = (): boolean => {
@@ -165,7 +159,10 @@ export const Board: FC<BoardProps> = ({
         return;
       }
 
-      if (canSelectSquare(coordinates)) {
+      if (
+        positionObject[coordinates] &&
+        canMoveWithPiece(positionObject[coordinates])
+      ) {
         setSelectionSquare(coordinates);
         return;
       }
@@ -188,7 +185,10 @@ export const Board: FC<BoardProps> = ({
         });
       }
     } else {
-      if (!canSelectSquare(coordinates)) {
+      if (
+        !positionObject[coordinates] ||
+        !canMoveWithPiece(positionObject[coordinates])
+      ) {
         setSelectionSquare(undefined);
         return;
       }
@@ -252,7 +252,7 @@ export const Board: FC<BoardProps> = ({
       return;
     }
 
-    if (canSelectSquare(event.coordinates)) {
+    if (canMoveWithPiece(event.pieceCode)) {
       setSelectionSquare(event.coordinates);
     }
   };
