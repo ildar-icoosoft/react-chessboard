@@ -221,11 +221,11 @@ export const Board: FC<BoardProps> = ({
     }
 
     if (isPremove()) {
-      doPremove(event.sourceCoordinates, event.targetCoordinates);
+      doPremove(event.from, event.to);
       return;
     }
 
-    if (!isValidMove(event.sourceCoordinates, event.targetCoordinates)) {
+    if (!isValidMove(event.from, event.to)) {
       return;
     }
 
@@ -233,8 +233,8 @@ export const Board: FC<BoardProps> = ({
 
     if (onMove) {
       onMove({
-        from: event.sourceCoordinates,
-        to: event.targetCoordinates,
+        from: event.from,
+        to: event.to,
       });
     }
   };
