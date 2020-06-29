@@ -1,8 +1,8 @@
 import { PieceCode } from "../enums/PieceCode";
 
 export interface PieceDropEvent {
-  sourceCoordinates: string;
-  targetCoordinates: string;
+  from: string;
+  to: string;
   pieceCode: PieceCode;
   disableTransitionInNextPosition(): void;
 }

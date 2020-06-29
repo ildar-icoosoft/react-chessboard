@@ -302,6 +302,18 @@ describe("Board", () => {
         expect(
           coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
         ).toBeFalsy(); // viewOnly is true
+
+        testRenderer.update(
+          <Board
+            position={initialPosition}
+            draggable={true}
+            turnColor={PieceColor.BLACK}
+            premovable={true}
+          />
+        );
+        expect(
+          coordinateGrid.props.allowDrag(PieceCode.WHITE_PAWN, "e2")
+        ).toBeFalsy(); // ignore premovable if movableColor both
       });
 
       it("transitionDuration", () => {
@@ -436,6 +448,22 @@ describe("Board", () => {
           });
 
           // user can't move opposite piece
+          expect(coordinateGrid.props.selectionSquare).toBeUndefined();
+
+          testRenderer.update(
+            <Board
+              position={INITIAL_BOARD_FEN}
+              clickable={true}
+              turnColor={PieceColor.BLACK}
+              premovable={true}
+            />
+          );
+
+          TestRenderer.act(() => {
+            coordinateGrid.props.onClick("e2");
+          });
+
+          // ignore premove if movableColor is both
           expect(coordinateGrid.props.selectionSquare).toBeUndefined();
         });
 
@@ -1023,7 +1051,7 @@ describe("Board", () => {
 
         it("drag start must clear roundMarkers", () => {
           const testRenderer = TestRenderer.create(
-            <Board allowMarkers={true} />
+            <Board allowMarkers={true} draggable={true} />
           );
           const testInstance = testRenderer.root;
 
@@ -1228,8 +1256,8 @@ describe("Board", () => {
         // valid move
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1247,8 +1275,8 @@ describe("Board", () => {
         // invalid move
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e5",
+            from: "e2",
+            to: "e5",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1276,8 +1304,8 @@ describe("Board", () => {
         // valid move
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition,
           });
@@ -1307,8 +1335,8 @@ describe("Board", () => {
 
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1329,8 +1357,8 @@ describe("Board", () => {
 
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1370,8 +1398,8 @@ describe("Board", () => {
 
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1446,8 +1474,8 @@ describe("Board", () => {
 
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1495,8 +1523,8 @@ describe("Board", () => {
         // valid move
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1641,8 +1669,8 @@ describe("Board", () => {
 
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1671,6 +1699,7 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             clickable={true}
+            draggable={true}
             premovable={true}
             onUnsetPremove={onUnsetPremove}
             validMoves={initialPositionValidMoves}
@@ -1753,8 +1782,8 @@ describe("Board", () => {
         // test click
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });
@@ -1776,8 +1805,8 @@ describe("Board", () => {
         // test drag
         TestRenderer.act(() => {
           coordinateGrid.props.onDrop({
-            sourceCoordinates: "e2",
-            targetCoordinates: "e4",
+            from: "e2",
+            to: "e4",
             pieceCode: PieceCode.WHITE_PAWN,
             disableTransitionInNextPosition() {},
           });

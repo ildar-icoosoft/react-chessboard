@@ -225,8 +225,8 @@ export const CoordinateGrid = forwardRef<
           const rect: DOMRect = (domRef.current as HTMLDivElement).getBoundingClientRect();
 
           onDrop({
-            sourceCoordinates: item.coordinates as string,
-            targetCoordinates: getSquareAlgebraicCoordinates(
+            from: item.coordinates as string,
+            to: getSquareAlgebraicCoordinates(
               {
                 x: (monitor.getClientOffset() as XYCoord).x - rect.left,
                 y: (monitor.getClientOffset() as XYCoord).y - rect.top,

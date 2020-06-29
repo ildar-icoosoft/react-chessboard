@@ -11,7 +11,6 @@ import { Position } from "../interfaces/Position";
 import { DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
 import { PieceDragLayer } from "./PieceDragLayer";
-import { PieceCode } from "../enums/PieceCode";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
 import { PieceDropEvent } from "../interfaces/PieceDropEvent";
 import { Coords } from "./Coords";
@@ -31,37 +30,36 @@ import {
 } from "../utils/chess";
 import { Move } from "../interfaces/Move";
 import { ValidMoves } from "../types/ValidMoves";
+import { PieceCode } from "../enums/PieceCode";
 
 export interface BoardProps {
-  allowMarkers?: boolean;
-  clickable?: boolean; // allow click-click moves
+  allowMarkers?: boolean; // allow round markers with right click
   check?: boolean; // true for current color, false to unset
-  position?: Position | string;
-  orientation?: PieceColor;
+  clickable?: boolean; // allow click-click moves
   draggable?: boolean; // allow moves & premoves to use drag'n drop
-  transitionDuration?: number;
-  validMoves?: ValidMoves;
-  viewOnly?: boolean;
-  width?: number;
-  minWidth?: number;
-  maxWidth?: number;
-  showCoordinates?: boolean;
-  resizable?: boolean;
-  premovable?: boolean;
-  lastMoveSquares?: string[];
-  movableColor?: PieceColor | "both";
-  premoveSquares?: string[];
+  lastMoveSquares?: string[]; // squares part of the last move ["c3", "c4"]
   turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
-
-  onResize?(width: number): void;
-
-  onMove?(move: Move): void;
+  maxWidth?: number; // Max width in pixels
+  minWidth?: number; // Min width in pixels
+  movableColor?: PieceColor | "both"; // color that can move. white | black | both
+  onMove?(move: Move): void; // called after move
+  onResize?(width: number): void; // called after resize
   onSetPremove?(
     move: Move,
     playPremove: () => void,
     cancelPremove: () => void
-  ): void;
-  onUnsetPremove?(): void;
+  ): void; // called after the premove has been set
+  onUnsetPremove?(): void; // called after the premove has been unset
+  orientation?: PieceColor; // board orientation. white | black
+  position?: Position | string; // FEN string or Position object
+  premovable?: boolean; // allow premoves for color that can not move
+  premoveSquares?: string[]; // premove destinations for the current selection
+  resizable?: boolean; // allow resize
+  showCoordinates?: boolean; // include coords attributes
+  transitionDuration?: number; // The time in seconds it takes for a piece to slide to the target square
+  validMoves?: ValidMoves; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
+  viewOnly?: boolean; // don't bind events: the user will never be able to move pieces around
+  width?: number; // board width in pixels
 }
 
 export const Board: FC<BoardProps> = ({
@@ -101,31 +99,26 @@ export const Board: FC<BoardProps> = ({
   const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
   const [premoveSquares, setPremoveSquares] = useState<string[]>([]);
 
-  const canSelectSquare = (coordinates: string): boolean => {
-    if (positionObject[coordinates]) {
-      const pieceColor: PieceColor = getColorFromPieceCode(
-        positionObject[coordinates]
-      );
+  const canMoveWithPiece = (pieceCode: PieceCode): boolean => {
+    const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
 
-      if (
-        (movableColor === "both" || pieceColor === movableColor) &&
-        (premovable || pieceColor === turnColor)
-      ) {
-        return true;
-      }
-    }
-    return false;
+    return (
+      (movableColor === "both" || pieceColor === movableColor) &&
+      ((premovable && movableColor !== "both") || pieceColor === turnColor)
+    );
   };
 
   const isAllowedToClickMove = (): boolean => {
-    return !!(
+    return (
+      !viewOnly &&
       clickable &&
       (premovable || movableColor === "both" || movableColor === turnColor)
     );
   };
 
   const isAllowedToDragMove = (): boolean => {
-    return !!(
+    return (
+      !viewOnly &&
       draggable &&
       (premovable || movableColor === "both" || movableColor === turnColor)
     );
@@ -148,11 +141,7 @@ export const Board: FC<BoardProps> = ({
   };
 
   const handleSquareClick = (coordinates: string): void => {
-    if (viewOnly) {
-      return;
-    }
-
-    if (allowMarkers) {
+    if (roundMarkers.length) {
       setRoundMarkers([]);
     }
 
@@ -170,33 +159,22 @@ export const Board: FC<BoardProps> = ({
         return;
       }
 
-      if (canSelectSquare(coordinates)) {
+      if (
+        positionObject[coordinates] &&
+        canMoveWithPiece(positionObject[coordinates])
+      ) {
         setSelectionSquare(coordinates);
         return;
       }
 
       setSelectionSquare(undefined);
 
-      if (turnColor !== movableColor && movableColor !== "both") {
-        if (onSetPremove) {
-          const premove: Move = {
-            from: selectionSquare,
-            to: coordinates,
-          };
-          onSetPremove(
-            premove,
-            makePlayPremoveCallback(premove),
-            cancelPremove
-          );
-        }
-        setPremoveSquares([selectionSquare, coordinates]);
+      if (isPremove()) {
+        doPremove(selectionSquare, coordinates);
         return;
       }
 
-      if (
-        !validMoves[selectionSquare] ||
-        !validMoves[selectionSquare].includes(coordinates)
-      ) {
+      if (!isValidMove(selectionSquare, coordinates)) {
         return;
       }
 
@@ -207,7 +185,10 @@ export const Board: FC<BoardProps> = ({
         });
       }
     } else {
-      if (!canSelectSquare(coordinates)) {
+      if (
+        !positionObject[coordinates] ||
+        !canMoveWithPiece(positionObject[coordinates])
+      ) {
         setSelectionSquare(undefined);
         return;
       }
@@ -215,31 +196,36 @@ export const Board: FC<BoardProps> = ({
     }
   };
 
-  const handleDrop = (event: PieceDropEvent): void => {
-    if (viewOnly) {
-      return;
-    }
+  const isPremove = (): boolean => {
+    return turnColor !== movableColor && movableColor !== "both";
+  };
 
+  const doPremove = (from: string, to: string): void => {
+    if (onSetPremove) {
+      const premove: Move = {
+        from,
+        to,
+      };
+      onSetPremove(premove, makePlayPremoveCallback(premove), cancelPremove);
+    }
+    setPremoveSquares([from, to]);
+  };
+
+  const isValidMove = (from: string, to: string): boolean => {
+    return validMoves[from] && validMoves[from].includes(to);
+  };
+
+  const handleDrop = (event: PieceDropEvent): void => {
     if (!isAllowedToDragMove()) {
       return;
     }
 
-    if (turnColor !== movableColor && movableColor !== "both") {
-      if (onSetPremove) {
-        const premove: Move = {
-          from: event.sourceCoordinates,
-          to: event.targetCoordinates,
-        };
-        onSetPremove(premove, makePlayPremoveCallback(premove), cancelPremove);
-      }
-      setPremoveSquares([event.sourceCoordinates, event.targetCoordinates]);
+    if (isPremove()) {
+      doPremove(event.from, event.to);
       return;
     }
 
-    if (
-      !validMoves[event.sourceCoordinates] ||
-      !validMoves[event.sourceCoordinates].includes(event.targetCoordinates)
-    ) {
+    if (!isValidMove(event.from, event.to)) {
       return;
     }
 
@@ -247,18 +233,14 @@ export const Board: FC<BoardProps> = ({
 
     if (onMove) {
       onMove({
-        from: event.sourceCoordinates,
-        to: event.targetCoordinates,
+        from: event.from,
+        to: event.to,
       });
     }
   };
 
   const handleDragStart = (event: PieceDragStartEvent): void => {
-    if (viewOnly) {
-      return;
-    }
-
-    if (allowMarkers) {
+    if (roundMarkers.length) {
       setRoundMarkers([]);
     }
 
@@ -270,7 +252,7 @@ export const Board: FC<BoardProps> = ({
       return;
     }
 
-    if (canSelectSquare(event.coordinates)) {
+    if (canMoveWithPiece(event.pieceCode)) {
       setSelectionSquare(event.coordinates);
     }
   };
@@ -309,20 +291,6 @@ export const Board: FC<BoardProps> = ({
     destinationSquares
   );
 
-  const allowDrag = (pieceCode: PieceCode): boolean => {
-    if (viewOnly) {
-      return false;
-    }
-
-    const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
-
-    return (
-      draggable &&
-      (movableColor === "both" || movableColor === pieceColor) &&
-      (premovable || pieceColor === turnColor)
-    );
-  };
-
   return (
     <>
       <DndProvider backend={Backend}>
@@ -336,7 +304,9 @@ export const Board: FC<BoardProps> = ({
         >
           <CoordinateGrid
             draggable={draggable}
-            allowDrag={allowDrag}
+            allowDrag={(pieceCode) =>
+              isAllowedToDragMove() && canMoveWithPiece(pieceCode)
+            }
             orientation={orientation}
             position={positionObject}
             width={width}

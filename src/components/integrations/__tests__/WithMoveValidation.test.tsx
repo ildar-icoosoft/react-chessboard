@@ -18,6 +18,13 @@ import { PromotionChoice } from "../PromotionChoice";
 
 jest.mock("antd");
 
+// we need this for Audio.play()
+// @see https://github.com/jsdom/jsdom/issues/2155
+// @ts-ignore
+window.HTMLMediaElement.prototype.play = () => {
+  /* do nothing */
+};
+
 const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
 const checkmateFen: string = "4k3/4Q3/4K3/8/8/8/8/8 b - - 0 1";

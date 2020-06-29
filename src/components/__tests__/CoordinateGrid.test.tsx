@@ -1436,8 +1436,8 @@ describe("CoordinateGrid", () => {
         expect(onDrop).toBeCalledTimes(1);
         expect(onDrop).toBeCalledWith(
           expect.objectContaining({
-            sourceCoordinates: "a8",
-            targetCoordinates: "b7",
+            from: "a8",
+            to: "b7",
             pieceCode: PieceCode.WHITE_KING,
             disableTransitionInNextPosition: expect.any(Function),
           })
