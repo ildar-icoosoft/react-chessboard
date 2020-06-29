@@ -104,7 +104,7 @@ export const Board: FC<BoardProps> = ({
 
     return (
       (movableColor === "both" || pieceColor === movableColor) &&
-      (premovable || pieceColor === turnColor)
+      ((premovable && movableColor !== "both") || pieceColor === turnColor)
     );
   };
 
@@ -304,16 +304,9 @@ export const Board: FC<BoardProps> = ({
         >
           <CoordinateGrid
             draggable={draggable}
-            allowDrag={(pieceCode) => {
-              const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
-
-              return (
-                !viewOnly &&
-                draggable &&
-                (movableColor === "both" || movableColor === pieceColor) &&
-                (premovable || pieceColor === turnColor)
-              );
-            }}
+            allowDrag={(pieceCode) =>
+              isAllowedToDragMove() && canMoveWithPiece(pieceCode)
+            }
             orientation={orientation}
             position={positionObject}
             width={width}
