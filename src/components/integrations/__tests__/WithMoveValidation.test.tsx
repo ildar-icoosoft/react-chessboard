@@ -16,6 +16,8 @@ import { PieceColor } from "../../../enums/PieceColor";
 import { ValidMoves } from "../../../types/ValidMoves";
 import { PromotionChoice } from "../PromotionChoice";
 
+jest.mock("antd");
+
 // we need this for Audio.play()
 // @see https://github.com/jsdom/jsdom/issues/2155
 // @ts-ignore
