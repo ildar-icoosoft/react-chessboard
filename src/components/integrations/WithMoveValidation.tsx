@@ -106,7 +106,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
       type: WithMoveValidationAction.SET_GAME,
       payload: new Chess(initialFen),
     });
-  }, []);
+  }, [initialFen]);
 
   const promotionMove = useRef<Move | null>(null);
 
