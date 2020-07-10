@@ -22,7 +22,9 @@
     "storybook": "start-storybook -p 6006",
     "prebuild-storybook": "npm run test:generate-output",
     "build-storybook": "build-storybook",
-    "deploy-storybook": "storybook-to-ghpages"
+    "deploy-storybook": "storybook-to-ghpages",
+    "styleguide": "styleguidist server",
+    "build-styleguide": "styleguidist build"
   },
   "peerDependencies": {
     "react": ">=16"
