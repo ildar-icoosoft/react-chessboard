@@ -33,35 +33,59 @@ import { ValidMoves } from "../types/ValidMoves";
 import { PieceCode } from "../enums/PieceCode";
 
 export interface BoardProps {
-  allowMarkers?: boolean; // allow round markers with right click
-  check?: boolean; // true for current color, false to unset
-  clickable?: boolean; // allow click-click moves
-  draggable?: boolean; // allow moves & premoves to use drag'n drop
-  lastMoveSquares?: string[]; // squares part of the last move ["c3", "c4"]
-  turnColor?: PieceColor; // turn to play. default is PieceColor.WHITE
-  maxWidth?: number; // Max width in pixels
-  minWidth?: number; // Min width in pixels
-  movableColor?: PieceColor | "both"; // color that can move. white | black | both
-  onMove?(move: Move): void; // called after move
-  onResize?(width: number): void; // called after resize
+  /** allow round markers with right click. */
+  allowMarkers?: boolean;
+  /** true for current color, false to unset */
+  check?: boolean;
+  /** allow click-click moves */
+  clickable?: boolean;
+  /** allow moves & premoves to use drag'n drop */
+  draggable?: boolean;
+  /** squares part of the last move ["c3", "c4"] */
+  lastMoveSquares?: string[];
+  /** turn to play  */
+  turnColor?: PieceColor;
+  /** Max width in pixels */
+  maxWidth?: number;
+  /** Min width in pixels */
+  minWidth?: number;
+  /** color that can move. white | black | both */
+  movableColor?: PieceColor | "both";
+  /** called after move */
+  onMove?(move: Move): void;
+  /** called after resize */
+  onResize?(width: number): void;
+  /** called after the premove has been set */
   onSetPremove?(
     move: Move,
     playPremove: () => void,
     cancelPremove: () => void
-  ): void; // called after the premove has been set
-  onUnsetPremove?(): void; // called after the premove has been unset
-  orientation?: PieceColor; // board orientation. white | black
-  position?: Position | string; // FEN string or Position object
-  premovable?: boolean; // allow premoves for color that can not move
-  premoveSquares?: string[]; // premove destinations for the current selection
-  resizable?: boolean; // allow resize
-  showCoordinates?: boolean; // include coords attributes
-  transitionDuration?: number; // The time in seconds it takes for a piece to slide to the target square
-  validMoves?: ValidMoves; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
-  viewOnly?: boolean; // don't bind events: the user will never be able to move pieces around
-  width?: number; // board width in pixels
+  ): void;
+  /** called after the premove has been unset */
+  onUnsetPremove?(): void;
+  /** board orientation. white | black */
+  orientation?: PieceColor;
+  /** FEN string or Position object */
+  position?: Position | string;
+  /** allow premoves for color that can not move */
+  premovable?: boolean;
+  /** allow resize */
+  resizable?: boolean;
+  /** include coords attributes */
+  showCoordinates?: boolean;
+  /** The time in seconds it takes for a piece to slide to the target square */
+  transitionDuration?: number;
+  /** valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]} */
+  validMoves?: ValidMoves;
+  /** don't bind events: the user will never be able to move pieces around */
+  viewOnly?: boolean;
+  /** board width in pixels */
+  width?: number;
 }
 
+/**
+ * Renders a chess board using React
+ */
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
   clickable = false,
@@ -85,7 +109,7 @@ export const Board: FC<BoardProps> = ({
   validMoves = {},
   viewOnly = false,
   premovable = false,
-}) => {
+}: BoardProps) => {
   let positionObject: Position = {};
   if (isValidFen(position)) {
     positionObject = convertFenToPositionObject(position as string);
