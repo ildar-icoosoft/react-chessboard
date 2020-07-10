@@ -77,11 +77,11 @@ describe("Board", () => {
       const testRenderer = TestRenderer.create(<Board />);
       const testInstance = testRenderer.root;
 
-      expect(testInstance.findAllByType(Resizer).length).toBe(1);
-
-      testRenderer.update(<Board resizable={false} />);
-
       expect(testInstance.findAllByType(Resizer).length).toBe(0);
+
+      testRenderer.update(<Board resizable={true} />);
+
+      expect(testInstance.findAllByType(Resizer).length).toBe(1);
     });
   });
 
@@ -1093,7 +1093,7 @@ describe("Board", () => {
 
     describe("Resizer", () => {
       it("width", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(<Board resizable={true} />);
         const testInstance = testRenderer.root;
 
         const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
@@ -1102,12 +1102,12 @@ describe("Board", () => {
 
         expect(resizer.props.width).toBe(480);
 
-        testRenderer.update(<Board width={240} />);
+        testRenderer.update(<Board resizable={true} width={240} />);
 
         expect(resizer.props.width).toBe(240);
       });
       it("minWidth", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(<Board resizable={true} />);
         const testInstance = testRenderer.root;
 
         const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
@@ -1116,12 +1116,12 @@ describe("Board", () => {
 
         expect(resizer.props.minWidth).toBe(160);
 
-        testRenderer.update(<Board minWidth={200} />);
+        testRenderer.update(<Board resizable={true} minWidth={200} />);
 
         expect(resizer.props.minWidth).toBe(200);
       });
       it("maxWidth", () => {
-        const testRenderer = TestRenderer.create(<Board />);
+        const testRenderer = TestRenderer.create(<Board resizable={true} />);
         const testInstance = testRenderer.root;
 
         const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
@@ -1130,7 +1130,7 @@ describe("Board", () => {
 
         expect(resizer.props.maxWidth).toBe(Infinity);
 
-        testRenderer.update(<Board maxWidth={800} />);
+        testRenderer.update(<Board resizable={true} maxWidth={800} />);
 
         expect(resizer.props.maxWidth).toBe(800);
       });
@@ -1833,8 +1833,9 @@ describe("Board", () => {
     it("onResize", () => {
       const onResize = jest.fn();
 
-      const testInstance = TestRenderer.create(<Board onResize={onResize} />)
-        .root;
+      const testInstance = TestRenderer.create(
+        <Board resizable={true} onResize={onResize} />
+      ).root;
 
       const resizer: TestRenderer.ReactTestInstance = testInstance.findByType(
         Resizer

@@ -75,7 +75,7 @@ export const Board: FC<BoardProps> = ({
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
   maxWidth = DEFAULT_BOARD_MAX_WIDTH,
   showCoordinates = true,
-  resizable = true,
+  resizable = false,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   lastMoveSquares,
   check = false,
