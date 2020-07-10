@@ -62,6 +62,9 @@ export interface BoardProps {
   width?: number; // board width in pixels
 }
 
+/**
+ * Renders a chess board using React
+ */
 export const Board: FC<BoardProps> = ({
   allowMarkers = false,
   clickable = false,
