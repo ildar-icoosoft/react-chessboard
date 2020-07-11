@@ -12,6 +12,7 @@ import { Resizer } from "../Resizer";
 import { Position } from "../../interfaces/Position";
 import { INITIAL_BOARD_FEN } from "../../constants/constants";
 import { ValidMoves } from "../../types/ValidMoves";
+import { mountTest } from "../../tests/mountTest";
 
 jest.useFakeTimers();
 
@@ -43,6 +44,8 @@ const afterEnPassantCapturePosition: Position = {
 };*/
 
 describe("Board", () => {
+  mountTest(Board);
+
   it("Snapshot", () => {
     const tree = TestRenderer.create(<Board />).toJSON();
     expect(tree).toMatchSnapshot();
