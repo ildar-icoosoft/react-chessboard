@@ -35,7 +35,7 @@
       "pre-commit": "tsdx lint"
     }
   },
-  "name": "react-chess",
+  "name": "ii-react-chessboard",
   "author": "ildar",
   "module": "dist/react-chess.esm.js",
   "devDependencies": {
