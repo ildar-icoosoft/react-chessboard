@@ -1,3 +1,12 @@
+Changelog
+
+# [2.4.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v2.3.0...v2.4.0) (2020-07-31)
+
+
+### Features
+
+* update release config [#2](https://github.com/ildar-icoosoft/react-chessboard/issues/2) ([e97497d](https://github.com/ildar-icoosoft/react-chessboard/commit/e97497d51c4e2e9354d0bb53ed863d7f18746af4))
+
 # [2.3.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v2.2.0...v2.3.0) (2020-07-31)
 
 
