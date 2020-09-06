@@ -5,6 +5,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [1.3.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.2.0...v1.3.0) (2020-09-06)
+
+
+### Features
+
+* add getValidMoves function to public API ([#54](https://github.com/ildar-icoosoft/react-chessboard/issues/54)) ([5aea7bd](https://github.com/ildar-icoosoft/react-chessboard/commit/5aea7bdff1de268e4bc16fbb7c479767d064f82c))
+
 # [1.2.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.1.1...v1.2.0) (2020-09-06)
 
 
