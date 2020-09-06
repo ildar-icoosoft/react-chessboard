@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, useEffect, useState } from "react";
+import React, { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import { Piece } from "./Piece";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareTransitionFrom } from "../interfaces/SquareTransitionFrom";
@@ -64,8 +64,11 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
     transitionFrom
   );
 
+  // https://github.com/reactjs/react-transition-group/issues/429
+  const ref = useRef(null);
+
   return (
-    <Transition in={inProp} timeout={transitionDuration}>
+    <Transition in={inProp} timeout={transitionDuration} nodeRef={ref}>
       {(state) => {
         return (
           <div
@@ -73,6 +76,7 @@ export const DraggablePiece: FC<DraggablePieceProps> = ({
               [css.isDragged]: isDragged,
             })}
             data-testid={`draggable-piece-${pieceCode}`}
+            ref={ref}
             style={{
               transform: `translate(${xYCoordinates.x}px, ${xYCoordinates.y}px)`,
               ...getTransitionStyles(
