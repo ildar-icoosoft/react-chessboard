@@ -5,6 +5,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.1.0...v1.1.1) (2020-09-06)
+
+
+### Bug Fixes
+
+* REACTCHESSBOARD-33 React Tranisition Group deprecation warning ([#53](https://github.com/ildar-icoosoft/react-chessboard/issues/53)) ([a85b29a](https://github.com/ildar-icoosoft/react-chessboard/commit/a85b29af79a0efb62a24de999df8c911cd4db6da))
+
 # [1.1.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.0.3...v1.1.0) (2020-08-28)
 
 
