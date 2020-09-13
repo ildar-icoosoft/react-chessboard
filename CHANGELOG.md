@@ -5,6 +5,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.3.0...v1.3.1) (2020-09-13)
+
+
+### Bug Fixes
+
+* REACTCHESSBOARD-34 react-dnd warning: "Cannot have two HTML5 backends at the same time." ([#55](https://github.com/ildar-icoosoft/react-chessboard/issues/55)) ([6252025](https://github.com/ildar-icoosoft/react-chessboard/commit/6252025d351c3adaa797270da8af458d2d04ffa3))
+
 # [1.3.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.2.0...v1.3.0) (2020-09-06)
 
 
