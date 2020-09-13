@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import css from "./Board.scss";
 import {
   DEFAULT_BOARD_MAX_WIDTH,
@@ -8,7 +8,7 @@ import {
 } from "../constants/constants";
 import { PieceColor } from "../enums/PieceColor";
 import { Position } from "../interfaces/Position";
-import { DndProvider } from "react-dnd";
+import { createDndContext, DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
 import { PieceDragLayer } from "./PieceDragLayer";
 import { PieceDragStartEvent } from "../interfaces/PieceDragStartEvent";
@@ -31,6 +31,9 @@ import {
 import { Move } from "../interfaces/Move";
 import { ValidMoves } from "../types/ValidMoves";
 import { PieceCode } from "../enums/PieceCode";
+
+// @see https://github.com/react-dnd/react-dnd/issues/186
+const dndContext = createDndContext(Backend);
 
 export interface BoardProps {
   /** allow round markers with right click. */
@@ -315,9 +318,11 @@ export const Board: FC<BoardProps> = ({
     destinationSquares
   );
 
+  const manager = useRef(dndContext);
+
   return (
     <>
-      <DndProvider backend={Backend}>
+      <DndProvider manager={manager.current.dragDropManager}>
         <div
           data-testid={"board"}
           className={css.board}
