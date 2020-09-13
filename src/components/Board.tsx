@@ -32,6 +32,7 @@ import { Move } from "../interfaces/Move";
 import { ValidMoves } from "../types/ValidMoves";
 import { PieceCode } from "../enums/PieceCode";
 
+// @see https://github.com/react-dnd/react-dnd/issues/186
 const dndContext = createDndContext(Backend);
 
 export interface BoardProps {
