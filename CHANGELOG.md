@@ -5,6 +5,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [1.4.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.3.1...v1.4.0) (2020-10-22)
+
+
+### Features
+
+* create helper function isValidMove and export it in public API ([#56](https://github.com/ildar-icoosoft/react-chessboard/issues/56)) ([d74a5da](https://github.com/ildar-icoosoft/react-chessboard/commit/d74a5da35ca5157cc499793264b709c558995ac1))
+
 ## [1.3.1](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.3.0...v1.3.1) (2020-09-13)
 
 
