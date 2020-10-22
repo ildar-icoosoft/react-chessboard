@@ -1,16 +1,17 @@
-import { FILE_NAMES, RANK_NAMES } from "../constants/constants";
-import { PieceColor } from "../enums/PieceColor";
-import { PieceCode } from "../enums/PieceCode";
-import { SquareWithDistance } from "../interfaces/SquareWithDistance";
-import { Position } from "../interfaces/Position";
 import {
   isObject as _isObject,
   isString as _isString,
   without as _without,
 } from "lodash";
-import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { ChessInstance } from "chess.js";
+import { FILE_NAMES, RANK_NAMES } from "../constants/constants";
+import { PieceColor } from "../enums/PieceColor";
+import { PieceCode } from "../enums/PieceCode";
+import { SquareWithDistance } from "../interfaces/SquareWithDistance";
+import { Position } from "../interfaces/Position";
+import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { ValidMoves } from "../types/ValidMoves";
+import { Move } from "../interfaces/Move";
 
 /**
  * @param a1-h8
@@ -318,6 +319,15 @@ export const getValidMoves = (game: ChessInstance): ValidMoves => {
   });
 
   return validMoves;
+};
+
+export const isValidMove = (game: ChessInstance, move: Move): boolean => {
+  const validMoves: ValidMoves = getValidMoves(game);
+
+  if (validMoves[move.from] && validMoves[move.from].includes(move.to)) {
+    return true;
+  }
+  return false;
 };
 
 export const getTurnColor = (game: ChessInstance | null): PieceColor => {
