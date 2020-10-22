@@ -17,6 +17,7 @@ import {
   getValidMoves,
   isLightSquare,
   isValidFen,
+  isValidMove,
   isValidPositionObject,
 } from "../chess";
 import { PieceColor } from "../../enums/PieceColor";
@@ -211,6 +212,33 @@ describe("Chess utils", () => {
       e2: ["e3", "e4", "d3"],
       f2: ["f3", "f4"],
     });
+  });
+
+  it("isValidMove()", () => {
+    const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
+
+    const game: ChessInstance = new Chess(initialFen);
+
+    expect(
+      isValidMove(game, {
+        from: "d1",
+        to: "d2",
+      })
+    ).toBeFalsy();
+
+    expect(
+      isValidMove(game, {
+        from: "e1",
+        to: "d3",
+      })
+    ).toBeFalsy();
+
+    expect(
+      isValidMove(game, {
+        from: "e1",
+        to: "d2",
+      })
+    ).toBeTruthy();
   });
 
   it("getTurnColor()", () => {
