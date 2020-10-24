@@ -7,10 +7,7 @@ Renders a chess board using React
 ![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
 ![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
 ![Semantic Release](https://github.com/ildar-icoosoft/react-chessboard/workflows/Semantic%20Release/badge.svg)
-[![codecov][codecov-image]][codecov-url]
-
-[codecov-image]: https://img.shields.io/codecov/c/github/ildar-icoosoft/react-chessboard/develop.svg?style=flat-square
-[codecov-url]: https://codecov.io/gh/ildar-icoosoft/react-chessboard/branch/develop
+[![codecov](https://codecov.io/gh/ildar-icoosoft/react-chessboard/branch/develop/graph/badge.svg?token=9BKCLGTTFV)](https://codecov.io/gh/ildar-icoosoft/react-chessboard)
 
 </div>
 
