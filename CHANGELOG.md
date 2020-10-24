@@ -5,6 +5,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [1.5.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.4.0...v1.5.0) (2020-10-24)
+
+
+### Features
+
+* update github actions badges in readme file ([#57](https://github.com/ildar-icoosoft/react-chessboard/issues/57)) ([1e668c1](https://github.com/ildar-icoosoft/react-chessboard/commit/1e668c1a458bc17f849948c3f994999bde17b25d))
+
 # [1.4.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.3.1...v1.4.0) (2020-10-22)
 
 
