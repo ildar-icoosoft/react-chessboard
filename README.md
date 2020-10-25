@@ -1,15 +1,19 @@
 <h1 align="center">react-chessboard</h1>
 
-<div align="center">
+<p align="center">
+    Renders a chess board using React
+</p>
 
-Renders a chess board using React
+<p align="center">
 
 ![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
-![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)
-![Semantic Release](https://github.com/ildar-icoosoft/react-chessboard/workflows/Semantic%20Release/badge.svg)
+[![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)](https://ildar-icoosoft.github.io/react-chessboard/)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![codecov](https://codecov.io/gh/ildar-icoosoft/react-chessboard/branch/develop/graph/badge.svg?token=9BKCLGTTFV)](https://codecov.io/gh/ildar-icoosoft/react-chessboard)
+[![npm](https://img.shields.io/npm/v/ii-react-chessboard)](https://www.npmjs.com/package/ii-react-chessboard)
 
-</div>
+</p>
+
 
 ## Installation
 
