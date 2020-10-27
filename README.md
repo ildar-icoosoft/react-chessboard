@@ -57,7 +57,7 @@ import { Board } from "ii-react-chessboard";
 
 function App() {
   return (
-    <Board position="startpos" />
+    <Board position="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" />
   );
 }
 ```
@@ -72,10 +72,14 @@ For more examples please visit our [Storybook](https://ildar-icoosoft.github.io/
 
 ### Board
 
+```javascript
+import { Board } from "ii-react-chessboard";
+```
+
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
-| position | Position | {} | The position to display on the board. It might be "startpos" string or Position object |
-| orientation | PieceColor| "white" | Orientation of the board |
+| position | Position | {} | The position to display on the board. It might be [FEN String](#fenstring) or [Position Object](#positionobject) object |
+| orientation | "white" \| "black" | "white" | Orientation of the board |
 | draggable | boolean| false | If false, the pieces will not be draggable |
 | width | number | 480 | The width in pixels |
 | allowDrag | (pieceCode: PieceCode, coordinates: string) => boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
@@ -92,3 +96,18 @@ For more examples please visit our [Storybook](https://ildar-icoosoft.github.io/
 | onMouseEnterSquare | (coordinates: string) => void |  | A function to call when the mouse is enter a square |
 | onMouseLeaveSquare | (coordinates: string) => void |  | A function to call when the mouse has left the square |
 
+### Position Object
+
+```javascript
+import { Position } from "ii-react-chessboard";
+```
+
+You can use a JavaScript object to represent a board position.
+
+The object property names must be algebraic squares (ie: e4, b2, c6, etc) and the values must be a valid piece codes (ie: wP, bK, wQ, etc).
+
+### FEN String
+
+You can use [Forsyth-Edwards Notation (FEN)](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation) to represent a board position.
+
+Note that FEN notation captures more information than chessboard.js requires, like who's move it is and whether or not castling is allowed. This information will be ignored; only the position information is used.
