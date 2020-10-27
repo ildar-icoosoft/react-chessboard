@@ -5,7 +5,6 @@ import {
   INITIAL_BOARD_FEN,
 } from "../../constants/constants";
 import { convertFenToPositionObject, getTurnColor } from "../../utils/chess";
-import { PieceColor } from "../../enums/PieceColor";
 import { Chess, Move as ChessJsMove, PieceType, Square } from "chess.js";
 import {
   getWithMoveValidationInitialState,
@@ -15,6 +14,7 @@ import {
 import { Move } from "../../interfaces/Move";
 import { ValidMoves } from "../../types/ValidMoves";
 import { PromotionChoice } from "./PromotionChoice";
+import { PieceColor } from "../../types/PieceColor";
 
 export interface WithMoveValidationCallbackProps {
   allowMarkers: boolean;
@@ -154,7 +154,7 @@ export const WithMoveValidation: FC<WithMoveValidationProps> = ({
         allowMarkers: true,
         clickable: true,
         draggable: true,
-        movableColor: playerVsCompMode ? PieceColor.WHITE : "both",
+        movableColor: playerVsCompMode ? "white" : "both",
         onResize(width: number) {
           dispatch({
             type: WithMoveValidationAction.RESIZE,

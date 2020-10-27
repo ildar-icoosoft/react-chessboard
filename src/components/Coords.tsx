@@ -1,21 +1,21 @@
 import React, { FC } from "react";
-import { PieceColor } from "../enums/PieceColor";
 import { FILE_NAMES, RANK_NAMES } from "../constants/constants";
 import css from "./Coords.scss";
 import classNames from "classnames";
+import { PieceColor } from "../types/PieceColor";
 
 export interface CoordsProps {
   orientation?: PieceColor;
 }
 
 const getOrientationCssClass = (orientation: PieceColor) => {
-  if (orientation === PieceColor.WHITE) {
+  if (orientation === "white") {
     return "white";
   }
   return "black";
 };
 
-export const Coords: FC<CoordsProps> = ({ orientation = PieceColor.WHITE }) => {
+export const Coords: FC<CoordsProps> = ({ orientation = "white" }) => {
   return (
     <>
       <div

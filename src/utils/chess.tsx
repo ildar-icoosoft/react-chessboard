@@ -5,13 +5,13 @@ import {
 } from "lodash";
 import { ChessInstance } from "chess.js";
 import { FILE_NAMES, RANK_NAMES } from "../constants/constants";
-import { PieceColor } from "../enums/PieceColor";
 import { PieceCode } from "../enums/PieceCode";
 import { SquareWithDistance } from "../interfaces/SquareWithDistance";
 import { Position } from "../interfaces/Position";
 import { XYCoordinates } from "../interfaces/XYCoordinates";
 import { ValidMoves } from "../types/ValidMoves";
 import { Move } from "../interfaces/Move";
+import { PieceColor } from "../types/PieceColor";
 
 /**
  * @param a1-h8
@@ -62,8 +62,8 @@ export const getFileNameFromCoordinates = (coordinates: string): string => {
  */
 export const getColorFromPieceCode = (pieceCode: PieceCode): PieceColor => {
   const pieceColorMap: Record<string, PieceColor> = {
-    w: PieceColor.WHITE,
-    b: PieceColor.BLACK,
+    w: "white",
+    b: "black",
   };
 
   return pieceColorMap[pieceCode[0]];
@@ -167,11 +167,11 @@ export const getSquareXYCoordinates = (
 
   return {
     x:
-      orientation === PieceColor.WHITE
+      orientation === "white"
         ? fileIndex * squareWidth
         : (7 - fileIndex) * squareWidth,
     y:
-      orientation === PieceColor.WHITE
+      orientation === "white"
         ? (7 - rankIndex) * squareWidth
         : rankIndex * squareWidth,
   };
@@ -185,12 +185,12 @@ export const getSquareAlgebraicCoordinates = (
   const squareWidth: number = boardWidth / 8;
 
   let fileIndex: number = Math.floor(xYCoordinates.x / squareWidth);
-  if (orientation === PieceColor.BLACK) {
+  if (orientation === "black") {
     fileIndex = 7 - fileIndex;
   }
 
   let rankIndex: number = Math.floor(xYCoordinates.y / squareWidth);
-  if (orientation === PieceColor.WHITE) {
+  if (orientation === "white") {
     rankIndex = 7 - rankIndex;
   }
 
@@ -333,11 +333,11 @@ export const isValidMove = (game: ChessInstance, move: Move): boolean => {
 export const getTurnColor = (game: ChessInstance | null): PieceColor => {
   if (game) {
     if (game.turn() === "w") {
-      return PieceColor.WHITE;
+      return "white";
     }
-    return PieceColor.BLACK;
+    return "black";
   }
-  return PieceColor.WHITE;
+  return "white";
 };
 
 export const getKingSquare = (
@@ -345,7 +345,7 @@ export const getKingSquare = (
   color: PieceColor
 ): string | undefined => {
   const kingPieceCode =
-    color === PieceColor.WHITE ? PieceCode.WHITE_KING : PieceCode.BLACK_KING;
+    color === "white" ? PieceCode.WHITE_KING : PieceCode.BLACK_KING;
 
   for (const coordinates in position) {
     if (position.hasOwnProperty(coordinates)) {

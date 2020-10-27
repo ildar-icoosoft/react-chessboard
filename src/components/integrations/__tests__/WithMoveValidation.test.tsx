@@ -12,7 +12,6 @@ import {
   INITIAL_BOARD_FEN,
   INITIAL_BOARD_POSITION,
 } from "../../../constants/constants";
-import { PieceColor } from "../../../enums/PieceColor";
 import { ValidMoves } from "../../../types/ValidMoves";
 import { PromotionChoice } from "../PromotionChoice";
 
@@ -128,7 +127,7 @@ describe("WithMoveValidation", () => {
       expect(props.position).toEqual(prePromotionPosition);
 
       expect(promotionChoice.props.showPromotionChoice).toBe(false);
-      expect(promotionChoice.props.turnColor).toBe(PieceColor.WHITE);
+      expect(promotionChoice.props.turnColor).toBe("white");
 
       TestRenderer.act(() => {
         props.onMove({
@@ -141,7 +140,7 @@ describe("WithMoveValidation", () => {
       expect(props.position).toEqual(prePromotionPosition);
 
       expect(promotionChoice.props.showPromotionChoice).toBe(true);
-      expect(promotionChoice.props.turnColor).toBe(PieceColor.WHITE);
+      expect(promotionChoice.props.turnColor).toBe("white");
 
       TestRenderer.act(() => {
         promotionChoice.props.onPromotion("b");
@@ -151,7 +150,7 @@ describe("WithMoveValidation", () => {
       expect(props.position).toEqual(promotionPosition);
 
       expect(promotionChoice.props.showPromotionChoice).toBe(false);
-      expect(promotionChoice.props.turnColor).toBe(PieceColor.BLACK);
+      expect(promotionChoice.props.turnColor).toBe("black");
     });
   });
 
@@ -228,7 +227,7 @@ describe("WithMoveValidation", () => {
         );
       });
 
-      it("props.children({turnColor: PieceColor.WHITE})", () => {
+      it("props.children({turnColor: white})", () => {
         const { getProps } = renderWithMoveValidation();
 
         let props = getProps();
@@ -239,12 +238,12 @@ describe("WithMoveValidation", () => {
 
         expect(props).toEqual(
           expect.objectContaining({
-            turnColor: PieceColor.WHITE,
+            turnColor: "white",
           })
         );
       });
 
-      it("props.children({turnColor: PieceColor.BLACK})", () => {
+      it("props.children({turnColor: black})", () => {
         const { getProps } = renderWithMoveValidation(checkmateFen);
 
         let props = getProps();
@@ -255,7 +254,7 @@ describe("WithMoveValidation", () => {
 
         expect(props).toEqual(
           expect.objectContaining({
-            turnColor: PieceColor.BLACK,
+            turnColor: "black",
           })
         );
       });
@@ -347,7 +346,7 @@ describe("WithMoveValidation", () => {
 
         expect(props).toEqual(
           expect.objectContaining({
-            movableColor: PieceColor.WHITE,
+            movableColor: "white",
           })
         );
       });
@@ -446,7 +445,7 @@ describe("WithMoveValidation", () => {
               position: positionAfterFirstMove,
               validMoves: positionAfterFirstMoveValidMoves,
               lastMoveSquares: ["e2", "e4"],
-              turnColor: PieceColor.BLACK,
+              turnColor: "black",
             })
           );
 
@@ -464,7 +463,7 @@ describe("WithMoveValidation", () => {
           );
           expect(props).toEqual(
             expect.objectContaining({
-              turnColor: PieceColor.WHITE,
+              turnColor: "white",
             })
           );
         });
@@ -531,7 +530,7 @@ describe("WithMoveValidation", () => {
               position: positionAfterFirstMove,
               validMoves: positionAfterFirstMoveValidMoves,
               lastMoveSquares: ["e2", "e4"],
-              turnColor: PieceColor.BLACK,
+              turnColor: "black",
             })
           );
 
@@ -549,7 +548,7 @@ describe("WithMoveValidation", () => {
           );
           expect(props).toEqual(
             expect.objectContaining({
-              turnColor: PieceColor.WHITE,
+              turnColor: "white",
             })
           );
 
@@ -596,7 +595,7 @@ describe("WithMoveValidation", () => {
               position: positionAfterFirstMove,
               validMoves: positionAfterFirstMoveValidMoves,
               lastMoveSquares: ["e2", "e4"],
-              turnColor: PieceColor.BLACK,
+              turnColor: "black",
             })
           );
 
@@ -618,7 +617,7 @@ describe("WithMoveValidation", () => {
           );
           expect(props).toEqual(
             expect.objectContaining({
-              turnColor: PieceColor.WHITE,
+              turnColor: "white",
             })
           );
 

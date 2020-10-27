@@ -1,7 +1,6 @@
 import React from "react";
 import { Board } from "../src";
 import { INITIAL_BOARD_POSITION } from "../src/constants/constants";
-import { PieceColor } from "../src/enums/PieceColor";
 
 export default {
   title: "Board",
@@ -16,7 +15,7 @@ SimpleBoard.story = {
 };
 
 export const FlippedBoard = () => (
-  <Board position={INITIAL_BOARD_POSITION} orientation={PieceColor.BLACK} />
+  <Board position={INITIAL_BOARD_POSITION} orientation="black" />
 );
 
 FlippedBoard.story = {

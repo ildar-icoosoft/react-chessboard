@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { PieceColor } from "../enums/PieceColor";
 import { Position } from "../interfaces/Position";
 import { toPairs as _toPairs } from "lodash";
 import css from "./CoordinateGrid.scss";
@@ -35,6 +34,7 @@ import {
 } from "../hooks/useNormalizedHighlightedSquares";
 import { RoundMarker } from "./RoundMarker";
 import { useCombinedRefs } from "ii-react-libraries";
+import { PieceColor } from "../types/PieceColor";
 
 export interface CoordinateGridRef {
   getDropHandlerId(): Identifier | null;
@@ -76,7 +76,7 @@ export const CoordinateGrid = forwardRef<
     {
       position = {},
       width = DEFAULT_BOARD_WIDTH,
-      orientation = PieceColor.WHITE,
+      orientation = "white",
       draggable = false,
       selectionSquare,
       occupationSquares = [],
