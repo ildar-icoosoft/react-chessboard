@@ -20,7 +20,6 @@ import {
   isValidMove,
   isValidPositionObject,
 } from "../chess";
-import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
 import { Position } from "../../interfaces/Position";
 import { Chess, ChessInstance } from "chess.js";
@@ -36,8 +35,8 @@ describe("Chess utils", () => {
   });
 
   it("getColorFromPieceCode()", () => {
-    expect(getColorFromPieceCode(PieceCode.BLACK_QUEEN)).toBe(PieceColor.BLACK);
-    expect(getColorFromPieceCode(PieceCode.WHITE_KING)).toBe(PieceColor.WHITE);
+    expect(getColorFromPieceCode(PieceCode.BLACK_QUEEN)).toBe("black");
+    expect(getColorFromPieceCode(PieceCode.WHITE_KING)).toBe("white");
   });
 
   it("getFileIndex()", () => {
@@ -114,46 +113,46 @@ describe("Chess utils", () => {
   });
 
   it("getSquareXYCoordinates()", () => {
-    expect(getSquareXYCoordinates("a8", 480, PieceColor.WHITE)).toEqual({
+    expect(getSquareXYCoordinates("a8", 480, "white")).toEqual({
       x: 0,
       y: 0,
     });
 
-    expect(getSquareXYCoordinates("h1", 480, PieceColor.BLACK)).toEqual({
+    expect(getSquareXYCoordinates("h1", 480, "black")).toEqual({
       x: 0,
       y: 0,
     });
 
-    expect(getSquareXYCoordinates("a4", 480, PieceColor.WHITE)).toEqual({
+    expect(getSquareXYCoordinates("a4", 480, "white")).toEqual({
       x: 0,
       y: 240,
     });
 
-    expect(getSquareXYCoordinates("a4", 480, PieceColor.BLACK)).toEqual({
+    expect(getSquareXYCoordinates("a4", 480, "black")).toEqual({
       x: 420,
       y: 180,
     });
   });
 
   it("getSquareAlgebraicCoordinates()", () => {
-    expect(
-      getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, PieceColor.WHITE)
-    ).toBe("a8");
+    expect(getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, "white")).toBe(
+      "a8"
+    );
+
+    expect(getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, "black")).toBe(
+      "h1"
+    );
+
+    expect(getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, "white")).toBe(
+      "h8"
+    );
+
+    expect(getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, "black")).toBe(
+      "a1"
+    );
 
     expect(
-      getSquareAlgebraicCoordinates({ x: 0, y: 0 }, 480, PieceColor.BLACK)
-    ).toBe("h1");
-
-    expect(
-      getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, PieceColor.WHITE)
-    ).toBe("h8");
-
-    expect(
-      getSquareAlgebraicCoordinates({ x: 479, y: 0 }, 480, PieceColor.BLACK)
-    ).toBe("a1");
-
-    expect(
-      getSquareAlgebraicCoordinates({ x: 150, y: 200 }, 480, PieceColor.WHITE)
+      getSquareAlgebraicCoordinates({ x: 150, y: 200 }, 480, "white")
     ).toBe("c5");
   });
 
@@ -242,20 +241,20 @@ describe("Chess utils", () => {
   });
 
   it("getTurnColor()", () => {
-    expect(getTurnColor(null)).toBe(PieceColor.WHITE);
+    expect(getTurnColor(null)).toBe("white");
 
     const initialFen: string = "8/4p3/8/5k2/8/3p4/4PP2/4K3 w KQkq - 0 1";
 
     const game: ChessInstance = new Chess(initialFen);
 
-    expect(getTurnColor(game)).toBe(PieceColor.WHITE);
+    expect(getTurnColor(game)).toBe("white");
 
     game.move({
       from: "e2",
       to: "e4",
     });
 
-    expect(getTurnColor(game)).toBe(PieceColor.BLACK);
+    expect(getTurnColor(game)).toBe("black");
   });
 
   it("getKingSquare()", () => {
@@ -265,8 +264,8 @@ describe("Chess utils", () => {
       e5: PieceCode.WHITE_PAWN,
     };
 
-    expect(getKingSquare(position, PieceColor.WHITE)).toBe("e1");
-    expect(getKingSquare(position, PieceColor.BLACK)).toBe("e6");
+    expect(getKingSquare(position, "white")).toBe("e1");
+    expect(getKingSquare(position, "black")).toBe("e6");
   });
 
   it("getOccupationSquares()", () => {

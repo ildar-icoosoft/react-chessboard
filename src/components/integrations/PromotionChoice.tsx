@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { PieceColor } from "../../enums/PieceColor";
 import { Modal } from "antd";
 import "antd/dist/antd.css";
 import css from "./PromotionChoice.scss";
 import classNames from "classnames";
 import { PieceType } from "chess.js";
+import { PieceColor } from "../../types/PieceColor";
 
 export interface PromotionChoiceProps {
   showPromotionChoice?: boolean;
@@ -14,7 +14,7 @@ export interface PromotionChoiceProps {
 
 export const PromotionChoice: FC<PromotionChoiceProps> = ({
   showPromotionChoice = false,
-  turnColor = PieceColor.WHITE,
+  turnColor = "white",
   onPromotion,
 }) => {
   const makePromotionHandler = (promotionPiece: Exclude<PieceType, "p">) => {
@@ -35,8 +35,8 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
         >
           <div
             className={classNames(css.piece, {
-              [css.wQ]: turnColor === PieceColor.WHITE,
-              [css.bQ]: turnColor === PieceColor.BLACK,
+              [css.wQ]: turnColor === "white",
+              [css.bQ]: turnColor === "black",
             })}
           />
         </span>
@@ -47,8 +47,8 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
         >
           <div
             className={classNames(css.piece, {
-              [css.wR]: turnColor === PieceColor.WHITE,
-              [css.bR]: turnColor === PieceColor.BLACK,
+              [css.wR]: turnColor === "white",
+              [css.bR]: turnColor === "black",
             })}
           />
         </span>
@@ -59,8 +59,8 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
         >
           <div
             className={classNames(css.piece, {
-              [css.wB]: turnColor === PieceColor.WHITE,
-              [css.bB]: turnColor === PieceColor.BLACK,
+              [css.wB]: turnColor === "white",
+              [css.bB]: turnColor === "black",
             })}
           />
         </span>
@@ -71,8 +71,8 @@ export const PromotionChoice: FC<PromotionChoiceProps> = ({
         >
           <div
             className={classNames(css.piece, {
-              [css.wN]: turnColor === PieceColor.WHITE,
-              [css.bN]: turnColor === PieceColor.BLACK,
+              [css.wN]: turnColor === "white",
+              [css.bN]: turnColor === "black",
             })}
           />
         </span>

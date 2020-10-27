@@ -4,7 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 import { CoordinateGrid, CoordinateGridRef } from "../CoordinateGrid";
 import { PieceCode } from "../../enums/PieceCode";
 import { act, fireEvent, render } from "@testing-library/react";
-import { PieceColor } from "../../enums/PieceColor";
 import { wrapInTestContext } from "react-dnd-test-utils";
 import { ReactDndRefType } from "../../interfaces/ReactDndRefType";
 import { DraggablePiece } from "../DraggablePiece";
@@ -939,7 +938,7 @@ describe("CoordinateGrid", () => {
         <CoordinateGridWithDnd
           onClick={onClick}
           onRightClick={onRightClick}
-          orientation={PieceColor.BLACK}
+          orientation="black"
         />
       );
 
@@ -982,7 +981,7 @@ describe("CoordinateGrid", () => {
         <CoordinateGridWithDnd
           onClick={onClick}
           onRightClick={onRightClick}
-          orientation={PieceColor.BLACK}
+          orientation="black"
         />
       );
 

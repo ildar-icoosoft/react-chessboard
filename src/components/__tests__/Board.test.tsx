@@ -1,7 +1,6 @@
 import React from "react";
 import TestRenderer from "react-test-renderer";
 import { Board } from "../Board";
-import { PieceColor } from "../../enums/PieceColor";
 import { PieceCode } from "../../enums/PieceCode";
 import { PieceDragLayer } from "../PieceDragLayer";
 import { render } from "@testing-library/react";
@@ -115,11 +114,11 @@ describe("Board", () => {
           Coords
         );
 
-        expect(coords.props.orientation).toBe(PieceColor.WHITE);
+        expect(coords.props.orientation).toBe("white");
 
-        testRenderer.update(<Board orientation={PieceColor.BLACK} />);
+        testRenderer.update(<Board orientation="black" />);
 
-        expect(coords.props.orientation).toBe(PieceColor.BLACK);
+        expect(coords.props.orientation).toBe("black");
       });
     });
 
@@ -132,11 +131,11 @@ describe("Board", () => {
           CoordinateGrid
         );
 
-        expect(coordinateGrid.props.orientation).toBe(PieceColor.WHITE);
+        expect(coordinateGrid.props.orientation).toBe("white");
 
-        testRenderer.update(<Board orientation={PieceColor.BLACK} />);
+        testRenderer.update(<Board orientation="black" />);
 
-        expect(coordinateGrid.props.orientation).toBe(PieceColor.BLACK);
+        expect(coordinateGrid.props.orientation).toBe("black");
       });
 
       describe("position", () => {
@@ -256,8 +255,8 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             draggable={true}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         expect(
@@ -268,8 +267,8 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             draggable={true}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
             premovable={true}
           />
         );
@@ -285,7 +284,7 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             draggable={true}
-            movableColor={PieceColor.BLACK}
+            movableColor="black"
           />
         );
         expect(
@@ -310,7 +309,7 @@ describe("Board", () => {
           <Board
             position={initialPosition}
             draggable={true}
-            turnColor={PieceColor.BLACK}
+            turnColor="black"
             premovable={true}
           />
         );
@@ -412,8 +411,8 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               clickable={true}
-              movableColor={PieceColor.WHITE}
-              turnColor={PieceColor.BLACK}
+              movableColor="white"
+              turnColor="black"
             />
           );
           const testInstance = testRenderer.root;
@@ -433,8 +432,8 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               clickable={true}
-              movableColor={PieceColor.WHITE}
-              turnColor={PieceColor.BLACK}
+              movableColor="white"
+              turnColor="black"
               premovable={true}
             />
           );
@@ -457,7 +456,7 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               clickable={true}
-              turnColor={PieceColor.BLACK}
+              turnColor="black"
               premovable={true}
             />
           );
@@ -519,7 +518,7 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               clickable={true}
-              movableColor={PieceColor.BLACK}
+              movableColor="black"
             />
           );
 
@@ -568,8 +567,8 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               draggable={true}
-              movableColor={PieceColor.WHITE}
-              turnColor={PieceColor.BLACK}
+              movableColor="white"
+              turnColor="black"
             />
           );
           const testInstance = testRenderer.root;
@@ -592,8 +591,8 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               draggable={true}
-              movableColor={PieceColor.WHITE}
-              turnColor={PieceColor.BLACK}
+              movableColor="white"
+              turnColor="black"
               premovable={true}
             />
           );
@@ -633,7 +632,7 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               draggable={true}
-              movableColor={PieceColor.BLACK}
+              movableColor="black"
             />
           );
           TestRenderer.act(() => {
@@ -648,8 +647,8 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               draggable={true}
-              turnColor={PieceColor.BLACK}
-              movableColor={PieceColor.BLACK}
+              turnColor="black"
+              movableColor="black"
             />
           );
           TestRenderer.act(() => {
@@ -664,8 +663,8 @@ describe("Board", () => {
             <Board
               position={INITIAL_BOARD_FEN}
               draggable={true}
-              turnColor={PieceColor.BLACK}
-              movableColor={PieceColor.WHITE}
+              turnColor="black"
+              movableColor="white"
               premovable={true}
             />
           );
@@ -844,7 +843,7 @@ describe("Board", () => {
         testRenderer.update(
           <Board
             check={true}
-            turnColor={PieceColor.BLACK}
+            turnColor="black"
             position={{ e1: PieceCode.WHITE_KING, e8: PieceCode.BLACK_KING }}
           />
         );
@@ -1195,7 +1194,7 @@ describe("Board", () => {
         const testRenderer = TestRenderer.create(
           <Board
             position={initialPosition}
-            movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
+            movableColor="black" // turnColor is white, so moves are forbidden
             clickable={true}
             onMove={onMove}
             validMoves={initialPositionValidMoves}
@@ -1324,7 +1323,7 @@ describe("Board", () => {
         const testRenderer = TestRenderer.create(
           <Board
             position={initialPosition}
-            movableColor={PieceColor.BLACK} // turnColor is white, so moves are forbidden
+            movableColor="black" // turnColor is white, so moves are forbidden
             draggable={true}
             onMove={onMove}
             validMoves={initialPositionValidMoves}
@@ -1423,8 +1422,8 @@ describe("Board", () => {
             premovable={true}
             onSetPremove={onSetPremove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1465,8 +1464,8 @@ describe("Board", () => {
             premovable={true}
             onSetPremove={onSetPremove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1513,8 +1512,8 @@ describe("Board", () => {
             }}
             onMove={onMove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1565,8 +1564,8 @@ describe("Board", () => {
             }}
             onMove={onMove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1614,8 +1613,8 @@ describe("Board", () => {
             }}
             onUnsetPremove={onUnsetPremove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1660,8 +1659,8 @@ describe("Board", () => {
             }}
             onUnsetPremove={onUnsetPremove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1706,8 +1705,8 @@ describe("Board", () => {
             premovable={true}
             onUnsetPremove={onUnsetPremove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;
@@ -1772,8 +1771,8 @@ describe("Board", () => {
             premovable={true}
             onUnsetPremove={onUnsetPremove}
             validMoves={initialPositionValidMoves}
-            turnColor={PieceColor.BLACK}
-            movableColor={PieceColor.WHITE}
+            turnColor="black"
+            movableColor="white"
           />
         );
         const testInstance = testRenderer.root;

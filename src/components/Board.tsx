@@ -6,7 +6,6 @@ import {
   DEFAULT_BOARD_WIDTH,
   DEFAULT_TRANSITION_DURATION,
 } from "../constants/constants";
-import { PieceColor } from "../enums/PieceColor";
 import { Position } from "../interfaces/Position";
 import { createDndContext, DndProvider } from "react-dnd";
 import Backend from "react-dnd-html5-backend";
@@ -31,6 +30,7 @@ import {
 import { Move } from "../interfaces/Move";
 import { ValidMoves } from "../types/ValidMoves";
 import { PieceCode } from "../enums/PieceCode";
+import { PieceColor } from "../types/PieceColor";
 
 // @see https://github.com/react-dnd/react-dnd/issues/186
 const dndContext = createDndContext(Backend);
@@ -93,7 +93,7 @@ export const Board: FC<BoardProps> = ({
   allowMarkers = false,
   clickable = false,
   position = {},
-  orientation = PieceColor.WHITE,
+  orientation = "white",
   draggable = false,
   width = DEFAULT_BOARD_WIDTH,
   minWidth = DEFAULT_BOARD_MIN_WIDTH,
@@ -103,7 +103,7 @@ export const Board: FC<BoardProps> = ({
   transitionDuration = DEFAULT_TRANSITION_DURATION,
   lastMoveSquares,
   check = false,
-  turnColor = PieceColor.WHITE,
+  turnColor = "white",
   movableColor = "both",
   onResize,
   onMove,
