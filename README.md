@@ -88,7 +88,7 @@ For more examples please visit our [Storybook](https://ildar-icoosoft.github.io/
 | onSquareRightClick| (coordinates: string) => void |  | A function to call when a square is right clicked |
 | onDragStart | (event: PieceDragStartEvent) => void |  | A function to call when a piece is started to drag |
 | onDragEnterSquare | (coordinates: string) => void |  | A function to call when a piece is dragged over a specific square |
-| onDrop | (event: BoardDropEvent) => void | undefined | The logic to be performed on piece drop |
+| onDrop | (event: BoardDropEvent) => void |  | The logic to be performed on piece drop |
 | onMouseEnterSquare | (coordinates: string) => void |  | A function to call when the mouse is enter a square |
 | onMouseLeaveSquare | (coordinates: string) => void |  | A function to call when the mouse has left the square |
 
