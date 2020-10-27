@@ -109,7 +109,7 @@ The object property names must be algebraic squares (ie: e4, b2, c6, etc) and th
 
 You can use [Forsyth-Edwards Notation (FEN)](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation) to represent a board position.
 
-Note that FEN notation captures more information than chessboard.js requires, like who's move it is and whether or not castling is allowed. This information will be ignored; only the position information is used.
+Note that FEN notation captures more information than ii-react-chessboard requires, like who's move it is and whether or not castling is allowed. This information will be ignored; only the position information is used.
 
 ### PieceCode
 
