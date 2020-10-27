@@ -5,6 +5,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [2.0.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.6.0...v2.0.0) (2020-10-27)
+
+
+### Features
+
+* REACTCHESSBOARD-36 replace PieceColor enum with union type "white" | "black" ([#61](https://github.com/ildar-icoosoft/react-chessboard/issues/61)) ([0e414ef](https://github.com/ildar-icoosoft/react-chessboard/commit/0e414ef7f5a382d5d6f1bcc3235d7bf4c887ee6e))
+
+
+### BREAKING CHANGES
+
+* PieceColor enum is a part of module's public API
+
 # [1.6.0](https://github.com/ildar-icoosoft/react-chessboard/compare/v1.5.0...v1.6.0) (2020-10-27)
 
 
