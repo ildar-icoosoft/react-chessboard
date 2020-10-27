@@ -23,7 +23,7 @@ Customizable React chessboard component
 </p>
 
 ii-react-chessboard is a React component with a flexible "just a board" API. 
-It's compatible with touch as well as standard HTML5 drag and drop.
+It's compatible with touch as well as standard HTML5 drag and drop. [Live Demo](https://ildar-icoosoft.github.io/react-chessboard/)
 
 <div align="center">
 
@@ -78,6 +78,7 @@ import { Board } from "ii-react-chessboard";
 
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
+|allowMarkers| boolean | false | Allow round markers with right click |
 | position | [Position](#positionobject) \| string | {} | The position to display on the board. It might be [FEN String](#fenstring) or [Position Object](#positionobject) object |
 | orientation | "white" \| "black" | "white" | Orientation of the board |
 | draggable | boolean| false | If false, the pieces will not be draggable |
