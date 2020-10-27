@@ -36,11 +36,11 @@ It's compatible with touch as well as standard HTML5 drag and drop. [Live Demo](
   - [Installation](#installation)
   - [Example](#example)
 - API
-  - [useCombinedRefs](#usecombinedrefs)
-  - [usePrevious](#useprevious)
-  - [usePreviousDifferent](#usepreviousdifferent)
-  - [useShallowEqualSelector](#useshallowequalselector)
-  - [useDeepEqualSelector](#usedeepequalselector)
+  - [Board](#board)
+  - [Position Object](#position-object)
+  - [FEN String](#fen-string)
+  - [Move](#move)
+  - [ValidMoves](#validmoves)
 
 ## Usage
 
@@ -92,7 +92,7 @@ import { Board } from "ii-react-chessboard";
 | onSetPremove | (move: Move, playPremove: () => void, cancelPremove: () => void): void | | called after the premove has been set |
 | onUnsetPremove | () => void | | called after the premove has been unset |
 | orientation | "white" \| "black" | "white" | board orientation |
-| position | [Position](#positionobject) \| string | {} | FEN string or Position object |
+| position | [Position](#position-object) \| string | {} | [FEN string](#fen-string) or [Position object](#position-object) |
 | premovable | boolean | false | allow premoves for color that can not move |
 | resizable | boolean | false | allow resize |
 | showCoordinates| boolean | true | include coords attributes |
