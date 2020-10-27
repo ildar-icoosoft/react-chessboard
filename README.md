@@ -25,12 +25,22 @@ Customizable React chessboard component
 ii-react-chessboard is a React component with a flexible "just a board" API. 
 It's compatible with touch as well as standard HTML5 drag and drop.
 
-<div align="center" markdown="1">
+<div align="center">
 
 <img src="./src/images/screenshot1.png" alt="Big board" width="500">
 <img src="./src/images/screenshot2.png" alt="Small board" width="261">
 
 </div>
+
+- Usage
+  - [Installation](#installation)
+  - [Example](#example)
+- API
+  - [useCombinedRefs](#usecombinedrefs)
+  - [usePrevious](#useprevious)
+  - [usePreviousDifferent](#usepreviousdifferent)
+  - [useShallowEqualSelector](#useshallowequalselector)
+  - [useDeepEqualSelector](#usedeepequalselector)
 
 ## Installation
 
