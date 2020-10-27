@@ -22,7 +22,7 @@ Customizable React chessboard component
     </a>
 </p>
 
-ii-react-chessboard Chessboard.jsx is a React component with a flexible "just a board" API. 
+ii-react-chessboard is a React component with a flexible "just a board" API. 
 It's compatible with touch as well as standard HTML5 drag and drop.
 
 <div align="center" markdown="1">
