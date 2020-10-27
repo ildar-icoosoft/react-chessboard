@@ -47,7 +47,7 @@ It's compatible with touch as well as standard HTML5 drag and drop. [Live Demo](
 ### Installation
 
 ```
-npm install ii-react-chessboard
+npm install ii-react-chessboard # or yarn add ii-react-chessboard
 ```
 
 ### Example
