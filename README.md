@@ -78,28 +78,28 @@ import { Board } from "ii-react-chessboard";
 
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
-|allowMarkers| boolean | false | Allow round markers with right click |
-|check|boolean|false| True if current position contains check |
-|clickable| boolean | false | Allow click-click moves |
+|allowMarkers| boolean | false | allow round markers with right click |
+|check|boolean|false| true if current position contains check |
+|clickable| boolean | false | allow click-click moves |
 |draggable| boolean | false | allow moves & premoves to use drag'n drop |
 |lastMoveSquares| string[] | [] | squares part of the last move ["c3", "c4"] |
-|turnColor| "white" \| "black" | | turn to play |
-| position | [Position](#positionobject) \| string | {} | The position to display on the board. It might be [FEN String](#fenstring) or [Position Object](#positionobject) object |
-| orientation | "white" \| "black" | "white" | Orientation of the board |
-| draggable | boolean| false | If false, the pieces will not be draggable |
-| width | number | 480 | The width in pixels |
-| allowDrag | (pieceCode: [PieceCode](#piececode), coordinates: string) => boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
-| showNotation | boolean | true | If false, notation will not be shown on the board |
-| transitionDuration | number | 300 | The time it takes for a piece to slide to the target square |
-| dragStartCssClass | string[] \| string|  | The class for the square which has a dragged piece |
-| dragEnterSquareCssClass| string[] \| string|  | The class for the square which a piece is dragged over |
-| onSquareClick | (coordinates: string) => void |  | A function to call when a square is clicked |
-| onSquareRightClick| (coordinates: string) => void |  | A function to call when a square is right clicked |
-| onDragStart | (event: PieceDragStartEvent) => void |  | A function to call when a piece is started to drag |
-| onDragEnterSquare | (coordinates: string) => void |  | A function to call when a piece is dragged over a specific square |
-| onDrop | (event: BoardDropEvent) => void |  | The logic to be performed on piece drop |
-| onMouseEnterSquare | (coordinates: string) => void |  | A function to call when the mouse is enter a square |
-| onMouseLeaveSquare | (coordinates: string) => void |  | A function to call when the mouse has left the square |
+|turnColor| "white" \| "black" | "white" | turn to play |
+|maxWidth| number | Infinity | Max width in pixels |
+|minWidth| number | 160 | Min width in pixels |
+|movableColor| "white" \| "black" \| "both" | "both" | color that can move |
+|onMove| (move: [Move](#move) => void | | called after move |
+|onResize| (width: number) => void| | | called after resize |
+|onSetPremove| (move: Move, playPremove: () => void, cancelPremove: () => void): void | | called after the premove has been set |
+|onUnsetPremove| () => void | | called after the premove has been unset |
+|orientation| "white" \| "black" | "white" | board orientation |
+|position| [Position](#positionobject) \| string | {} | FEN string or Position object |
+|premovable| boolean | false | allow premoves for color that can not move |
+|resizable | boolean | false | allow resize |
+|showCoordinates| boolean | true | include coords attributes |
+| transitionDuration | number | 300 | The time in seconds it takes for a piece to slide to the target square |
+| validMoves | [ValidMoves](#validmoves) | {} | valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]} |
+| viewOnly | boolean | false | don't bind events: the user will never be able to move pieces around |
+| width | number | 480 | board width in pixels |
 
 ### Position Object
 
@@ -109,7 +109,7 @@ import { Position } from "ii-react-chessboard";
 
 You can use a JavaScript object to represent a board position.
 
-The object property names must be algebraic squares (ie: e4, b2, c6, etc) and the values must be a valid [piece codes](#piececode) (ie: `PieceCode.BLACK_KNIGHT`, `PieceCode.WHITE_QUEEN` etc).
+The object property names must be algebraic squares (ie: e4, b2, c6, etc) and the values must be valid piece codes (ie: wP, bK, wQ, etc).
 
 ### FEN String
 
@@ -117,10 +117,38 @@ You can use [Forsyth-Edwards Notation (FEN)](https://en.wikipedia.org/wiki/Forsy
 
 Note that FEN notation captures more information than ii-react-chessboard requires, like who's move it is and whether or not castling is allowed. This information will be ignored; only the position information is used.
 
-### PieceCode
+### Move
 
 ```javascript
-import { PieceCode } from "ii-react-chessboard";
+import { Move } from "ii-react-chessboard";
 ```
 
-PieceCode is an Enum that stores piece color and name, for example `PieceCode.WHITE_PAWN`, `PieceCode.BLACK_KNIGHT`
+Source code:
+
+```typescript
+export interface Move {
+  /**
+   * The location the piece is moving from.
+   * Must be in san format, e.g "h8"
+   */
+  from: string;
+
+  /**
+   * The location the piece is moving to.
+   * Must be in san format, e.g "a1"
+   */
+  to: string;
+}
+```
+
+### ValidMoves
+
+```javascript
+import { ValidMoves } from "ii-react-chessboard";
+```
+
+Source code:
+
+```typescript
+export type ValidMoves = Record<string, string[]>;
+```

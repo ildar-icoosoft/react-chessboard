@@ -36,7 +36,7 @@ import { PieceColor } from "../types/PieceColor";
 const dndContext = createDndContext(Backend);
 
 export interface BoardProps {
-  /** allow round markers with right click. */
+  /** allow round markers with right click */
   allowMarkers?: boolean;
   /** true if current position contains check */
   check?: boolean;
