@@ -78,13 +78,12 @@ import { Board } from "ii-react-chessboard";
 
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
-| position | Position | {} | The position to display on the board. It might be [FEN String](#fenstring) or [Position Object](#positionobject) object |
+| position | [Position](#positionobject) \| string | {} | The position to display on the board. It might be [FEN String](#fenstring) or [Position Object](#positionobject) object |
 | orientation | "white" \| "black" | "white" | Orientation of the board |
 | draggable | boolean| false | If false, the pieces will not be draggable |
 | width | number | 480 | The width in pixels |
-| allowDrag | (pieceCode: PieceCode, coordinates: string) => boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
+| allowDrag | (pieceCode: [PieceCode](#piececode), coordinates: string) => boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
 | showNotation | boolean | true | If false, notation will not be shown on the board |
-| squareCssClasses | SquareCssClasses |  | An object containing CSS classes for squares. For example {'e4': "highlight", 'd4': "red"} |
 | transitionDuration | number | 300 | The time it takes for a piece to slide to the target square |
 | dragStartCssClass | string[] \| string|  | The class for the square which has a dragged piece |
 | dragEnterSquareCssClass| string[] \| string|  | The class for the square which a piece is dragged over |
@@ -111,3 +110,11 @@ The object property names must be algebraic squares (ie: e4, b2, c6, etc) and th
 You can use [Forsyth-Edwards Notation (FEN)](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation) to represent a board position.
 
 Note that FEN notation captures more information than chessboard.js requires, like who's move it is and whether or not castling is allowed. This information will be ignored; only the position information is used.
+
+### PieceCode
+
+```javascript
+import { PieceCode } from "ii-react-chessboard";
+```
+
+PieceCode is an Enum that stores piece color and name, for example `PieceCode.WHITE_PAWN`, `PieceCode.BLACK_KNIGHT`
