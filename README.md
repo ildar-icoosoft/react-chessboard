@@ -89,7 +89,7 @@ import { Board } from "ii-react-chessboard";
 | movableColor | "white" \| "black" \| "both" | "both" | color that can move |
 | onMove | (move: [Move](#move)) => void | | called after move |
 | onResize | (width: number) => void| | called after resize |
-| onSetPremove | (move: Move, playPremove: () => void, cancelPremove: () => void): void | | called after the premove has been set |
+| onSetPremove | (move: [Move](#move), playPremove: () => void, cancelPremove: () => void): void | | called after the premove has been set |
 | onUnsetPremove | () => void | | called after the premove has been unset |
 | orientation | "white" \| "black" | "white" | board orientation |
 | position | [Position](#position-object) \| string | {} | [FEN string](#fen-string) or [Position object](#position-object) |
