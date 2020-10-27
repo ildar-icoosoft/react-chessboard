@@ -64,7 +64,7 @@ function App() {
 
 The code above will render chessboard with starting position:
 
-<img src="./src/images/screenshot3.png" alt="Chessboard with starting position" width="261">
+<img src="./src/images/screenshot3.png" alt="Chessboard with starting position" width="256">
 
 For more examples please visit our [Storybook](https://ildar-icoosoft.github.io/react-chessboard/) page
 
