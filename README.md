@@ -74,21 +74,21 @@ For more examples please visit our [Storybook](https://ildar-icoosoft.github.io/
 
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
-| position | Position | {} | The position to display on the board |
-| orientation | PieceColor| PieceColor.WHITE | Orientation of the board |
+| position | Position | {} | The position to display on the board. It might be "startpos" string or Position object |
+| orientation | PieceColor| "white" | Orientation of the board |
 | draggable | boolean| false | If false, the pieces will not be draggable |
 | width | number | 480 | The width in pixels |
-| allowDrag | (pieceCode: PieceCode, coordinates: string): boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
+| allowDrag | (pieceCode: PieceCode, coordinates: string) => boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
 | showNotation | boolean | true | If false, notation will not be shown on the board |
-| squareCssClasses | SquareCssClasses | undefined | An object containing CSS classes for squares. For example {'e4': "highlight", 'd4': "red"} |
+| squareCssClasses | SquareCssClasses |  | An object containing CSS classes for squares. For example {'e4': "highlight", 'd4': "red"} |
 | transitionDuration | number | 300 | The time it takes for a piece to slide to the target square |
-| dragStartCssClass | string[] \| string| undefined | The class for the square which has a dragged piece |
-| dragEnterSquareCssClass| string[] \| string| undefined | The class for the square which a piece is dragged over |
-| onSquareClick | (coordinates: string): void | undefined | A function to call when a square is clicked |
-| onSquareRightClick| (coordinates: string): void | undefined | A function to call when a square is right clicked |
-| onDragStart | (event: PieceDragStartEvent) | undefined | A function to call when a piece is started to drag |
-| onDragEnterSquare | (coordinates: string): void | undefined | A function to call when a piece is dragged over a specific square |
-| onDrop | (event: BoardDropEvent): void | undefined | The logic to be performed on piece drop |
-| onMouseEnterSquare | (coordinates: string): void | undefined | A function to call when the mouse is enter a square |
-| onMouseLeaveSquare | (coordinates: string): void | undefined | A function to call when the mouse has left the square |
+| dragStartCssClass | string[] \| string|  | The class for the square which has a dragged piece |
+| dragEnterSquareCssClass| string[] \| string|  | The class for the square which a piece is dragged over |
+| onSquareClick | (coordinates: string) => void |  | A function to call when a square is clicked |
+| onSquareRightClick| (coordinates: string) => void |  | A function to call when a square is right clicked |
+| onDragStart | (event: PieceDragStartEvent) => void |  | A function to call when a piece is started to drag |
+| onDragEnterSquare | (coordinates: string) => void |  | A function to call when a piece is dragged over a specific square |
+| onDrop | (event: BoardDropEvent) => void | undefined | The logic to be performed on piece drop |
+| onMouseEnterSquare | (coordinates: string) => void |  | A function to call when the mouse is enter a square |
+| onMouseLeaveSquare | (coordinates: string) => void |  | A function to call when the mouse has left the square |
 
