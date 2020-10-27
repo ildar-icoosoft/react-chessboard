@@ -1,19 +1,36 @@
-<h1 align="center">react-chessboard</h1>
+<h1 align="center">ii-react-chessboard</h1>
+
+<h3 align="center">
+
+Customizable React chessboard component
+
+</h3>
 
 <p align="center">
-    Renders a chess board using React
+    <img alt="CI" src="https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg">
+    <a href="https://ildar-icoosoft.github.io/react-chessboard/">
+        <img src="https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg" alt="Storybook">
+    </a>
+    <a href="https://codecov.io/gh/ildar-icoosoft/react-chessboard">
+        <img alt="codecov" src="https://codecov.io/gh/ildar-icoosoft/react-chessboard/branch/master/graph/badge.svg?token=9BKCLGTTFV">
+    </a>
+    <a href="https://github.com/semantic-release/semantic-release">
+        <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+    </a>
+    <a href="https://www.npmjs.com/package/ii-react-chessboard">
+        <img alt="semantic-release" src="https://img.shields.io/npm/v/ii-react-chessboard">
+    </a>
 </p>
 
-<p align="center">
+ii-react-chessboard Chessboard.jsx is a React component with a flexible "just a board" API. 
+It's compatible with touch as well as standard HTML5 drag and drop.
 
-![CI](https://github.com/ildar-icoosoft/react-chessboard/workflows/CI/badge.svg)
-[![Storybook](https://github.com/ildar-icoosoft/react-chessboard/workflows/Storybook/badge.svg)](https://ildar-icoosoft.github.io/react-chessboard/)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![codecov](https://codecov.io/gh/ildar-icoosoft/react-chessboard/branch/develop/graph/badge.svg?token=9BKCLGTTFV)](https://codecov.io/gh/ildar-icoosoft/react-chessboard)
-[![npm](https://img.shields.io/npm/v/ii-react-chessboard)](https://www.npmjs.com/package/ii-react-chessboard)
+<div align="center" markdown="1">
 
-</p>
+<img src="./src/images/screenshot1.png" alt="Big board" width="500">
+<img src="./src/images/screenshot2.png" alt="Small board" width="261">
 
+</div>
 
 ## Installation
 
