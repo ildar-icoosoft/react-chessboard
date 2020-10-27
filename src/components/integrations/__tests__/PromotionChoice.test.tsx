@@ -5,8 +5,6 @@ import { Modal } from "antd";
 import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-jest.mock("antd");
-
 describe("PromotionChoice", () => {
   describe("children components", () => {
     it("contains 1 Modal", () => {
