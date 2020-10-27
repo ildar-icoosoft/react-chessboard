@@ -42,27 +42,53 @@ It's compatible with touch as well as standard HTML5 drag and drop.
   - [useShallowEqualSelector](#useshallowequalselector)
   - [useDeepEqualSelector](#usedeepequalselector)
 
-## Installation
+## Usage
+
+### Installation
 
 ```
-npm install --save @ildar-icoosoft/react-chessboard
+npm install ii-react-chessboard
 ```
-
-## Demo
-
-- [Storybook](https://ildar-icoosoft.github.io/react-chessboard/)
-
-## Documentation
-
-Check out our [WIKI](https://github.com/ildar-icoosoft/react-chessboard/wiki/API)
 
 ### Example
 
-```jsx
-import { Board, PieceCode } from "ii-react-chessboard";
+```JSX
+import { Board } from "ii-react-chessboard";
 
-ReactDOM.render(
-  <Board position={{ e2: PieceCode.WHITE_PAWN, e7: PieceCode.BLACK_PAWN }} />,
-  document.getElementById("container")
-);
+function App() {
+  return (
+    <Board position="startpos" />
+  );
+}
 ```
+
+The code above will render chessboard with starting position:
+
+<img src="./src/images/screenshot3.png" alt="Chessboard with starting position" width="261">
+
+For more examples please visit our [Storybook](https://ildar-icoosoft.github.io/react-chessboard/) page
+
+## API
+
+### Board
+
+| Name | Type | Default | Description |
+| --- | --- | --- | ---|
+| position | Position | {} | The position to display on the board |
+| orientation | PieceColor| PieceColor.WHITE | Orientation of the board |
+| draggable | boolean| false | If false, the pieces will not be draggable |
+| width | number | 480 | The width in pixels |
+| allowDrag | (pieceCode: PieceCode, coordinates: string): boolean | undefined | A function to call when a piece drag is initiated. Returns true if the piece is draggable, false if not |
+| showNotation | boolean | true | If false, notation will not be shown on the board |
+| squareCssClasses | SquareCssClasses | undefined | An object containing CSS classes for squares. For example {'e4': "highlight", 'd4': "red"} |
+| transitionDuration | number | 300 | The time it takes for a piece to slide to the target square |
+| dragStartCssClass | string[] \| string| undefined | The class for the square which has a dragged piece |
+| dragEnterSquareCssClass| string[] \| string| undefined | The class for the square which a piece is dragged over |
+| onSquareClick | (coordinates: string): void | undefined | A function to call when a square is clicked |
+| onSquareRightClick| (coordinates: string): void | undefined | A function to call when a square is right clicked |
+| onDragStart | (event: PieceDragStartEvent) | undefined | A function to call when a piece is started to drag |
+| onDragEnterSquare | (coordinates: string): void | undefined | A function to call when a piece is dragged over a specific square |
+| onDrop | (event: BoardDropEvent): void | undefined | The logic to be performed on piece drop |
+| onMouseEnterSquare | (coordinates: string): void | undefined | A function to call when the mouse is enter a square |
+| onMouseLeaveSquare | (coordinates: string): void | undefined | A function to call when the mouse has left the square |
+
