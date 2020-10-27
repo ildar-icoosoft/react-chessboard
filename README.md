@@ -78,24 +78,24 @@ import { Board } from "ii-react-chessboard";
 
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
-|allowMarkers| boolean | false | allow round markers with right click |
-|check|boolean|false| true if current position contains check |
-|clickable| boolean | false | allow click-click moves |
-|draggable| boolean | false | allow moves & premoves to use drag'n drop |
-|lastMoveSquares| string[] | [] | squares part of the last move ["c3", "c4"] |
-|turnColor| "white" \| "black" | "white" | turn to play |
-|maxWidth| number | Infinity | Max width in pixels |
-|minWidth| number | 160 | Min width in pixels |
-|movableColor| "white" \| "black" \| "both" | "both" | color that can move |
-|onMove| (move: [Move](#move) => void | | called after move |
-|onResize| (width: number) => void| | | called after resize |
-|onSetPremove| (move: Move, playPremove: () => void, cancelPremove: () => void): void | | called after the premove has been set |
-|onUnsetPremove| () => void | | called after the premove has been unset |
-|orientation| "white" \| "black" | "white" | board orientation |
-|position| [Position](#positionobject) \| string | {} | FEN string or Position object |
-|premovable| boolean | false | allow premoves for color that can not move |
-|resizable | boolean | false | allow resize |
-|showCoordinates| boolean | true | include coords attributes |
+| allowMarkers | boolean | false | allow round markers with right click |
+| check | boolean|false| true if current position contains check |
+| clickable | boolean | false | allow click-click moves |
+| draggable | boolean | false | allow moves & premoves to use drag'n drop |
+| lastMoveSquares | string[] | [] | squares part of the last move ["c3", "c4"] |
+| turnColor | "white" \| "black" | "white" | turn to play |
+| maxWidth | number | Infinity | Max width in pixels |
+| minWidth | number | 160 | Min width in pixels |
+| movableColor | "white" \| "black" \| "both" | "both" | color that can move |
+| onMove | (move: [Move])(#move) => void | | called after move |
+| onResize | (width: number) => void| | | called after resize |
+| onSetPremove | (move: Move, playPremove: () => void, cancelPremove: () => void): void | | called after the premove has been set |
+| onUnsetPremove | () => void | | called after the premove has been unset |
+| orientation | "white" \| "black" | "white" | board orientation |
+| position | [Position](#positionobject) \| string | {} | FEN string or Position object |
+| premovable | boolean | false | allow premoves for color that can not move |
+| resizable | boolean | false | allow resize |
+| showCoordinates| boolean | true | include coords attributes |
 | transitionDuration | number | 300 | The time in seconds it takes for a piece to slide to the target square |
 | validMoves | [ValidMoves](#validmoves) | {} | valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]} |
 | viewOnly | boolean | false | don't bind events: the user will never be able to move pieces around |
