@@ -79,6 +79,11 @@ import { Board } from "ii-react-chessboard";
 | Name | Type | Default | Description |
 | --- | --- | --- | ---|
 |allowMarkers| boolean | false | Allow round markers with right click |
+|check|boolean|false| True if current position contains check |
+|clickable| boolean | false | Allow click-click moves |
+|draggable| boolean | false | allow moves & premoves to use drag'n drop |
+|lastMoveSquares| string[] | [] | squares part of the last move ["c3", "c4"] |
+|turnColor| "white" \| "black" | | turn to play |
 | position | [Position](#positionobject) \| string | {} | The position to display on the board. It might be [FEN String](#fenstring) or [Position Object](#positionobject) object |
 | orientation | "white" \| "black" | "white" | Orientation of the board |
 | draggable | boolean| false | If false, the pieces will not be draggable |
@@ -104,7 +109,7 @@ import { Position } from "ii-react-chessboard";
 
 You can use a JavaScript object to represent a board position.
 
-The object property names must be algebraic squares (ie: e4, b2, c6, etc) and the values must be a valid piece codes (ie: wP, bK, wQ, etc).
+The object property names must be algebraic squares (ie: e4, b2, c6, etc) and the values must be a valid [piece codes](#piececode) (ie: `PieceCode.BLACK_KNIGHT`, `PieceCode.WHITE_QUEEN` etc).
 
 ### FEN String
 

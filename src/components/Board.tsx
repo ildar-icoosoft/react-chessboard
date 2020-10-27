@@ -38,7 +38,7 @@ const dndContext = createDndContext(Backend);
 export interface BoardProps {
   /** allow round markers with right click. */
   allowMarkers?: boolean;
-  /** true for current color, false to unset */
+  /** true if current position contains check */
   check?: boolean;
   /** allow click-click moves */
   clickable?: boolean;
