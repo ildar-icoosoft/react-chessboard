@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useRef, useState, memo } from "react";
 import css from "./Board.scss";
 import {
   DEFAULT_BOARD_MAX_WIDTH,
@@ -89,7 +89,7 @@ export interface BoardProps {
 /**
  * Renders a chess board using React
  */
-export const Board: FC<BoardProps> = React.memo(
+export const Board: FC<BoardProps> = memo(
   ({
     allowMarkers = false,
     clickable = false,
