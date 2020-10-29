@@ -89,283 +89,287 @@ export interface BoardProps {
 /**
  * Renders a chess board using React
  */
-export const Board: FC<BoardProps> = ({
-  allowMarkers = false,
-  clickable = false,
-  position = {},
-  orientation = "white",
-  draggable = false,
-  width = DEFAULT_BOARD_WIDTH,
-  minWidth = DEFAULT_BOARD_MIN_WIDTH,
-  maxWidth = DEFAULT_BOARD_MAX_WIDTH,
-  showCoordinates = true,
-  resizable = false,
-  transitionDuration = DEFAULT_TRANSITION_DURATION,
-  lastMoveSquares,
-  check = false,
-  turnColor = "white",
-  movableColor = "both",
-  onResize,
-  onMove,
-  onSetPremove,
-  onUnsetPremove,
-  validMoves = {},
-  viewOnly = false,
-  premovable = false,
-}: BoardProps) => {
-  let positionObject: Position = {};
-  if (isValidFen(position)) {
-    positionObject = convertFenToPositionObject(position as string);
-  }
-  if (isValidPositionObject(position)) {
-    positionObject = position as Position;
-  }
+export const Board: FC<BoardProps> = React.memo(
+  ({
+    allowMarkers = false,
+    clickable = false,
+    position = {},
+    orientation = "white",
+    draggable = false,
+    width = DEFAULT_BOARD_WIDTH,
+    minWidth = DEFAULT_BOARD_MIN_WIDTH,
+    maxWidth = DEFAULT_BOARD_MAX_WIDTH,
+    showCoordinates = true,
+    resizable = false,
+    transitionDuration = DEFAULT_TRANSITION_DURATION,
+    lastMoveSquares,
+    check = false,
+    turnColor = "white",
+    movableColor = "both",
+    onResize,
+    onMove,
+    onSetPremove,
+    onUnsetPremove,
+    validMoves = {},
+    viewOnly = false,
+    premovable = false,
+  }: BoardProps) => {
+    let positionObject: Position = {};
+    if (isValidFen(position)) {
+      positionObject = convertFenToPositionObject(position as string);
+    }
+    if (isValidPositionObject(position)) {
+      positionObject = position as Position;
+    }
 
-  const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
+    const [roundMarkers, setRoundMarkers] = useState<string[]>([]);
 
-  const [selectionSquare, setSelectionSquare] = useState<string | undefined>();
-  const [premoveSquares, setPremoveSquares] = useState<string[]>([]);
+    const [selectionSquare, setSelectionSquare] = useState<
+      string | undefined
+    >();
+    const [premoveSquares, setPremoveSquares] = useState<string[]>([]);
 
-  const canMoveWithPiece = (pieceCode: PieceCode): boolean => {
-    const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
+    const canMoveWithPiece = (pieceCode: PieceCode): boolean => {
+      const pieceColor: PieceColor = getColorFromPieceCode(pieceCode);
 
-    return (
-      (movableColor === "both" || pieceColor === movableColor) &&
-      ((premovable && movableColor !== "both") || pieceColor === turnColor)
-    );
-  };
+      return (
+        (movableColor === "both" || pieceColor === movableColor) &&
+        ((premovable && movableColor !== "both") || pieceColor === turnColor)
+      );
+    };
 
-  const isAllowedToClickMove = (): boolean => {
-    return (
-      !viewOnly &&
-      clickable &&
-      (premovable || movableColor === "both" || movableColor === turnColor)
-    );
-  };
+    const isAllowedToClickMove = (): boolean => {
+      return (
+        !viewOnly &&
+        clickable &&
+        (premovable || movableColor === "both" || movableColor === turnColor)
+      );
+    };
 
-  const isAllowedToDragMove = (): boolean => {
-    return (
-      !viewOnly &&
-      draggable &&
-      (premovable || movableColor === "both" || movableColor === turnColor)
-    );
-  };
+    const isAllowedToDragMove = (): boolean => {
+      return (
+        !viewOnly &&
+        draggable &&
+        (premovable || movableColor === "both" || movableColor === turnColor)
+      );
+    };
 
-  const makePlayPremoveCallback = (premove: Move) => {
-    return () => {
-      if (onMove) {
-        onMove(premove);
+    const makePlayPremoveCallback = (premove: Move) => {
+      return () => {
+        if (onMove) {
+          onMove(premove);
+        }
+        setPremoveSquares([]);
+      };
+    };
+
+    const cancelPremove = (): void => {
+      if (onUnsetPremove) {
+        onUnsetPremove();
       }
       setPremoveSquares([]);
     };
-  };
 
-  const cancelPremove = (): void => {
-    if (onUnsetPremove) {
-      onUnsetPremove();
-    }
-    setPremoveSquares([]);
-  };
+    const handleSquareClick = (coordinates: string): void => {
+      if (roundMarkers.length) {
+        setRoundMarkers([]);
+      }
 
-  const handleSquareClick = (coordinates: string): void => {
-    if (roundMarkers.length) {
-      setRoundMarkers([]);
-    }
+      if (premoveSquares.length) {
+        cancelPremove();
+      }
 
-    if (premoveSquares.length) {
-      cancelPremove();
-    }
+      if (!isAllowedToClickMove()) {
+        return;
+      }
 
-    if (!isAllowedToClickMove()) {
-      return;
-    }
+      if (selectionSquare) {
+        if (selectionSquare === coordinates) {
+          setSelectionSquare(undefined);
+          return;
+        }
 
-    if (selectionSquare) {
-      if (selectionSquare === coordinates) {
+        if (
+          positionObject[coordinates] &&
+          canMoveWithPiece(positionObject[coordinates])
+        ) {
+          setSelectionSquare(coordinates);
+          return;
+        }
+
         setSelectionSquare(undefined);
-        return;
-      }
 
-      if (
-        positionObject[coordinates] &&
-        canMoveWithPiece(positionObject[coordinates])
-      ) {
+        if (isPremove()) {
+          doPremove(selectionSquare, coordinates);
+          return;
+        }
+
+        if (!isValidMove(selectionSquare, coordinates)) {
+          return;
+        }
+
+        if (onMove) {
+          onMove({
+            from: selectionSquare,
+            to: coordinates,
+          });
+        }
+      } else {
+        if (
+          !positionObject[coordinates] ||
+          !canMoveWithPiece(positionObject[coordinates])
+        ) {
+          setSelectionSquare(undefined);
+          return;
+        }
         setSelectionSquare(coordinates);
+      }
+    };
+
+    const isPremove = (): boolean => {
+      return turnColor !== movableColor && movableColor !== "both";
+    };
+
+    const doPremove = (from: string, to: string): void => {
+      if (onSetPremove) {
+        const premove: Move = {
+          from,
+          to,
+        };
+        onSetPremove(premove, makePlayPremoveCallback(premove), cancelPremove);
+      }
+      setPremoveSquares([from, to]);
+    };
+
+    const isValidMove = (from: string, to: string): boolean => {
+      return validMoves[from] && validMoves[from].includes(to);
+    };
+
+    const handleDrop = (event: PieceDropEvent): void => {
+      if (!isAllowedToDragMove()) {
         return;
       }
-
-      setSelectionSquare(undefined);
 
       if (isPremove()) {
-        doPremove(selectionSquare, coordinates);
+        doPremove(event.from, event.to);
         return;
       }
 
-      if (!isValidMove(selectionSquare, coordinates)) {
+      if (!isValidMove(event.from, event.to)) {
         return;
       }
+
+      event.disableTransitionInNextPosition();
 
       if (onMove) {
         onMove({
-          from: selectionSquare,
-          to: coordinates,
+          from: event.from,
+          to: event.to,
         });
       }
-    } else {
-      if (
-        !positionObject[coordinates] ||
-        !canMoveWithPiece(positionObject[coordinates])
-      ) {
-        setSelectionSquare(undefined);
+    };
+
+    const handleDragStart = (event: PieceDragStartEvent): void => {
+      if (roundMarkers.length) {
+        setRoundMarkers([]);
+      }
+
+      if (premoveSquares.length) {
+        cancelPremove();
+      }
+
+      if (!isAllowedToDragMove()) {
         return;
       }
-      setSelectionSquare(coordinates);
-    }
-  };
 
-  const isPremove = (): boolean => {
-    return turnColor !== movableColor && movableColor !== "both";
-  };
-
-  const doPremove = (from: string, to: string): void => {
-    if (onSetPremove) {
-      const premove: Move = {
-        from,
-        to,
-      };
-      onSetPremove(premove, makePlayPremoveCallback(premove), cancelPremove);
-    }
-    setPremoveSquares([from, to]);
-  };
-
-  const isValidMove = (from: string, to: string): boolean => {
-    return validMoves[from] && validMoves[from].includes(to);
-  };
-
-  const handleDrop = (event: PieceDropEvent): void => {
-    if (!isAllowedToDragMove()) {
-      return;
-    }
-
-    if (isPremove()) {
-      doPremove(event.from, event.to);
-      return;
-    }
-
-    if (!isValidMove(event.from, event.to)) {
-      return;
-    }
-
-    event.disableTransitionInNextPosition();
-
-    if (onMove) {
-      onMove({
-        from: event.from,
-        to: event.to,
-      });
-    }
-  };
-
-  const handleDragStart = (event: PieceDragStartEvent): void => {
-    if (roundMarkers.length) {
-      setRoundMarkers([]);
-    }
-
-    if (premoveSquares.length) {
-      cancelPremove();
-    }
-
-    if (!isAllowedToDragMove()) {
-      return;
-    }
-
-    if (canMoveWithPiece(event.pieceCode)) {
-      setSelectionSquare(event.coordinates);
-    }
-  };
-
-  const handleDragEnd = (): void => {
-    setSelectionSquare(undefined);
-  };
-
-  const handleSquareRightClick = (
-    event: CoordinateGridRightClickEvent
-  ): void => {
-    if (viewOnly) {
-      return;
-    }
-
-    if (allowMarkers) {
-      event.mouseEvent.preventDefault();
-
-      if (roundMarkers.includes(event.coordinates)) {
-        setRoundMarkers(_without(roundMarkers, event.coordinates));
-      } else {
-        setRoundMarkers(roundMarkers.concat(event.coordinates));
+      if (canMoveWithPiece(event.pieceCode)) {
+        setSelectionSquare(event.coordinates);
       }
-    }
-  };
+    };
 
-  const checkSquare = check
-    ? getKingSquare(positionObject, turnColor)
-    : undefined;
-  const destinationSquares =
-    selectionSquare && validMoves[selectionSquare]
-      ? validMoves[selectionSquare]
-      : [];
-  const occupationSquares = getOccupationSquares(
-    positionObject,
-    destinationSquares
-  );
+    const handleDragEnd = (): void => {
+      setSelectionSquare(undefined);
+    };
 
-  const manager = useRef(dndContext);
+    const handleSquareRightClick = (
+      event: CoordinateGridRightClickEvent
+    ): void => {
+      if (viewOnly) {
+        return;
+      }
 
-  return (
-    <>
-      <DndProvider manager={manager.current.dragDropManager}>
-        <div
-          data-testid={"board"}
-          className={css.board}
-          style={{
-            width: `${width}px`,
-            height: `${width}px`,
-          }}
-        >
-          <CoordinateGrid
-            draggable={draggable}
-            allowDrag={(pieceCode) =>
-              isAllowedToDragMove() && canMoveWithPiece(pieceCode)
-            }
-            orientation={orientation}
-            position={positionObject}
-            width={width}
-            selectionSquare={selectionSquare}
-            occupationSquares={occupationSquares}
-            destinationSquares={destinationSquares}
-            lastMoveSquares={lastMoveSquares}
-            premoveSquares={premoveSquares}
-            checkSquare={checkSquare}
-            onClick={handleSquareClick}
-            onRightClick={handleSquareRightClick}
-            onDrop={handleDrop}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            transitionDuration={transitionDuration}
-            roundMarkers={roundMarkers}
-          />
+      if (allowMarkers) {
+        event.mouseEvent.preventDefault();
 
-          {showCoordinates && <Coords orientation={orientation} />}
-          {resizable && (
-            <Resizer
+        if (roundMarkers.includes(event.coordinates)) {
+          setRoundMarkers(_without(roundMarkers, event.coordinates));
+        } else {
+          setRoundMarkers(roundMarkers.concat(event.coordinates));
+        }
+      }
+    };
+
+    const checkSquare = check
+      ? getKingSquare(positionObject, turnColor)
+      : undefined;
+    const destinationSquares =
+      selectionSquare && validMoves[selectionSquare]
+        ? validMoves[selectionSquare]
+        : [];
+    const occupationSquares = getOccupationSquares(
+      positionObject,
+      destinationSquares
+    );
+
+    const manager = useRef(dndContext);
+
+    return (
+      <>
+        <DndProvider manager={manager.current.dragDropManager}>
+          <div
+            data-testid={"board"}
+            className={css.board}
+            style={{
+              width: `${width}px`,
+              height: `${width}px`,
+            }}
+          >
+            <CoordinateGrid
+              draggable={draggable}
+              allowDrag={(pieceCode) =>
+                isAllowedToDragMove() && canMoveWithPiece(pieceCode)
+              }
+              orientation={orientation}
+              position={positionObject}
               width={width}
-              minWidth={minWidth}
-              onResize={onResize}
-              maxWidth={maxWidth}
+              selectionSquare={selectionSquare}
+              occupationSquares={occupationSquares}
+              destinationSquares={destinationSquares}
+              lastMoveSquares={lastMoveSquares}
+              premoveSquares={premoveSquares}
+              checkSquare={checkSquare}
+              onClick={handleSquareClick}
+              onRightClick={handleSquareRightClick}
+              onDrop={handleDrop}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              transitionDuration={transitionDuration}
+              roundMarkers={roundMarkers}
             />
-          )}
-        </div>
-        <PieceDragLayer width={width / 8} />
-      </DndProvider>
-    </>
-  );
-};
+
+            {showCoordinates && <Coords orientation={orientation} />}
+            {resizable && (
+              <Resizer
+                width={width}
+                minWidth={minWidth}
+                onResize={onResize}
+                maxWidth={maxWidth}
+              />
+            )}
+          </div>
+          <PieceDragLayer width={width / 8} />
+        </DndProvider>
+      </>
+    );
+  }
+);
