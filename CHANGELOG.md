@@ -5,6 +5,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
  and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3](https://github.com/ildar-icoosoft/react-chessboard/compare/v2.0.2...v2.0.3) (2020-10-29)
+
+
+### Performance Improvements
+
+* REACTCHESSBOARD-37 add React.memo wrapper to Board component ([#66](https://github.com/ildar-icoosoft/react-chessboard/issues/66)) ([9966f64](https://github.com/ildar-icoosoft/react-chessboard/commit/9966f64d7fba78041699a631f55e30b1cf6c5d95))
+
 ## [2.0.2](https://github.com/ildar-icoosoft/react-chessboard/compare/v2.0.1...v2.0.2) (2020-10-27)
 
 
