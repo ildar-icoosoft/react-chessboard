@@ -58,7 +58,7 @@ describe("Resizer", () => {
       expect(onResize).nthCalledWith(4, 600); // 480 + 200 = 680, but maxWidth is 600
     });
 
-    it("onResize() if no callback", () => {
+    it("resize if no onResize() callback", () => {
       const { getByTestId } = render(
         <div
           style={{ width: "1000px", height: "1000px", position: "relative" }}
