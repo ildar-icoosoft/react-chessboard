@@ -199,6 +199,17 @@ describe("Chess utils", () => {
       // @ts-ignore
       isValidPositionObject({ e4: "wK", e6: "bK", e5: "wP", e1: "bM" })
     ).toBe(false);
+
+    // prototype should be ignored
+    const positionWithPrototype: any = Object.create({
+      e1: "bM",
+    });
+    Object.assign(positionWithPrototype, {
+      e4: PieceCode.WHITE_KING,
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    });
+    expect(isValidPositionObject(positionWithPrototype)).toBe(true);
   });
 
   it("getValidMoves()", () => {
@@ -266,6 +277,18 @@ describe("Chess utils", () => {
 
     expect(getKingSquare(position, "white")).toBe("e1");
     expect(getKingSquare(position, "black")).toBe("e6");
+
+    // prototype should be ignored
+    const positionWithPrototype: any = Object.create({
+      e1: PieceCode.WHITE_KING,
+    });
+    Object.assign(positionWithPrototype, {
+      e6: PieceCode.BLACK_KING,
+      e5: PieceCode.WHITE_PAWN,
+    });
+
+    expect(getKingSquare(positionWithPrototype, "white")).toBeUndefined();
+    expect(getKingSquare(positionWithPrototype, "black")).toBe("e6");
   });
 
   it("getOccupationSquares()", () => {
