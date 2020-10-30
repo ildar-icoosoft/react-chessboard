@@ -109,7 +109,8 @@ describe("WithMoveValidation", () => {
   describe("children components props", () => {
     it("PromotionChoice", () => {
       const { testInstance, getProps } = renderWithMoveValidation(
-        prePromotionFen
+        prePromotionFen,
+        true
       );
 
       let props = getProps();
@@ -149,6 +150,26 @@ describe("WithMoveValidation", () => {
 
       expect(promotionChoice.props.showPromotionChoice).toBe(false);
       expect(promotionChoice.props.turnColor).toBe("black");
+
+      // invalid move. do nothing
+      TestRenderer.act(() => {
+        promotionChoice.props.onPromotion("b");
+      });
+      props = getProps();
+      expect(props.position).toEqual(promotionPosition);
+
+      expect(promotionChoice.props.showPromotionChoice).toBe(false);
+      expect(promotionChoice.props.turnColor).toBe("black");
+
+      //do computer move after 3 seconds
+      TestRenderer.act(() => {
+        jest.advanceTimersByTime(3000);
+      });
+
+      props = getProps();
+      expect(props.position).not.toEqual(promotionPosition);
+      expect(props.lastMoveSquares).not.toEqual(["e7", "e8"]);
+      expect(props.turnColor).toBe("white");
     });
   });
 
