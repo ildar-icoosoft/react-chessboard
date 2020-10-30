@@ -57,6 +57,27 @@ describe("Resizer", () => {
       expect(onResize).nthCalledWith(3, 580); // 480 + 100 = 580
       expect(onResize).nthCalledWith(4, 600); // 480 + 200 = 680, but maxWidth is 600
     });
+
+    it("onResize() if no callback", () => {
+      const { getByTestId } = render(
+        <div
+          style={{ width: "1000px", height: "1000px", position: "relative" }}
+        >
+          <Resizer width={480} minWidth={100} maxWidth={600} />
+        </div>
+      );
+
+      const el = getByTestId("resizer");
+
+      expect(() => {
+        fireEvent.mouseDown(el);
+        fireEvent.mouseMove(el, {
+          clientX: -100,
+          clientY: -100,
+        });
+        fireEvent.mouseUp(el);
+      }).not.toThrow();
+    });
   });
 
   describe("DOM structure", () => {
