@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Board } from "../src";
 import { INITIAL_BOARD_POSITION } from "../src/constants/constants";
 
@@ -25,10 +25,29 @@ FlippedBoard.story = {
 };
 
 export const SmallBoard = () => (
-  <Board position={INITIAL_BOARD_POSITION} draggable={true} width={240} />
+  <Board position={INITIAL_BOARD_POSITION} draggable width={240} />
 );
 
 SmallBoard.story = {
+  parameters: {
+    jest: ["Board"],
+  },
+};
+
+export const ResizableBoard = () => {
+  const [width, setWidth] = useState(480);
+
+  return (
+    <Board
+      position={INITIAL_BOARD_POSITION}
+      width={width}
+      resizable
+      onResize={(newWidth) => setWidth(newWidth)}
+    />
+  );
+};
+
+ResizableBoard.story = {
   parameters: {
     jest: ["Board"],
   },
